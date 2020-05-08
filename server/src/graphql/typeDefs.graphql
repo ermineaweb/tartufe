@@ -1,0 +1,22 @@
+type Game {
+    id: ID!
+    creator: Player
+    players: [Player]
+    round: Int
+    roundMax: Int
+    playerMax: Int
+    roundDuration: Int
+}
+
+type Player {
+    id: ID!
+    username: String
+    creator: Boolean
+    tartufe: Boolean # 'tartufe' is the lier
+    votes: Int
+    secretWord: String
+    ownWord: String
+}
+
+
+

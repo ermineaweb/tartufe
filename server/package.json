@@ -1,0 +1,29 @@
+{
+  "name": "tartufe",
+  "version": "1.0.0",
+  "description": "society game",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --verbose",
+    "test:watch": "jest --watchAll",
+    "start": "node src/index.js",
+    "dev": "nodemon --exec babel-node src/index.js"
+  },
+  "author": "romain amichaud",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-express": "^2.13.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "graphql": "^15.0.0",
+    "uuid": "^8.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/node": "^7.8.7",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.9.6",
+    "jest": "^26.0.1",
+    "nodemon": "^2.0.3"
+  }
+}

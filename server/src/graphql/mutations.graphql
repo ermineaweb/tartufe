@@ -1,0 +1,7 @@
+type Mutation {
+
+    createGame(username: String!, playerMax: Int, roundMax: Int, roundDuration: Int): Game
+
+    joinGame(username: String!, idGame: ID!): Game
+
+}
