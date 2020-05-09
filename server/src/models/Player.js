@@ -6,18 +6,48 @@ export default class Player {
     _username;
     _creator;
     _tartufe;
+    _ownVote;
     _votes;
     _secretWord;
     _ownWord;
+    _score;
+    _ready;
 
     constructor(username, creator) {
         this._id = uuid();
         this._username = username;
         this._creator = !!creator;
         this._tartufe = false;
-        this._votes = 0;
+        this._ownVote = null;
+        this._votes = [];
         this._secretWord = "";
         this._ownWord = "";
+        this._score = 0;
+        this._ready = false;
+    }
+
+    get votes() {
+        return this._votes;
+    }
+
+    set votes(value) {
+        this._votes = value;
+    }
+
+    get ready() {
+        return this._ready;
+    }
+
+    set ready(value) {
+        this._ready = value;
+    }
+
+    get score() {
+        return this._score;
+    }
+
+    set score(value) {
+        this._score = value;
     }
 
     get id() {
@@ -52,12 +82,12 @@ export default class Player {
         this._tartufe = value;
     }
 
-    get votes() {
-        return this._votes;
+    get ownVote() {
+        return this._ownVote;
     }
 
-    set votes(value) {
-        this._votes = value;
+    set ownVote(value) {
+        this._ownVote = value;
     }
 
     get secretWord() {

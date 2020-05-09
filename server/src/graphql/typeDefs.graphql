@@ -6,16 +6,22 @@ type Game {
     roundMax: Int
     playerMax: Int
     roundDuration: Int
+    gameStarted: Boolean
+    timer: Int
+    gameOver: Boolean
 }
 
 type Player {
     id: ID!
     username: String
     creator: Boolean
-    tartufe: Boolean # 'tartufe' is the lier
-    votes: Int
+    tartufe: Boolean
+    ownVote: Player
+    votes: [Player]
     secretWord: String
     ownWord: String
+    score: Int
+    ready: Boolean
 }
 
 

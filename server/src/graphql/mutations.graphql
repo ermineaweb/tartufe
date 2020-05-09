@@ -4,4 +4,10 @@ type Mutation {
 
     joinGame(username: String!, idGame: ID!): Game
 
+    toggleReady(idPlayer: ID!, idGame: ID!): Game
+
+    setOwnWord(idPlayer: ID!, idGame: ID!, word: String): Game
+
+    vote(idPlayer: ID!, idGame: ID!, idTartufe: ID!): Game
+
 }
