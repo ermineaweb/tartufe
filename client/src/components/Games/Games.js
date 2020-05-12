@@ -1,39 +1,19 @@
-import React from "react";
-import {gql} from 'apollo-boost';
-import {useQuery} from "@apollo/react-hooks";
+import React, {useEffect} from "react";
+import {useQuery, useSubscription} from "@apollo/react-hooks";
+import {GAMES, GAMES_UPDATED} from "../../graphql";
 
-const GAMES = gql`
-    query {
-        games {
-            id
-            playerMax
-            roundMax
-            roundDuration
-            creator {
-                username
-            }
-            players {
-                id
-                username
-                creator
-                tartufe
-                votes
-                secretWord
-            }
-        }
-    }
-`;
 
 export default function Games() {
-    const {loading, data, error} = useQuery(GAMES);
+    const dataQuery = useQuery(GAMES);
+    const dataSub = useSubscription(GAMES_UPDATED);
 
-    if (loading) return <>loading...</>;
-    if (error) return <>{error}</>;
+    if (dataQuery.loading || dataSub.loading) return <>loading</>;
+    if (dataQuery.error || dataSub.error) return <>error</>;
 
     return (
         <>
             Games
-            {data.games.map((game) =>
+            {dataQuery && dataQuery.data.games.map((game) =>
                 <div key={game.id}>
                     <p>
                         {game.id} - Créateur : {game.creator.username}

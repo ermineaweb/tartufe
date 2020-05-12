@@ -8,6 +8,10 @@ type Mutation {
 
     setOwnWord(idPlayer: ID!, idGame: ID!, word: String): Game
 
+    startVote(idPlayer: ID!, idGame: ID!): Game
+
     vote(idPlayer: ID!, idGame: ID!, idTartufe: ID!): Game
+
+    resetGames: [Game]
 
 }

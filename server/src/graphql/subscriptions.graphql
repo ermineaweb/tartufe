@@ -1,0 +1,7 @@
+type Subscription {
+
+    gameUpdated(id: ID!): Game
+
+    gamesUpdated: [Game]
+
+}

@@ -1,36 +1,60 @@
 import GameService from "../../services/GameService";
+import Game from "../../models/Game";
 
 const resolvers = {
 
     Mutation: {
 
-        createGame: (root, params) => {
+        createGame: (root, params, context) => {
             const {username, playerMax, roundMax, roundDuration} = params;
-            return GameService.createGame(username, playerMax, roundMax, roundDuration);
+            const game = GameService.createGame(username, playerMax, roundMax, roundDuration);
+            const games = GameService.getGames();
+            context.pubsub.publish("GAMES_UPDATED", {gamesUpdated: games});
+            return game;
         },
 
-        joinGame: (root, params) => {
+        joinGame: (root, params, context) => {
             const {username, idGame} = params;
-            return GameService.joinGame(username, idGame);
+            const game = GameService.joinGame(username, idGame);
+            context.pubsub.publish("GAME_UPDATED", {gameUpdated: game});
+            return game;
         },
 
-        toggleReady: (root, params) => {
+        toggleReady: (root, params, context) => {
             const {idPlayer, idGame} = params;
-            return GameService.toggleReady(idPlayer, idGame);
+            const game = GameService.toggleReady(idPlayer, idGame);
+            context.pubsub.publish("GAME_UPDATED", {gameUpdated: game});
+            return game;
         },
 
-        setOwnWord: (root, params) => {
+        setOwnWord: (root, params, context) => {
             const {idPlayer, idGame, word} = params;
-            return GameService.setOwnWord(idPlayer, idGame, word);
+            const game = GameService.setOwnWord(idPlayer, idGame, word);
+            context.pubsub.publish("GAME_UPDATED", {gameUpdated: game});
+            return game;
         },
 
-        vote: (root, params) => {
+        startVote: (root, params, context) => {
+            const {idPlayer, idGame} = params;
+            const game = GameService.startVote(idPlayer, idGame);
+            context.pubsub.publish("GAME_UPDATED", {gameUpdated: game});
+            return game;
+        },
+
+        vote: (root, params, context) => {
             const {idPlayer, idGame, idTartufe} = params;
-            return GameService.vote(idPlayer, idGame, idTartufe);
+            const game = GameService.vote(idPlayer, idGame, idTartufe);
+            context.pubsub.publish("GAME_UPDATED", {gameUpdated: game});
+            return game;
         },
 
-    }
+        resetGames: (root, params, context) => {
+            const games = GameService.resetGames();
+            context.pubsub.publish("GAMES_UPDATED", {gamesUpdated: games});
+            return games;
+        },
 
+    },
 };
 
 export default resolvers;

@@ -10,6 +10,7 @@ export default class Game {
     _playerMax;
     _roundDuration;
     _gameStarted;
+    _voteStarted;
     _timer;
     _gameOver;
 
@@ -22,6 +23,7 @@ export default class Game {
         this._playerMax = playerMax;
         this._roundDuration = roundDuration;
         this._gameStarted = false;
+        this._voteStarted = false;
         this._timer = roundDuration;
         this._gameOver = false;
     }
@@ -42,6 +44,14 @@ export default class Game {
     removePlayer(player) {
         const index = this._players.findIndex(p => p.id === player.id);
         this._players.slice(index, 1);
+    }
+
+    get voteStarted() {
+        return this._voteStarted;
+    }
+
+    set voteStarted(value) {
+        this._voteStarted = value;
     }
 
     get gameOver() {

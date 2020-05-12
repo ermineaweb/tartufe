@@ -8,7 +8,11 @@ export default {
     ROUND_MIN: 1,
     ROUND_MAX: 12,
 
-    DURATION_MIN: 5,
-    DURATION_MAX: 120,
+    DURATION_MIN: 0,
+    DURATION_MAX: 240,
+
+    WORD_MAX: 5,
+
+    USERNAME_MIN_LENGTH: 2,
 
 };

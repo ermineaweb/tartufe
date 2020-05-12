@@ -7,6 +7,7 @@ type Game {
     playerMax: Int
     roundDuration: Int
     gameStarted: Boolean
+    voteStarted: Boolean
     timer: Int
     gameOver: Boolean
 }
@@ -17,7 +18,6 @@ type Player {
     creator: Boolean
     tartufe: Boolean
     ownVote: Player
-    votes: [Player]
     secretWord: String
     ownWord: String
     score: Int

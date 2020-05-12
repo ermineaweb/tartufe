@@ -17,7 +17,6 @@ const resolvers = {
         username: (root) => root.username,
         creator: (root) => root.creator,
         tartufe: (root) => root.tartufe,
-        votes: (root) => root.votes,
         ownVote: (root) => root.ownVote,
         secretWord: (root) => root.secretWord,
         ownWord: (root) => root.ownWord,

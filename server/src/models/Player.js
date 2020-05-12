@@ -7,7 +7,7 @@ export default class Player {
     _creator;
     _tartufe;
     _ownVote;
-    _votes;
+    _wantVote;
     _secretWord;
     _ownWord;
     _score;
@@ -19,19 +19,11 @@ export default class Player {
         this._creator = !!creator;
         this._tartufe = false;
         this._ownVote = null;
-        this._votes = [];
-        this._secretWord = "";
-        this._ownWord = "";
+        this._wantVote = false;
+        this._secretWord = null;
+        this._ownWord = null;
         this._score = 0;
         this._ready = false;
-    }
-
-    get votes() {
-        return this._votes;
-    }
-
-    set votes(value) {
-        this._votes = value;
     }
 
     get ready() {

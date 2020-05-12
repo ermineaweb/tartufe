@@ -1,5 +1,5 @@
 import config from "../config";
-import words from "../datas/words";
+import wordList from "../datas/words";
 import Random from "../utils/Random";
 import Player from "../models/Player";
 import Game from "../models/Game";
@@ -25,6 +25,10 @@ export default class GameService {
             throw new Error(`Le nombre de round doit être compris entre ${config.ROUND_MIN} et ${config.ROUND_MAX}.`);
         }
 
+        if (username.length < config.USERNAME_MIN_LENGTH) {
+            throw new Error(`Le pseudo du créateur doit contenir au moins ${config.USERNAME_MIN_LENGTH} caractères.`);
+        }
+
         const creator = new Player(username, true);
         const game = new Game(creator, roundMax, playerMax, roundDuration);
         this.games = [...GameService.games, game];
@@ -34,8 +38,12 @@ export default class GameService {
 
     static joinGame(username, idGame) {
         const game = GameService.getGame(idGame);
-        const playerExist = game.players.some(p => p.username === username);
-        if (playerExist) return game;
+        if (username.length === config.USERNAME_MIN_LENGTH) {
+            throw new Error(`Le pseudo doit contenir au moins ${config.USERNAME_MIN_LENGTH} caractères.`);
+        }
+        if (game.players.some(p => p.username === username)) {
+            throw new Error("Le pseudo existe déjà dans la partie, soyez créatif.");
+        }
         const player = new Player(username, false);
 
         return game.addPlayer(player);
@@ -53,12 +61,6 @@ export default class GameService {
         return game;
     }
 
-    static resetPlayersNotReady(idGame) {
-        const game = GameService.getGame(idGame);
-        game.players.forEach(p => p.ready = false);
-        return game;
-    }
-
     static arePlayersReady(idGame) {
         const game = GameService.getGame(idGame);
         return game.players.every(p => p.ready);
@@ -72,10 +74,9 @@ export default class GameService {
         return game.players.find(p => p.id === idPlayer);
     }
 
-    static removeGame(id) {
-        const index = GameService.games.findIndex(g => g.id === id);
-        this.games.slice(index, 1);
-        return GameService.games;
+    static resetGames() {
+        GameService.games = [];
+        return GameService.games
     }
 
     static getGames() {
@@ -102,33 +103,54 @@ export default class GameService {
 
         // let's start
         game.gameStarted = true;
-        // chose the tartufe
+
+        // reset votes
+        game.players.forEach(p => p.ownVote = null);
+
+        // chose the Tartufe
         const tartufe = Random.fromArray(game.players);
         tartufe.tartufe = true;
-        GameService.assignSecretsWords(id);
+
+        // assign secrets words
+        const flipCoin = Random.flipCoin(); // true or false
+        const words = Random.fromArray(wordList); // a couple of word : {word1: "blue", word2: "red"}
+        game.players.forEach(player => {
+            // we want sometimes assign the word1 to the Tartufe, sometimes reverse
+            if (flipCoin) {
+                player.secretWord = player.tartufe ? words.word1 : words.word2;
+            } else {
+                player.secretWord = player.tartufe ? words.word2 : words.word1;
+            }
+        });
 
         console.log("game : " + game.id + " started - round : " + game.round);
 
-        const timer = setInterval(() => {
-
-            console.log(game.timer);
-            game.timer--;
-
-            if (game.timer <= 0) {
-                console.log("game : " + game.id + " - Fin du round !");
-                game.gameStarted = false;
-                game.timer = game.roundDuration;
-                tartufe.tartufe = false;
-                GameService.resetPlayersNotReady(id);
-                if (game.round++ === game.roundMax) {
-                    game.gameOver = true;
-                    console.log("game : " + game.id + " - GameOver !");
+        if (game.roundDuration > 0) {
+            const chrono = setInterval(() => {
+                console.log(game.timer);
+                if (game.timer-- === 0) {
+                    GameService.startVote(id);
+                    clearInterval(chrono);
                 }
-                clearInterval(timer);
-            }
+            }, 1000);
+        }
 
-        }, 1000);
+        return game;
+    }
 
+    static endGame(id) {
+        const game = GameService.getGame(id);
+        console.log("game : " + game.id + " - Fin du round " + game.round);
+        game.gameStarted = false;
+        game.timer = game.roundDuration;
+        game.players.forEach((player) => {
+            player.ready = false;
+            player.tartufe = false;
+        });
+        if (game.round++ === game.roundMax) {
+            game.gameOver = true;
+            console.log("game : " + game.id + " - GameOver !");
+        }
         return game;
     }
 
@@ -139,40 +161,33 @@ export default class GameService {
         return game;
     }
 
-    static vote(idPlayer, idGame, idTartufe) {
+    static startVote(idPlayer, idGame) {
         const game = GameService.getGame(idGame);
         const player = GameService.getPlayer(idPlayer, idGame);
-        const tartufe = GameService.getPlayer(idTartufe, idGame);
-        player.ownVote = tartufe;
-        tartufe.votes = [...tartufe.votes, player];
+        player.wantVote = true;
+        // if the majority want to vote, we vote !
+        if (game.players.filter(p => p.wantVote).length >= Math.ceil(game.players.length / 2)) {
+            game.voteStarted = true;
+        }
+        return game;
+    }
+
+    static vote(idPlayer, idGame, idTartufe) {
+        const game = GameService.getGame(idGame);
+        if (!game.voteStarted) {
+            throw new Error("Le vote n'est pas encore ouvert sur cette partie.");
+        }
+        const player = GameService.getPlayer(idPlayer, idGame);
+        player.ownVote = GameService.getPlayer(idTartufe, idGame);
         if (GameService.arePlayersVoted(idGame)) {
             console.log("tous les joueurs ont voté");
         }
         return game;
     }
 
-    static resetPlayersVote(idGame) {
-        const game = GameService.getGame(idGame);
-        game.players.forEach(p => {
-            p.ownVote = null;
-            p.votes = [];
-        });
-    }
-
     static arePlayersVoted(idGame) {
         const game = GameService.getGame(idGame);
         return game.players.every(p => p.ownVote !== null);
-    }
-
-    static assignSecretsWords(id) {
-        const game = GameService.getGame(id);
-        game.players.forEach(player => {
-            if (player.tartufe) {
-                player.secretWord = Random.fromArray(words).tartufeWord;
-            } else {
-                player.secretWord = Random.fromArray(words).word;
-            }
-        });
     }
 
 }
