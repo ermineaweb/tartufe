@@ -12,11 +12,17 @@
   "author": "romain amichaud",
   "license": "ISC",
   "dependencies": {
+    "@axelspringer/graphql-google-pubsub": "^2.1.0",
+    "add": "^2.0.6",
     "apollo-server-express": "^2.13.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "graphql": "^15.0.0",
-    "uuid": "^8.0.0"
+    "graphql-redis-subscriptions": "^2.2.1",
+    "or": "^0.2.0",
+    "subscriptions-transport-ws": "^0.9.16",
+    "uuid": "^8.0.0",
+    "yarn": "^1.22.4"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",

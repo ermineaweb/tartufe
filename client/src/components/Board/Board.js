@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
         height: 100,
     },
     players: {
-        textAlign:"center",
+        textAlign: "center",
         margin: "50px auto",
         width: "100%",
     },
@@ -102,95 +102,99 @@ export default function Board({game, subscribe}) {
 
     return (
         <div className={classes.root}>
-            {error && <div>{error}</div>}
-            {/*<div>{user.id}</div>*/}
-            {/*<div>{user.idGame}</div>*/}
+            <Paper>
 
-            {game.gameStarted && !game.voteStarted &&
-            <div className={classes.actions}>
-                <TextField
-                    variant="outlined"
-                    value={ownWord}
-                    onChange={(e) => setOwnWord(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    fullWidth={true}
-                />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAddOwnWord}
-                >
-                    Ajouter le mot
-                </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleWantVote}
-                >
-                    Lancer un vote
-                </Button>
-            </div>
-            }
+                {error && <div>{error}</div>}
+                {/*<div>{user.id}</div>*/}
+                {/*<div>{user.idGame}</div>*/}
 
-            <div className={classes.players}>
-                <Grid container spacing={3}>
-                    {game.players.map((player) => (
-                        <Grid item key={player.id}>
-                            {game.gameStarted ?
-                                <>
-                                    {game.voteStarted ?
-                                        <Badge
-                                            color="primary"
-                                            badgeContent={game.players.filter(p => {
-                                                if (p.ownVote) {
-                                                    return p.ownVote.id === player.id;
-                                                }
-                                            }).length}
-                                        >
-                                            <Avatar className={classes.avatar}>{player.username[0]}</Avatar>
-                                        </Badge>
-                                        :
-                                        <Badge
-                                            color="primary"
-                                            badgeContent={player.wantVote ? "Démasquons Tartufe !" : "..."}
-                                        >
-                                            <Avatar className={classes.avatar}>{player.username[0]}</Avatar>
-                                        </Badge>
-                                    }
-                                </>
-                                :
-                                <Badge color={player.ready ? "primary" : "secondary"} badgeContent=" ">
-                                    <Avatar className={classes.avatar}>{player.username[0]}</Avatar>
-                                </Badge>
-                            }
 
-                            <p>{player.username}</p>
+                {game.gameStarted && !game.voteStarted &&
+                <div className={classes.actions}>
+                    <TextField
+                        variant="outlined"
+                        value={ownWord}
+                        onChange={(e) => setOwnWord(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        fullWidth={true}
+                    />
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleAddOwnWord}
+                    >
+                        Ajouter le mot
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleWantVote}
+                    >
+                        Lancer un vote
+                    </Button>
+                </div>
+                }
 
-                            {!game.gameStarted && user.id === player.id &&
-                            <Button
-                                variant="contained"
-                                color={player.ready ? "primary" : "secondary"}
-                                onClick={handleToggleReady}
-                            >
-                                {player.ready ? "Pas prêt" : "  Prêt  "}
-                            </Button>
-                            }
+                <div className={classes.players}>
+                    <Grid container spacing={3}>
+                        {game.players.map((player) => (
+                            <Grid item key={player.id}>
+                                {game.gameStarted ?
+                                    <>
+                                        {game.voteStarted ?
+                                            <Badge
+                                                color="primary"
+                                                badgeContent={game.players.filter(p => {
+                                                    if (p.ownVote) {
+                                                        return p.ownVote.id === player.id;
+                                                    }
+                                                }).length}
+                                            >
+                                                <Avatar className={classes.avatar}>{player.username[0]}</Avatar>
+                                            </Badge>
+                                            :
+                                            <Badge
+                                                color="primary"
+                                                badgeContent={player.wantVote ? "Démasquons Tartufe !" : "..."}
+                                            >
+                                                <Avatar className={classes.avatar}>{player.username[0]}</Avatar>
+                                            </Badge>
+                                        }
+                                    </>
+                                    :
+                                    <Badge color={player.ready ? "primary" : "secondary"} badgeContent=" ">
+                                        <Avatar className={classes.avatar}>{player.username[0]}</Avatar>
+                                    </Badge>
+                                }
 
-                            {game.voteStarted &&
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => handleVote(player.id)}
-                            >
-                                Voter
-                            </Button>
-                            }
+                                <p>{player.username}</p>
 
-                            {game.gameStarted && <Words words={player.words}/>}
-                        </Grid>
-                    ))}
-                </Grid>
-            </div>
+                                {!game.gameStarted && user.id === player.id &&
+                                <Button
+                                    variant="contained"
+                                    color={player.ready ? "primary" : "secondary"}
+                                    onClick={handleToggleReady}
+                                >
+                                    {player.ready ? "Pas prêt" : "  Prêt  "}
+                                </Button>
+                                }
+
+                                {game.voteStarted &&
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleVote(player.id)}
+                                >
+                                    Voter
+                                </Button>
+                                }
+
+                                {game.gameStarted && <Words words={player.words}/>}
+                            </Grid>
+                        ))}
+                    </Grid>
+                </div>
+            </Paper>
 
         </div>
     )

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useCallback} from "react";
 import {useQuery} from "@apollo/react-hooks";
 import {GAME, GAME_UPDATED} from "../../graphql";
 import Board from "./Board";
@@ -8,12 +8,12 @@ export default ({...props}) => {
 
     const options = {
         variables: {idGame},
-        notifyOnNetworkStatusChange: true,
+        fetchPolicy: "cache-and-network",
     };
 
     const {loading, data, error, subscribeToMore} = useQuery(GAME, options);
 
-    const subscribe = () => {
+    const subscribe = useCallback(() => {
         subscribeToMore({
             document: GAME_UPDATED,
             variables: {
@@ -25,7 +25,7 @@ export default ({...props}) => {
                 });
             }
         })
-    };
+    }, [subscribeToMore, GAME_UPDATED]);
 
     if (loading) return <>loading</>;
     if (error) return <>error</>;

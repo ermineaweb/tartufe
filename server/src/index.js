@@ -2,12 +2,13 @@ import 'dotenv/config';
 import express from "express";
 import path from "path";
 import http from "http";
-import {ApolloServer, PubSub} from "apollo-server-express";
+import {ApolloServer} from "apollo-server-express";
 import {resolvers, schema} from "./graphql";
+import { PubSub } from 'graphql-subscriptions';
 
 const app = express();
 
-const pubsub = new PubSub();
+export const pubsub = new PubSub();
 
 const server = new ApolloServer({
     typeDefs: schema,

@@ -6,7 +6,7 @@ const resolvers = {
 
         gameUpdated: {
             subscribe: withFilter((root, params, context) => {
-                return context.pubsub.asyncIterator(["GAME_UPDATED"])
+                return context.pubsub.asyncIterator("GAME_UPDATED")
             }, (payload, variables) => {
                 return payload.gameUpdated.id === variables.id;
             })
@@ -14,7 +14,7 @@ const resolvers = {
 
         gamesUpdated: {
             subscribe: (root, params, context) => {
-                return context.pubsub.asyncIterator(["GAMES_UPDATED"])
+                return context.pubsub.asyncIterator("GAMES_UPDATED")
             },
         },
 

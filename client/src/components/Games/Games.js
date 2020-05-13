@@ -3,9 +3,9 @@ import {Link} from "react-router-dom";
 
 export default function Games({games, subscribe}) {
 
-    useEffect(() => {
-        subscribe();
-    }, [subscribe]);
+    // useEffect(() => {
+    //     subscribe();
+    // }, [subscribe]);
 
     return (
         <>
