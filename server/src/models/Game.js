@@ -3,7 +3,6 @@ import {v4 as uuid} from "uuid";
 export default class Game {
 
     _id;
-    _creator;
     _players;
     _round;
     _roundMax;
@@ -14,10 +13,9 @@ export default class Game {
     _timer;
     _gameOver;
 
-    constructor(creator, roundMax = 3, playerMax = 1, roundDuration = 20) {
+    constructor(roundMax = 3, playerMax = 1, roundDuration = 20) {
         this._id = uuid();
-        this._creator = creator;
-        this._players = [this._creator];
+        this._players = [];
         this._round = 1;
         this._roundMax = roundMax;
         this._playerMax = playerMax;
@@ -108,14 +106,6 @@ export default class Game {
 
     set roundDuration(value) {
         this._roundDuration = value;
-    }
-
-    get creator() {
-        return this._creator;
-    }
-
-    set creator(value) {
-        this._creator = value;
     }
 
     get id() {

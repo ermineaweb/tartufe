@@ -1,2 +1,2 @@
-import Games from "./Games";
-export default Games;
+import wrapperGraphql from "./wrapperGraphql";
+export default wrapperGraphql;

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -11,6 +11,9 @@ import Slider from "../Slider";
 import Typography from "@material-ui/core/Typography";
 import {CREATE_GAME, JOIN_GAME} from "../../graphql";
 import Games from "../Games";
+import {useHistory} from "react-router-dom";
+import {UserContext} from "../../context";
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -38,43 +41,52 @@ export default function Home() {
     const [roundMax, setRoundMax] = useState(2);
     const [roundDuration, setRoundDuration] = useState(0);
     const [openOptions, setOpenOptions] = useState(false);
+    const {user, setUser} = useContext(UserContext);
 
-    const optionsCreateGame = {
+    const history = useHistory();
+
+    const [createGame] = useMutation(CREATE_GAME, {
         variables: {
             username,
             playerMax,
             roundMax,
             roundDuration,
         }
-    };
-
-    const optionsJoinGame = {
-        variables: {
-            username,
-            idGame,
-        }
-    };
-
-    const [createGame] = useMutation(CREATE_GAME, optionsCreateGame);
-    const [joinGame] = useMutation(JOIN_GAME, optionsJoinGame);
+    });
+    const [joinGame] = useMutation(JOIN_GAME, {variables: {username, idGame}});
 
     const handleCreateGame = () => {
         setOpenOptions(false);
         createGame()
-            .catch(err => {
-                console.log(err);
-            });
+            .then(res => {
+                setUser(res.data.createGame);
+                history.push({
+                    pathname: "/board",
+                    state: {
+                        idGame: res.data.createGame.idGame,
+                    }
+                })
+            })
+            .catch(err => setError(err.toString()));
     };
 
     const handleJoinGame = () => {
         joinGame()
-            .catch(err => {
-                console.log(err);
-            });
+            .then(res => {
+                setUser(res.data.joinGame);
+                history.push({
+                    pathname: "/board",
+                    state: {
+                        idGame: res.data.joinGame.idGame,
+                    }
+                });
+            })
+            .catch(err => setError(err.toString()));
     };
 
     return (
         <div className={classes.root}>
+            {error && <div>{error}</div>}
             <Games/>
             <TextField
                 label="Pseudo"

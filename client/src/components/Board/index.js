@@ -1,2 +1,2 @@
-import Board from "./Board";
-export default Board;
+import wrapperGraphql from "./wrapperGraphql";
+export default wrapperGraphql;

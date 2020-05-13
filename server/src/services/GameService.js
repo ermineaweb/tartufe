@@ -29,11 +29,11 @@ export default class GameService {
             throw new Error(`Le pseudo du créateur doit contenir au moins ${config.USERNAME_MIN_LENGTH} caractères.`);
         }
 
-        const creator = new Player(username, true);
-        const game = new Game(creator, roundMax, playerMax, roundDuration);
+        const game = new Game(roundMax, playerMax, roundDuration);
+        const creator = new Player(username, game.id, true);
+        game.addPlayer(creator);
         this.games = [...GameService.games, game];
-
-        return game;
+        return creator;
     }
 
     static joinGame(username, idGame) {
@@ -42,11 +42,11 @@ export default class GameService {
             throw new Error(`Le pseudo doit contenir au moins ${config.USERNAME_MIN_LENGTH} caractères.`);
         }
         if (game.players.some(p => p.username === username)) {
-            throw new Error("Le pseudo existe déjà dans la partie, soyez créatif.");
+            throw new Error("Le pseudo existe déjà dans la partie, soyez plus créatif.");
         }
-        const player = new Player(username, false);
-
-        return game.addPlayer(player);
+        const player = new Player(username, idGame, false);
+        game.addPlayer(player);
+        return player;
     }
 
     static toggleReady(idPlayer, idGame) {
@@ -129,7 +129,7 @@ export default class GameService {
             const chrono = setInterval(() => {
                 console.log(game.timer);
                 if (game.timer-- === 0) {
-                    GameService.startVote(id);
+                    // todo : mettre tous les votes a true avec wantVote
                     clearInterval(chrono);
                 }
             }, 1000);
@@ -142,10 +142,18 @@ export default class GameService {
         const game = GameService.getGame(id);
         console.log("game : " + game.id + " - Fin du round " + game.round);
         game.gameStarted = false;
+        game.voteStarted = false;
         game.timer = game.roundDuration;
         game.players.forEach((player) => {
-            player.ready = false;
             player.tartufe = false;
+            player.ownVote = null;
+            player.wantVote = false;
+            player.words = [];
+            player.ready = false;
+
+            // todo calcul des scores
+            player.score += 5;
+
         });
         if (game.round++ === game.roundMax) {
             game.gameOver = true;
@@ -154,14 +162,14 @@ export default class GameService {
         return game;
     }
 
-    static setOwnWord(idPlayer, idGame, word) {
+    static addOwnWord(idPlayer, idGame, word) {
         const game = GameService.getGame(idGame);
         const player = GameService.getPlayer(idPlayer, idGame);
-        player.ownWord = word;
+        player.addWord(word);
         return game;
     }
 
-    static startVote(idPlayer, idGame) {
+    static wantVote(idPlayer, idGame) {
         const game = GameService.getGame(idGame);
         const player = GameService.getPlayer(idPlayer, idGame);
         player.wantVote = true;
@@ -181,6 +189,7 @@ export default class GameService {
         player.ownVote = GameService.getPlayer(idTartufe, idGame);
         if (GameService.arePlayersVoted(idGame)) {
             console.log("tous les joueurs ont voté");
+            GameService.endGame(idGame);
         }
         return game;
     }

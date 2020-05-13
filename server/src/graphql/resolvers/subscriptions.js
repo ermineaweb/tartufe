@@ -13,7 +13,9 @@ const resolvers = {
         },
 
         gamesUpdated: {
-            subscribe: (root, params, context) => context.pubsub.asyncIterator(["GAMES_UPDATED"]),
+            subscribe: (root, params, context) => {
+                return context.pubsub.asyncIterator(["GAMES_UPDATED"])
+            },
         },
 
     },

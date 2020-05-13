@@ -2,7 +2,6 @@ const resolvers = {
 
     Game: {
         id: (root) => root.id,
-        creator: (root) => root.creator,
         players: (root) => root.players,
         roundMax: (root) => root.roundMax,
         playerMax: (root) => root.playerMax,
@@ -14,14 +13,16 @@ const resolvers = {
 
     Player: {
         id: (root) => root.id,
+        idGame: (root) => root.idGame,
         username: (root) => root.username,
         creator: (root) => root.creator,
         tartufe: (root) => root.tartufe,
         ownVote: (root) => root.ownVote,
         secretWord: (root) => root.secretWord,
-        ownWord: (root) => root.ownWord,
+        words: (root) => root.words,
         score: (root) => root.score,
         ready: (root) => root.ready,
+        wantVote: (root) => root.wantVote,
     },
 
 };

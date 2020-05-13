@@ -3,27 +3,66 @@ import {v4 as uuid} from "uuid";
 export default class Player {
 
     _id;
+    _idGame;
     _username;
     _creator;
     _tartufe;
     _ownVote;
     _wantVote;
     _secretWord;
-    _ownWord;
+    _words;
     _score;
     _ready;
 
-    constructor(username, creator) {
+    constructor(username, idGame, creator) {
         this._id = uuid();
+        this._idGame = idGame;
         this._username = username;
         this._creator = !!creator;
         this._tartufe = false;
         this._ownVote = null;
         this._wantVote = false;
         this._secretWord = null;
-        this._ownWord = null;
+        this._words = [];
         this._score = 0;
         this._ready = false;
+    }
+
+    addWord(word) {
+        this._words = [...this._words, word];
+        return this;
+    }
+
+    get ownVote() {
+        return this._ownVote;
+    }
+
+    set ownVote(value) {
+        this._ownVote = value;
+    }
+
+    get wantVote() {
+        return this._wantVote;
+    }
+
+    set wantVote(value) {
+        this._wantVote = value;
+    }
+
+    get words() {
+        return this._words;
+    }
+
+    set words(value) {
+        this._words = value;
+    }
+
+    get idGame() {
+        return this._idGame;
+    }
+
+    set idGame(value) {
+        this._idGame = value;
     }
 
     get ready() {
@@ -72,14 +111,6 @@ export default class Player {
 
     set tartufe(value) {
         this._tartufe = value;
-    }
-
-    get ownVote() {
-        return this._ownVote;
-    }
-
-    set ownVote(value) {
-        this._ownVote = value;
     }
 
     get secretWord() {

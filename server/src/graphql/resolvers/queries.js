@@ -10,7 +10,7 @@ const resolvers = {
         },
 
         game: function (root, {idGame}) {
-            return "123";
+            return GameService.getGame(idGame);
         },
 
         games: function () {

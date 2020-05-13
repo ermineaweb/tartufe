@@ -7,17 +7,18 @@ const resolvers = {
 
         createGame: (root, params, context) => {
             const {username, playerMax, roundMax, roundDuration} = params;
-            const game = GameService.createGame(username, playerMax, roundMax, roundDuration);
+            const creator = GameService.createGame(username, playerMax, roundMax, roundDuration);
             const games = GameService.getGames();
             context.pubsub.publish("GAMES_UPDATED", {gamesUpdated: games});
-            return game;
+            return creator;
         },
 
         joinGame: (root, params, context) => {
             const {username, idGame} = params;
-            const game = GameService.joinGame(username, idGame);
+            const player = GameService.joinGame(username, idGame);
+            const game = GameService.getGame(idGame);
             context.pubsub.publish("GAME_UPDATED", {gameUpdated: game});
-            return game;
+            return player;
         },
 
         toggleReady: (root, params, context) => {
@@ -27,16 +28,16 @@ const resolvers = {
             return game;
         },
 
-        setOwnWord: (root, params, context) => {
+        addOwnWord: (root, params, context) => {
             const {idPlayer, idGame, word} = params;
-            const game = GameService.setOwnWord(idPlayer, idGame, word);
+            const game = GameService.addOwnWord(idPlayer, idGame, word);
             context.pubsub.publish("GAME_UPDATED", {gameUpdated: game});
             return game;
         },
 
-        startVote: (root, params, context) => {
+        wantVote: (root, params, context) => {
             const {idPlayer, idGame} = params;
-            const game = GameService.startVote(idPlayer, idGame);
+            const game = GameService.wantVote(idPlayer, idGame);
             context.pubsub.publish("GAME_UPDATED", {gameUpdated: game});
             return game;
         },
