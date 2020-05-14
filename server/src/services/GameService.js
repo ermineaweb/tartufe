@@ -53,7 +53,7 @@ export default class GameService {
         const game = GameService.getGame(idGame);
         const player = GameService.getPlayer(idPlayer, idGame);
         player.isReady = !player.isReady;
-
+// game.players.length >= config.PLAYER_MIN &&
         if (GameService.arePlayersReady(idGame) && !game.isGameOver) {
             GameService.startGame(idGame);
         }
@@ -76,6 +76,12 @@ export default class GameService {
 
     static resetGames() {
         GameService.games = [];
+        return GameService.games
+    }
+
+    static removeGame(idGame) {
+        const index = GameService.games.find(g => g.id === idGame);
+        GameService.games.slice(index, 1);
         return GameService.games
     }
 
@@ -103,6 +109,13 @@ export default class GameService {
 
         // let's start
         game.isGameStarted = true;
+
+        game.players.forEach((player) => {
+            player.words = [];
+            player.ownVote = null;
+            player.isTartufe = false;
+            player.wantVote = false;
+        });
 
         // chose the Tartufe
         const tartufe = Random.fromArray(game.players);
@@ -160,15 +173,11 @@ export default class GameService {
                 // each player win 1 for each player who find tartufe
                 player.vote += playersFindTartufe;
             }
-
-            player.words = [];
-            player.ownVote = null;
-            player.isTartufe = false;
-            player.wantVote = false;
             player.isReady = false;
         });
         if (game.round++ === game.roundMax) {
             game.isGameOver = true;
+            GameService.removeGame(idGame);
             console.log("game : " + game.id + " - GameOver !");
         }
         return game;

@@ -2,8 +2,8 @@ export default {
 
     GAME_MAX: 5,
 
-    PLAYER_MIN: 2,
-    PLAYER_MAX: 10,
+    PLAYER_MIN: 3,
+    PLAYER_MAX: 12,
 
     ROUND_MIN: 1,
     ROUND_MAX: 12,

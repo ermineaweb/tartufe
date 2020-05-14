@@ -7,8 +7,7 @@ import AvatarDiable from "../../assets/img/avatar_diable.png";
 import AvatarAnge from "../../assets/img/avatar_ange.png";
 import AvatarSearch from "../../assets/img/avatar_search.png";
 import AvatarSleep from "../../assets/img/avatar_sleep.png";
-import Words from "../Words";
-import Chip from "@material-ui/core/Chip";
+import AvatarTartufe from "../../assets/img/avatar_tartufe.png";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -30,8 +29,8 @@ const BadgeStatus = withStyles((theme) => ({
         right: "50%",
         top: "0%",
         padding: '0 0',
-        width: 30,
-        height: 30,
+        width: 20,
+        height: 20,
     },
 }))(Badge);
 
@@ -53,8 +52,6 @@ export default function Player({player, game}) {
         <div className={classes.root}>
             {game.isGameStarted ?
                 <>
-                    <Chip label={player.score} color="primary" variant="outlined"/>
-
                     {game.isVoteStarted ?
 
                         <BadgeStatus
@@ -73,12 +70,7 @@ export default function Player({player, game}) {
                         <>
                             {
                                 player.wantVote ?
-                                    <BadgeWantVote
-                                        color="primary"
-                                        badgeContent={player.wantVote ? "VOTONS !" : " "}
-                                    >
-                                        <Avatar className={classes.avatar} src={AvatarDiable}/>
-                                    </BadgeWantVote>
+                                    <Avatar className={classes.avatar} src={AvatarDiable}/>
                                     :
                                     <Avatar className={classes.avatar} src={AvatarSearch}/>
                             }
@@ -87,10 +79,13 @@ export default function Player({player, game}) {
                 </>
                 :
                 <>
-                    {player.isReady ?
-                        <Avatar className={classes.avatar} src={AvatarDiable}/>
+                    {player.isTartufe ?
+                        <Avatar className={classes.avatar} src={AvatarTartufe}/>
                         :
-                        <Avatar className={classes.avatar} src={AvatarSleep}/>
+                        player.isReady ?
+                            <Avatar className={classes.avatar} src={AvatarDiable}/>
+                            :
+                            <Avatar className={classes.avatar} src={AvatarSleep}/>
                     }
                 </>
             }

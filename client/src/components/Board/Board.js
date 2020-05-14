@@ -133,6 +133,18 @@ export default function Board({game, subscribe}) {
                     {game.players.map((player) => (
                         <Grid item key={player.id}>
                             <div className={classes.card}>
+
+                                <Player game={game} player={player}/>
+
+                                <Typography gutterBottom variant="h5" component="h2">
+                                    Score : {player.score}
+                                </Typography>
+                                <Typography gutterBottom variant="h5" component="h2">
+                                    {player.isWriting ? <img src={Writing}/> : player.username}
+                                </Typography>
+
+                                {game.isGameStarted && <Words words={player.words}/>}
+
                                 {!game.isGameStarted && user.id === player.id &&
                                 <Button
                                     variant="contained"
@@ -152,12 +164,6 @@ export default function Board({game, subscribe}) {
                                 </Button>
                                 }
 
-                                <Player game={game} player={player}/>
-                                <Typography gutterBottom variant="h5" component="h2">
-                                    {player.isWriting ? <img src={Writing}/> : player.username}
-                                </Typography>
-
-                                {game.isGameStarted && <Words words={player.words}/>}
                             </div>
 
                         </Grid>

@@ -7,14 +7,14 @@ import {InMemoryCache} from "apollo-cache-inmemory";
 import {ApolloProvider} from "@apollo/react-hooks";
 import React from "react";
 
-// 51.91.91.13
+// 51.91.97.13
 
 const httpLink = new HttpLink({
-    uri: 'http://51.91.91.13:4000/graphql'
+    uri: 'http://51.91.97.13:4000/graphql'
 });
 
 const wsLink = new WebSocketLink({
-    uri: 'ws://51.91.91.13:4000/graphql',
+    uri: 'ws://51.91.97.13:4000/graphql',
     options: {
         reconnect: true,
     }

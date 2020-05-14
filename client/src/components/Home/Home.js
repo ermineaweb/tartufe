@@ -167,8 +167,8 @@ export default function Home() {
                         <Slider
                             valueLabelDisplay="auto"
                             value={playerMax}
-                            min={1}
-                            max={10}
+                            min={3}
+                            max={12}
                             onChange={(e, val) => setPlayerMax(val)}
                         />
                         <Typography gutterBottom>
