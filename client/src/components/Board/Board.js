@@ -145,7 +145,7 @@ export default function Board({game, subscribe}) {
 
                                 {game.isGameStarted && <Words words={player.words}/>}
 
-                                {!game.isGameStarted && user.id === player.id &&
+                                {!game.isGameStarted && !game.isGameOver && user.id === player.id &&
                                 <Button
                                     variant="contained"
                                     color={player.isReady ? "primary" : "secondary"}
@@ -154,7 +154,8 @@ export default function Board({game, subscribe}) {
                                     {player.isReady ? "Pas prêt" : "  Prêt  "}
                                 </Button>
                                 }
-                                {game.isVoteStarted &&
+
+                                {game.isVoteStarted && user.id === player.id &&
                                 <Button
                                     variant="contained"
                                     color="primary"

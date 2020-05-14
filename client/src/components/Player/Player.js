@@ -48,48 +48,46 @@ const BadgeWantVote = withStyles((theme) => ({
 export default function Player({player, game}) {
     const classes = useStyles();
 
+    const PlayerAvatar = () => {
+        switch (true) {
+            case (game.isGameStarted && game.isVoteStarted):
+                return (
+                    <BadgeStatus
+                        color="primary"
+                        badgeContent={game.players.filter(p => {
+                            if (p.ownVote) {
+                                return p.ownVote.id === player.id;
+                            }
+                        }).length}
+                    >
+                        <Avatar className={classes.avatar} src={AvatarAnge}/>
+                    </BadgeStatus>
+                );
+
+            case (game.isGameStarted && player.wantVote):
+                return <Avatar className={classes.avatar} src={AvatarDiable}/>;
+
+            case (game.isGameStarted && !player.wantVote):
+                return <Avatar className={classes.avatar} src={AvatarSearch}/>;
+
+            case (!game.isGameStarted && player.isTartufe):
+                return <Avatar className={classes.avatar} src={AvatarTartufe}/>;
+
+            case (!game.isGameStarted && player.isReady):
+                return <Avatar className={classes.avatar} src={AvatarDiable}/>;
+
+            case (!game.isGameStarted):
+                return <Avatar className={classes.avatar} src={AvatarSleep}/>;
+
+            default:
+                return <Avatar className={classes.avatar} src={AvatarSearch}/>;
+        }
+    };
+
+
     return (
         <div className={classes.root}>
-            {game.isGameStarted ?
-                <>
-                    {game.isVoteStarted ?
-
-                        <BadgeStatus
-                            color="primary"
-                            badgeContent={game.players.filter(p => {
-                                if (p.ownVote) {
-                                    return p.ownVote.id === player.id;
-                                }
-                            }).length}
-                        >
-                            <Avatar className={classes.avatar} src={AvatarAnge}/>
-                        </BadgeStatus>
-
-                        :
-
-                        <>
-                            {
-                                player.wantVote ?
-                                    <Avatar className={classes.avatar} src={AvatarDiable}/>
-                                    :
-                                    <Avatar className={classes.avatar} src={AvatarSearch}/>
-                            }
-                        </>
-                    }
-                </>
-                :
-                <>
-                    {player.isTartufe ?
-                        <Avatar className={classes.avatar} src={AvatarTartufe}/>
-                        :
-                        player.isReady ?
-                            <Avatar className={classes.avatar} src={AvatarDiable}/>
-                            :
-                            <Avatar className={classes.avatar} src={AvatarSleep}/>
-                    }
-                </>
-            }
-
+            <PlayerAvatar/>
         </div>
     )
 }

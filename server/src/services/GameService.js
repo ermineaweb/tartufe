@@ -133,8 +133,6 @@ export default class GameService {
             }
         });
 
-        console.log("game : " + game.id + " started - round : " + game.round);
-
         if (game.roundDuration > 0) {
             const chrono = setInterval(() => {
                 console.log(game.timer);
@@ -150,7 +148,6 @@ export default class GameService {
 
     static endGame(idGame) {
         const game = GameService.getGame(idGame);
-        console.log("game : " + game.id + " - Fin du round " + game.round);
         game.isGameStarted = false;
         game.isVoteStarted = false;
         game.timer = game.roundDuration;
@@ -178,7 +175,6 @@ export default class GameService {
         if (game.round++ === game.roundMax) {
             game.isGameOver = true;
             GameService.removeGame(idGame);
-            console.log("game : " + game.id + " - GameOver !");
         }
         return game;
     }
@@ -216,7 +212,6 @@ export default class GameService {
         const player = GameService.getPlayer(idPlayer, idGame);
         player.ownVote = GameService.getPlayer(idTartufe, idGame);
         if (GameService.arePlayersVoted(idGame)) {
-            console.log("tous les joueurs ont voté");
             GameService.endGame(idGame);
         }
         return game;

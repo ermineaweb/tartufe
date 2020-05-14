@@ -1,6 +1,6 @@
 export default {
 
-    GAME_MAX: 5,
+    GAME_MAX: 100,
 
     PLAYER_MIN: 3,
     PLAYER_MAX: 12,

@@ -5,7 +5,7 @@ import Typography from "@material-ui/core/Typography";
 const useStyles = makeStyles((theme) => ({
     root: {
         margin: "100px auto",
-        width: "800px",
+        width: "450px",
         '& > *': {
             margin: "10px",
             width: "100%",
@@ -21,41 +21,39 @@ export default function Rules() {
     return (
         <div className={classes.root}>
             <Typography variant="h5">Règles de jeu</Typography>
-            <p>
+            <Typography variant="body1">
                 A chaque round, les joueurs ont un MOT SECRET.
-            </p>
-            <p>
-                Le seul qui a un mot différent est le TARTUFE.
-            </p>
-            <p>
+            </Typography>
+            <Typography>
+                Le seul joueur qui a un mot différent est le TARTUFE.
+            </Typography>
+            <Typography variant="body1">
                 Les autres joueurs sont la PLEBE.
-            </p>
-            <p>
-                La PLEBE doit deviner qui est le TARTUFE, en écrivant des mots.
-            </p>
-            <p>
+            </Typography>
+            <Typography variant="body1">
+                La PLEBE doit deviner qui est le TARTUFE, en écrivant une liste de mots.
+            </Typography>
+            <Typography variant="body1">
                 Les mots peuvent être ce que vous voulez, mais ne doivent pas indiquer directement le MOT SECRET.
-            </p>
-            <p>
+            </Typography>
+            <Typography variant="body1">
                 A n'importe quel instant, les joueurs peuvent lancer un vote.
-            </p>
-            <p>
+            </Typography>
+            <Typography variant="body1">
                 Il faut la majorité pour que le vote soit lancé.
-            </p>
-            <p>
+            </Typography>
+            <Typography variant="body1">
                 Les joueurs votent et les points sont calculés :
-                <ul>
-                    <li>
-                        1 point par joueur qui découvre le TARTUFE, pour la PLEBE
-                    </li>
-                    <li>
-                        1 point par joueur qui ne découvre pas le TARTUFE, pour le TARTUFE
-                    </li>
-                    <li>
-                        Si le TARTUFE se découvre, il gagne un BONUS !
-                    </li>
-                </ul>
-            </p>
+            </Typography>
+            <Typography variant="body1">
+                1 point par joueur qui découvre le TARTUFE, pour la PLEBE
+            </Typography>
+            <Typography variant="body1">
+                1 point par joueur qui ne découvre pas le TARTUFE, pour le TARTUFE
+            </Typography>
+            <Typography variant="body1">
+                Si le TARTUFE se découvre, il gagne un BONUS !
+            </Typography>
         </div>
     )
 }
