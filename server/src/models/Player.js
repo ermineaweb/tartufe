@@ -51,14 +51,6 @@ export default class Player {
         this._idGame = value;
     }
 
-    get creator() {
-        return this._creator;
-    }
-
-    set creator(value) {
-        this._creator = value;
-    }
-
     get id() {
         return this._id;
     }

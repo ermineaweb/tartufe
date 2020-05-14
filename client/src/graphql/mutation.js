@@ -26,6 +26,17 @@ export const JOIN_GAME = gql`
     }
 `;
 
+export const LEAVE_GAME = gql`
+    mutation ($idGame: ID!, $idPlayer: ID!){
+        leaveGame(
+            idGame:  $idGame
+            idPlayer: $idPlayer
+        ) {
+            id
+        }
+    }
+`;
+
 export const TOGGLE_READY = gql`
     mutation ($idGame: ID!, $idPlayer: ID!){
         toggleReady(

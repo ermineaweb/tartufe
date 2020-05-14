@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import {useMutation} from "@apollo/react-hooks";
-import {ADD_OWN_WORD, IS_WRITING, TOGGLE_READY, VOTE, WANT_VOTE} from "../../graphql/mutation";
+import {ADD_OWN_WORD, IS_WRITING, LEAVE_GAME, TOGGLE_READY, VOTE, WANT_VOTE} from "../../graphql/mutation";
 import {UserContext} from "../../context";
 import Grid from "@material-ui/core/Grid";
 import Words from "../Words";
@@ -29,16 +29,24 @@ export default function Board({game, subscribe}) {
 
     const [toggleReady] = useMutation(TOGGLE_READY, options);
     const [addOwnWord] = useMutation(ADD_OWN_WORD, options);
+    const [leaveGame] = useMutation(LEAVE_GAME, options);
     const [wantVote] = useMutation(WANT_VOTE, options);
     const [isWriting] = useMutation(IS_WRITING, options);
     const [vote] = useMutation(VOTE);
 
     useEffect(() => {
         subscribe();
-        return () => {
-            console.log("on unsub");
-        }
     }, [subscribe]);
+
+    useEffect(() => {
+        return () => {
+            if (!!user.id) {
+            console.log("on remove le joueur de la partie")
+                leaveGame()
+                    .catch(err => setError(err.toString()));
+            }
+        }
+    }, []);
 
     const handleToggleReady = () => {
         toggleReady()
@@ -89,7 +97,13 @@ export default function Board({game, subscribe}) {
 
             {!user.id && <Typography variant="h5">Vous êtes spectateur</Typography>}
 
-            {game.isGameStarted && <Typography variant="h5">Round : {game.round} / {game.roundMax}</Typography>}
+            <Typography variant="h5">
+                {game.isGameStarted ?
+                    <>{game.round} / {game.roundMax} Rounds</>
+                    :
+                    <>{game.players.length} / {game.playerMax} Joueurs</>
+                }
+            </Typography>
 
             {game.isGameStarted && user.id &&
             <div className={classes.actions}>
@@ -145,6 +159,12 @@ export default function Board({game, subscribe}) {
 
                                 {game.isGameStarted && <Words words={player.words}/>}
 
+                                {!game.isGameStarted && player.secretWord &&
+                                <Typography gutterBottom variant="h5" component="h2">
+                                    {player.secretWord}
+                                </Typography>
+                                }
+
                                 {!game.isGameStarted && !game.isGameOver && user.id === player.id &&
                                 <Button
                                     variant="contained"
@@ -155,8 +175,10 @@ export default function Board({game, subscribe}) {
                                 </Button>
                                 }
 
-                                {game.isVoteStarted && user.id !== player.id &&
-                                <Button
+                                {game.isVoteStarted && game.players.some(p => {
+                                    return p.ownVote !== null ? p.id === user.id && p.ownVote.id !== player.id : true;
+                                }) &&
+                                < Button
                                     variant="contained"
                                     color="primary"
                                     onClick={() => handleVote(player.id)}

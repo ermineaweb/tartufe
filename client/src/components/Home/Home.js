@@ -95,12 +95,6 @@ export default function Home() {
             .catch(err => setError(err.toString()));
     };
 
-    const handleKeyDown = (e) => {
-        if (e.key === "Enter") {
-            handleCreateGame();
-        }
-    };
-
     return (
         <div className={classes.root}>
 
@@ -125,6 +119,7 @@ export default function Home() {
                             variant="outlined"
                             value={idGame}
                             onChange={(e) => setIdGame(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleJoinGame}
                         />
                         <Button
                             variant="contained"
@@ -159,7 +154,7 @@ export default function Home() {
                             variant="outlined"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            onKeyDown={handleKeyDown}
+                            onKeyDown={(e) => e.key === "Enter" && handleCreateGame}
                         />
                         <Typography gutterBottom>
                             Maximum de joueurs

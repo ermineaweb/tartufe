@@ -8,6 +8,7 @@ import {ApolloProvider} from "@apollo/react-hooks";
 import React from "react";
 
 // 51.91.97.13
+// localhost
 
 const httpLink = new HttpLink({
     uri: 'http://51.91.97.13:4000/graphql'

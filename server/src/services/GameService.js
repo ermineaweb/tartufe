@@ -49,6 +49,13 @@ export default class GameService {
         return player;
     }
 
+    static leaveGame(idPlayer, idGame) {
+        const game = GameService.getGame(idGame);
+        const player = GameService.getPlayer(idPlayer, idGame);
+        game.removePlayer(player);
+        return game;
+    }
+
     static toggleReady(idPlayer, idGame) {
         const game = GameService.getGame(idGame);
         const player = GameService.getPlayer(idPlayer, idGame);

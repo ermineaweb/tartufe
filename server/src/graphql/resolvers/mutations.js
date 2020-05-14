@@ -20,6 +20,13 @@ const resolvers = {
             return player;
         },
 
+        leaveGame: (root, params, context) => {
+            const {idPlayer, idGame} = params;
+            const game = GameService.leaveGame(idPlayer, idGame);
+            context.pubsub.publish("GAME_UPDATED", {gameUpdated: game}).catch(err => err);
+            return game;
+        },
+
         toggleReady: (root, params, context) => {
             const {idPlayer, idGame} = params;
             const game = GameService.toggleReady(idPlayer, idGame);

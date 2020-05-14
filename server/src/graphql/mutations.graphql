@@ -4,6 +4,8 @@ type Mutation {
 
     joinGame(username: String!, idGame: ID!): Player
 
+    leaveGame(idPlayer: ID!, idGame: ID!): Game
+
     toggleReady(idPlayer: ID!, idGame: ID!): Game
 
     isWriting(idPlayer: ID!, idGame: ID!, isWriting: Boolean): Game
