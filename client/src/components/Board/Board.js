@@ -155,7 +155,7 @@ export default function Board({game, subscribe}) {
                                 </Button>
                                 }
 
-                                {game.isVoteStarted && user.id === player.id &&
+                                {game.isVoteStarted && user.id !== player.id &&
                                 <Button
                                     variant="contained"
                                     color="primary"
