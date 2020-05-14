@@ -1,49 +1,16 @@
 import React, {useContext, useEffect, useState} from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import makeStyles from "@material-ui/core/styles/makeStyles";
 import {useMutation} from "@apollo/react-hooks";
-import {ADD_OWN_WORD, TOGGLE_READY, VOTE, WANT_VOTE} from "../../graphql";
+import {ADD_OWN_WORD, IS_WRITING, TOGGLE_READY, VOTE, WANT_VOTE} from "../../graphql/mutation";
 import {UserContext} from "../../context";
-import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
-import Badge from "@material-ui/core/Badge";
 import Words from "../Words";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
-import Paper from "@material-ui/core/Paper";
+import Player from "../Player";
+import Typography from "@material-ui/core/Typography";
+import Writing from "../../assets/img/writing.gif";
+import useStyles from "./useStyles";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        margin: "100px auto",
-        width: "800px",
-        '& > *': {
-            margin: "10px",
-            width: "100%",
-            heigth: "100%",
-            textAlign: "center",
-        },
-    },
-    dialog: {
-        padding: 50,
-        overflow: "hidden",
-    },
-    avatar: {
-        width: 100,
-        height: 100,
-    },
-    players: {
-        textAlign: "center",
-        margin: "50px auto",
-        width: "100%",
-    },
-    actions: {
-        margin: "0 auto",
-        width: 300,
-        '& > *': {
-            margin: "10px",
-        }
-    },
-}));
 
 export default function Board({game, subscribe}) {
     const classes = useStyles();
@@ -55,40 +22,55 @@ export default function Board({game, subscribe}) {
         variables: {
             idGame: user.idGame,
             idPlayer: user.id,
-            word: ownWord
+            word: ownWord,
+            isWriting: false,
         }
     };
+
     const [toggleReady] = useMutation(TOGGLE_READY, options);
     const [addOwnWord] = useMutation(ADD_OWN_WORD, options);
     const [wantVote] = useMutation(WANT_VOTE, options);
+    const [isWriting] = useMutation(IS_WRITING, options);
     const [vote] = useMutation(VOTE);
 
     useEffect(() => {
         subscribe();
-    }, [subscribe]);
-
-    useEffect(() => {
         return () => {
-            console.log("mutation : joueur part de la game")
+            console.log("on unsub");
         }
-    }, []);
+    }, [subscribe]);
 
     const handleToggleReady = () => {
         toggleReady()
-            .catch(err => err);
+            .catch(err => setError(err.toString()));
     };
 
     const handleAddOwnWord = () => {
         addOwnWord()
             .then(() => setOwnWord(""))
+            .then(() => {
+                isWriting({variables: {...options.variables, isWriting: false}})
+                    .catch(err => setError(err.toString()));
+            })
             .catch(err => setError(err.toString()));
     };
 
-    const handleKeyDown = (e) => {
-        if (e.key === "Enter") {
-            handleAddOwnWord();
+    const handleWriting = (e, isAlreadyWriting) => {
+        setOwnWord(e.target.value);
+        // si le joueur écrit déjà, on n'envoit rien au serveur
+        // pour ne pas surcharger en requetes
+        if (!isAlreadyWriting) {
+            isWriting({variables: {...options.variables, isWriting: true}})
+                .catch(err => setError(err.toString()));
         }
     };
+
+    useEffect(() => {
+        if (user.id && ownWord === "") {
+            isWriting({variables: {...options.variables, isWriting: false}})
+                .catch(err => setError(err.toString()));
+        }
+    }, [ownWord]);
 
     const handleWantVote = () => {
         wantVote()
@@ -102,84 +84,65 @@ export default function Board({game, subscribe}) {
 
     return (
         <div className={classes.root}>
-            <Paper>
 
-                {error && <div>{error}</div>}
-                {/*<div>{user.id}</div>*/}
-                {/*<div>{user.idGame}</div>*/}
+            {error && <div>{error}</div>}
 
+            {!user.id && <Typography variant="h5">Vous êtes spectateur</Typography>}
 
-                {game.gameStarted && !game.voteStarted &&
-                <div className={classes.actions}>
-                    <TextField
-                        variant="outlined"
-                        value={ownWord}
-                        onChange={(e) => setOwnWord(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        fullWidth={true}
-                    />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleAddOwnWord}
-                    >
-                        Ajouter le mot
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleWantVote}
-                    >
-                        Lancer un vote
-                    </Button>
-                </div>
-                }
+            {game.isGameStarted && <Typography variant="h5">Round : {game.round} / {game.roundMax}</Typography>}
 
-                <div className={classes.players}>
-                    <Grid container spacing={3}>
-                        {game.players.map((player) => (
-                            <Grid item key={player.id}>
-                                {game.gameStarted ?
-                                    <>
-                                        {game.voteStarted ?
-                                            <Badge
-                                                color="primary"
-                                                badgeContent={game.players.filter(p => {
-                                                    if (p.ownVote) {
-                                                        return p.ownVote.id === player.id;
-                                                    }
-                                                }).length}
-                                            >
-                                                <Avatar className={classes.avatar}>{player.username[0]}</Avatar>
-                                            </Badge>
-                                            :
-                                            <Badge
-                                                color="primary"
-                                                badgeContent={player.wantVote ? "Démasquons Tartufe !" : "..."}
-                                            >
-                                                <Avatar className={classes.avatar}>{player.username[0]}</Avatar>
-                                            </Badge>
-                                        }
-                                    </>
-                                    :
-                                    <Badge color={player.ready ? "primary" : "secondary"} badgeContent=" ">
-                                        <Avatar className={classes.avatar}>{player.username[0]}</Avatar>
-                                    </Badge>
-                                }
+            {game.isGameStarted && user.id &&
+            <div className={classes.actions}>
+                <TextField
+                    variant="outlined"
+                    value={game.players.find(p => p.id === user.id).secretWord}
+                    fullWidth={true}
+                    readOnly={true}
+                    className={classes.wordInput}
+                />
+                <TextField
+                    variant="outlined"
+                    value={ownWord}
+                    // on récupère le statut "isWriting" du joueur en cours
+                    onChange={(e) => handleWriting(e, game.players.some(p => (p.id === user.id && p.isWriting)))}
+                    onKeyDown={(e) => e.key === "Enter" && handleAddOwnWord()}
+                    fullWidth={true}
+                    disabled={game.isVoteStarted}
+                />
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAddOwnWord}
+                    disabled={game.isVoteStarted}
+                >
+                    Ajouter le mot
+                </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleWantVote}
+                    disabled={game.isVoteStarted}
+                >
+                    Lancer un vote
+                </Button>
+            </div>
+            }
 
-                                <p>{player.username}</p>
-
-                                {!game.gameStarted && user.id === player.id &&
+            <div className={classes.players}>
+                <Grid container spacing={3}>
+                    {game.players.map((player) => (
+                        <Grid item key={player.id}>
+                            <div className={classes.card}>
+                                {!game.isGameStarted && user.id === player.id &&
                                 <Button
                                     variant="contained"
-                                    color={player.ready ? "primary" : "secondary"}
+                                    color={player.isReady ? "primary" : "secondary"}
                                     onClick={handleToggleReady}
                                 >
-                                    {player.ready ? "Pas prêt" : "  Prêt  "}
+                                    {player.isReady ? "Pas prêt" : "  Prêt  "}
                                 </Button>
                                 }
-
-                                {game.voteStarted &&
+                                {game.isVoteStarted &&
                                 <Button
                                     variant="contained"
                                     color="primary"
@@ -189,12 +152,18 @@ export default function Board({game, subscribe}) {
                                 </Button>
                                 }
 
-                                {game.gameStarted && <Words words={player.words}/>}
-                            </Grid>
-                        ))}
-                    </Grid>
-                </div>
-            </Paper>
+                                <Player game={game} player={player}/>
+                                <Typography gutterBottom variant="h5" component="h2">
+                                    {player.isWriting ? <img src={Writing}/> : player.username}
+                                </Typography>
+
+                                {game.isGameStarted && <Words words={player.words}/>}
+                            </div>
+
+                        </Grid>
+                    ))}
+                </Grid>
+            </div>
 
         </div>
     )

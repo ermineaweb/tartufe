@@ -1,20 +1,16 @@
 import React from "react";
-import ListItem from "@material-ui/core/ListItem";
-import List from "@material-ui/core/List";
-import ListItemText from "@material-ui/core/ListItemText";
+import Typography from "@material-ui/core/Typography";
 
 
 export default function Words({words}) {
 
     return (
-        <List>
-            {words.map((word) => (
-                <ListItem>
-                    <ListItemText
-                        primary={word}
-                    />
-                </ListItem>
+        <>
+            {words.map((word, index) => (
+                <Typography key={index}>
+                    {word}
+                </Typography>
             ))}
-        </List>
+        </>
     )
 }

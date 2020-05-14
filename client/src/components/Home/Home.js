@@ -9,18 +9,29 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Slider from "../Slider";
 import Typography from "@material-ui/core/Typography";
-import {CREATE_GAME, JOIN_GAME} from "../../graphql";
+import {CREATE_GAME, JOIN_GAME} from "../../graphql/mutation";
 import Games from "../Games";
 import {useHistory} from "react-router-dom";
 import {UserContext} from "../../context";
+import Grid from "@material-ui/core/Grid";
 
 
 const useStyles = makeStyles((theme) => ({
     root: {
         margin: "100px auto",
-        width: "300px",
+        textAlign: "center",
         '& > *': {
-            margin: "10px",
+            margin: "10px auto",
+            width: "100%",
+            heigth: "100%",
+            textAlign: "center",
+        },
+    },
+    rootJoin: {
+        margin: "50px auto",
+        // width: "300px",
+        '& > *': {
+            margin: "10px auto",
             width: "100%",
             heigth: "100%",
             textAlign: "center",
@@ -41,7 +52,7 @@ export default function Home() {
     const [roundMax, setRoundMax] = useState(2);
     const [roundDuration, setRoundDuration] = useState(0);
     const [openOptions, setOpenOptions] = useState(false);
-    const {user, setUser} = useContext(UserContext);
+    const {setUser} = useContext(UserContext);
 
     const history = useHistory();
 
@@ -84,37 +95,60 @@ export default function Home() {
             .catch(err => setError(err.toString()));
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            handleCreateGame();
+        }
+    };
+
     return (
         <div className={classes.root}>
+
             {error && <div>{error}</div>}
-            <Games/>
-            <TextField
-                label="Pseudo"
-                variant="outlined"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-            />
-            <TextField
-                label="ID de la partie"
-                variant="outlined"
-                value={idGame}
-                onChange={(e) => setIdGame(e.target.value)}
-            />
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handleJoinGame}
-            >
-                Rejoindre
-            </Button>
-            <div>Ou créer une nouvelle partie</div>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setOpenOptions(true)}
-            >
-                Créer
-            </Button>
+
+            <Grid container spacing={3}>
+
+                <Grid item xs={4}>
+                    <Games/>
+                </Grid>
+
+                <Grid item xs={4}>
+                    <div className={classes.rootJoin}>
+                        <TextField
+                            label="Pseudo"
+                            variant="outlined"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                        <TextField
+                            label="ID de la partie"
+                            variant="outlined"
+                            value={idGame}
+                            onChange={(e) => setIdGame(e.target.value)}
+                        />
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleJoinGame}
+                        >
+                            Rejoindre
+                        </Button>
+                        <div>Ou créer une nouvelle partie</div>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => setOpenOptions(true)}
+                        >
+                            Créer
+                        </Button>
+                    </div>
+                </Grid>
+
+                <Grid item xs={4}>
+                </Grid>
+
+            </Grid>
+
 
             <Dialog open={openOptions} onClose={() => setOpenOptions(false)}>
                 <div className={classes.dialog}>
@@ -125,6 +159,7 @@ export default function Home() {
                             variant="outlined"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            onKeyDown={handleKeyDown}
                         />
                         <Typography gutterBottom>
                             Maximum de joueurs
@@ -133,7 +168,7 @@ export default function Home() {
                             valueLabelDisplay="auto"
                             value={playerMax}
                             min={1}
-                            max={12}
+                            max={10}
                             onChange={(e, val) => setPlayerMax(val)}
                         />
                         <Typography gutterBottom>
@@ -146,17 +181,17 @@ export default function Home() {
                             max={12}
                             onChange={(e, val) => setRoundMax(val)}
                         />
-                        <Typography gutterBottom>
-                            Temps d'un round (0 pour infini)
-                        </Typography>
-                        <Slider
-                            valueLabelDisplay="auto"
-                            value={roundDuration}
-                            min={0}
-                            max={180}
-                            step={10}
-                            onChange={(e, val) => setRoundDuration(val)}
-                        />
+                        {/*<Typography gutterBottom>*/}
+                        {/*    Temps d'un round (0 pour infini)*/}
+                        {/*</Typography>*/}
+                        {/*<Slider*/}
+                        {/*    valueLabelDisplay="auto"*/}
+                        {/*    value={roundDuration}*/}
+                        {/*    min={0}*/}
+                        {/*    max={180}*/}
+                        {/*    step={10}*/}
+                        {/*    onChange={(e, val) => setRoundDuration(val)}*/}
+                        {/*/>*/}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleCreateGame} color="primary" variant={"contained"}>

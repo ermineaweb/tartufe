@@ -41,6 +41,13 @@ const resolvers = {
             return game;
         },
 
+        isWriting: (root, params, context) => {
+            const {idPlayer, idGame, isWriting} = params;
+            const game = GameService.isWriting(idPlayer, idGame, isWriting);
+            context.pubsub.publish("GAME_UPDATED", {gameUpdated: game}).catch(err => err);
+            return game;
+        },
+
         vote: (root, params, context) => {
             const {idPlayer, idGame, idTartufe} = params;
             const game = GameService.vote(idPlayer, idGame, idTartufe);

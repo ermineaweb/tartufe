@@ -5,88 +5,34 @@ export default class Player {
     _id;
     _idGame;
     _username;
-    _creator;
-    _tartufe;
-    _ownVote;
-    _wantVote;
-    _secretWord;
     _words;
+    _secretWord;
+    _ownVote;
     _score;
-    _ready;
+    _wantVote;
+    _isCreator;
+    _isTartufe;
+    _isReady;
+    _isWriting;
 
-    constructor(username, idGame, creator) {
+    constructor(username, idGame, isCreator) {
         this._id = uuid();
         this._idGame = idGame;
         this._username = username;
-        this._creator = !!creator;
-        this._tartufe = false;
-        this._ownVote = null;
-        this._wantVote = false;
-        this._secretWord = null;
         this._words = [];
+        this._secretWord = "";
+        this._ownVote = null;
         this._score = 0;
-        this._ready = false;
+        this._wantVote = false;
+        this._isCreator = isCreator;
+        this._isTartufe = false;
+        this._isReady = false;
+        this._isWriting = false;
     }
 
     addWord(word) {
         this._words = [...this._words, word];
         return this;
-    }
-
-    get ownVote() {
-        return this._ownVote;
-    }
-
-    set ownVote(value) {
-        this._ownVote = value;
-    }
-
-    get wantVote() {
-        return this._wantVote;
-    }
-
-    set wantVote(value) {
-        this._wantVote = value;
-    }
-
-    get words() {
-        return this._words;
-    }
-
-    set words(value) {
-        this._words = value;
-    }
-
-    get idGame() {
-        return this._idGame;
-    }
-
-    set idGame(value) {
-        this._idGame = value;
-    }
-
-    get ready() {
-        return this._ready;
-    }
-
-    set ready(value) {
-        this._ready = value;
-    }
-
-    get score() {
-        return this._score;
-    }
-
-    set score(value) {
-        this._score = value;
-    }
-
-    get id() {
-        return this._id;
-    }
-
-    set id(value) {
-        this._id = value;
     }
 
     get username() {
@@ -97,6 +43,14 @@ export default class Player {
         this._username = value;
     }
 
+    get idGame() {
+        return this._idGame;
+    }
+
+    set idGame(value) {
+        this._idGame = value;
+    }
+
     get creator() {
         return this._creator;
     }
@@ -105,12 +59,20 @@ export default class Player {
         this._creator = value;
     }
 
-    get tartufe() {
-        return this._tartufe;
+    get id() {
+        return this._id;
     }
 
-    set tartufe(value) {
-        this._tartufe = value;
+    set id(value) {
+        this._id = value;
+    }
+
+    get words() {
+        return this._words;
+    }
+
+    set words(value) {
+        this._words = value;
     }
 
     get secretWord() {
@@ -121,11 +83,59 @@ export default class Player {
         this._secretWord = value;
     }
 
-    get ownWord() {
-        return this._ownWord;
+    get ownVote() {
+        return this._ownVote;
     }
 
-    set ownWord(value) {
-        this._ownWord = value;
+    set ownVote(value) {
+        this._ownVote = value;
+    }
+
+    get score() {
+        return this._score;
+    }
+
+    set score(value) {
+        this._score = value;
+    }
+
+    get wantVote() {
+        return this._wantVote;
+    }
+
+    set wantVote(value) {
+        this._wantVote = value;
+    }
+
+    get isCreator() {
+        return this._isCreator;
+    }
+
+    set isCreator(value) {
+        this._isCreator = value;
+    }
+
+    get isTartufe() {
+        return this._isTartufe;
+    }
+
+    set isTartufe(value) {
+        this._isTartufe = value;
+    }
+
+    get isReady() {
+        return this._isReady;
+    }
+
+    set isReady(value) {
+        this._isReady = value;
+    }
+
+    get isWriting() {
+        return this._isWriting;
+    }
+
+    set isWriting(value) {
+        this._isWriting = value;
     }
 }

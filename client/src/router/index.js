@@ -1,6 +1,5 @@
 import React from "react";
 import {BrowserRouter, Switch, Route} from "react-router-dom";
-import Games from "../components/Games";
 import Rules from "../components/Rules";
 import NotFound from "../components/NotFound";
 import Menu from "../components/Menu";

@@ -6,6 +6,8 @@ type Mutation {
 
     toggleReady(idPlayer: ID!, idGame: ID!): Game
 
+    isWriting(idPlayer: ID!, idGame: ID!, isWriting: Boolean): Game
+
     addOwnWord(idPlayer: ID!, idGame: ID!, word: String): Game
 
     wantVote(idPlayer: ID!, idGame: ID!): Game

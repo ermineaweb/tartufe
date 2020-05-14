@@ -1,12 +1,14 @@
 import React, {useCallback} from "react";
 import {useQuery} from "@apollo/react-hooks";
-import {GAMES, GAMES_UPDATED} from "../../graphql";
+import {GAMES} from "../../graphql/query";
+import {GAMES_UPDATED} from "../../graphql/subscription";
 import Games from "./Games";
+import Loading from "../Loading";
 
 export default () => {
 
     const options = {
-        pollInterval: 5000,
+        fetchPolicy: "cache-and-network",
     };
 
     const {loading, data, error, subscribeToMore} = useQuery(GAMES, options);
@@ -22,7 +24,7 @@ export default () => {
         })
     }, [subscribeToMore, GAMES_UPDATED]);
 
-    if (loading) return <>loading</>;
+    if (loading) return <Loading/>;
     if (error) return <>error</>;
 
     return (

@@ -1,167 +1,46 @@
-import gql from "graphql-tag";
+import {HttpLink} from "apollo-link-http";
+import {WebSocketLink} from "apollo-link-ws";
+import {split} from "apollo-link";
+import {getMainDefinition} from "apollo-utilities";
+import ApolloClient from "apollo-client";
+import {InMemoryCache} from "apollo-cache-inmemory";
+import {ApolloProvider} from "@apollo/react-hooks";
+import React from "react";
 
-export const GAME = gql`
-    query ($idGame: ID!){
-        game(idGame: $idGame) {
-            id
-            round
-            roundMax
-            playerMax
-            roundDuration
-            gameStarted
-            voteStarted
-            timer
-            gameOver
-            players {
-                id
-                username
-                tartufe
-                ownVote {
-                    id
-                    username
-                }
-                secretWord
-                words
-                score
-                ready
-                wantVote
-            }
-        }
+// 51.91.91.13
+
+const httpLink = new HttpLink({
+    uri: 'http://51.91.91.13:4000/graphql'
+});
+
+const wsLink = new WebSocketLink({
+    uri: 'ws://51.91.91.13:4000/graphql',
+    options: {
+        reconnect: true,
     }
+});
 
-`;
+const link = split(
+    ({query}) => {
+        const definition = getMainDefinition(query);
+        return (
+            definition.kind === 'OperationDefinition' &&
+            definition.operation === 'subscription'
+        );
+    },
+    wsLink,
+    httpLink,
+);
 
-export const GAME_UPDATED = gql`
-    subscription ($idGame: ID!){
-        gameUpdated(id: $idGame) {
-            id
-            round
-            roundMax
-            playerMax
-            roundDuration
-            gameStarted
-            voteStarted
-            timer
-            gameOver
-            players {
-                id
-                username
-                tartufe
-                creator
-                ownVote {
-                    id
-                    username
-                }
-                secretWord
-                words
-                score
-                ready
-                wantVote
-            }
-        }
-    }
+const client = new ApolloClient({
+    link,
+    cache: new InMemoryCache(),
+});
 
-`;
-
-export const GAMES = gql`
-    query {
-        games {
-            id
-            gameStarted
-            players {
-                id
-                username
-                ready
-                creator
-            }
-        }
-    }
-
-`;
-
-export const GAMES_UPDATED = gql`
-    subscription {
-        gamesUpdated {
-            id
-            gameStarted
-            players {
-                id
-                username
-                ready
-                creator
-            }
-        }
-    }
-`;
-
-export const CREATE_GAME = gql`
-    mutation($username: String!, $playerMax: Int, $roundMax: Int, $roundDuration: Int) {
-        createGame(
-            username: $username
-            playerMax: $playerMax
-            roundMax: $roundMax
-            roundDuration: $roundDuration
-        ) {
-            id
-            idGame
-        }
-    }
-`;
-
-export const JOIN_GAME = gql`
-    mutation ($idGame: ID!, $username: String!){
-        joinGame(
-            idGame:  $idGame
-            username: $username
-        ) {
-            id
-            idGame
-        }
-    }
-`;
-
-export const TOGGLE_READY = gql`
-    mutation ($idGame: ID!, $idPlayer: ID!){
-        toggleReady(
-            idGame:  $idGame
-            idPlayer: $idPlayer
-        ) {
-            id
-        }
-    }
-`;
-
-export const ADD_OWN_WORD = gql`
-    mutation ($idPlayer: ID!, $idGame: ID!, $word: String){
-        addOwnWord(
-            idGame:  $idGame
-            idPlayer: $idPlayer
-            word: $word
-        ) {
-            id
-        }
-    }
-`;
-
-export const WANT_VOTE = gql`
-    mutation ($idPlayer: ID!, $idGame: ID!){
-        wantVote(
-            idGame:  $idGame
-            idPlayer: $idPlayer
-        ) {
-            id
-        }
-    }
-`;
-
-export const VOTE = gql`
-    mutation ($idPlayer: ID!, $idGame: ID!, $idTartufe: ID!){
-        vote(
-            idGame:  $idGame
-            idPlayer: $idPlayer
-            idTartufe: $idTartufe
-        ) {
-            id
-        }
-    }
-`;
+export default function ApolloClientProvider(props) {
+    return (
+        <ApolloProvider client={client}>
+            {props.children}
+        </ApolloProvider>
+    )
+}

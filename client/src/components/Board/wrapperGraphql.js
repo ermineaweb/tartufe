@@ -1,7 +1,9 @@
 import React, {useCallback} from "react";
 import {useQuery} from "@apollo/react-hooks";
-import {GAME, GAME_UPDATED} from "../../graphql";
+import {GAME} from "../../graphql/query";
+import {GAME_UPDATED} from "../../graphql/subscription";
 import Board from "./Board";
+import Loading from "../Loading";
 
 export default ({...props}) => {
     const {idGame} = props.location.state;
@@ -27,7 +29,7 @@ export default ({...props}) => {
         })
     }, [subscribeToMore, GAME_UPDATED]);
 
-    if (loading) return <>loading</>;
+    if (loading) return <Loading/>;
     if (error) return <>error</>;
 
     return (

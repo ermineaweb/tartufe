@@ -3,7 +3,7 @@ import Slider from "@material-ui/core/Slider";
 
 export default withStyles({
     root: {
-        color: '#52af77',
+        color: '#3c54af',
         height: 8,
         width: 200,
         padding:10,

@@ -8,10 +8,10 @@ export default class Game {
     _roundMax;
     _playerMax;
     _roundDuration;
-    _gameStarted;
-    _voteStarted;
     _timer;
-    _gameOver;
+    _isGameStarted;
+    _isVoteStarted;
+    _isGameOver;
 
     constructor(roundMax = 3, playerMax = 1, roundDuration = 20) {
         this._id = uuid();
@@ -20,10 +20,10 @@ export default class Game {
         this._roundMax = roundMax;
         this._playerMax = playerMax;
         this._roundDuration = roundDuration;
-        this._gameStarted = false;
-        this._voteStarted = false;
         this._timer = roundDuration;
-        this._gameOver = false;
+        this._isGameStarted = false;
+        this._isVoteStarted = false;
+        this._isGameOver = false;
     }
 
     addPlayer(player) {
@@ -44,44 +44,12 @@ export default class Game {
         this._players.slice(index, 1);
     }
 
-    get voteStarted() {
-        return this._voteStarted;
-    }
-
-    set voteStarted(value) {
-        this._voteStarted = value;
-    }
-
-    get gameOver() {
-        return this._gameOver;
-    }
-
-    set gameOver(value) {
-        this._gameOver = value;
-    }
-
     get timer() {
         return this._timer;
     }
 
     set timer(value) {
         this._timer = value;
-    }
-
-    get gameStarted() {
-        return this._gameStarted;
-    }
-
-    set gameStarted(value) {
-        this._gameStarted = value;
-    }
-
-    get round() {
-        return this._round;
-    }
-
-    set round(value) {
-        this._round = value;
     }
 
     get roundMax() {
@@ -122,5 +90,37 @@ export default class Game {
 
     set players(value) {
         this._players = value;
+    }
+
+    get round() {
+        return this._round;
+    }
+
+    set round(value) {
+        this._round = value;
+    }
+
+    get isGameStarted() {
+        return this._isGameStarted;
+    }
+
+    set isGameStarted(value) {
+        this._isGameStarted = value;
+    }
+
+    get isVoteStarted() {
+        return this._isVoteStarted;
+    }
+
+    set isVoteStarted(value) {
+        this._isVoteStarted = value;
+    }
+
+    get isGameOver() {
+        return this._isGameOver;
+    }
+
+    set isGameOver(value) {
+        this._isGameOver = value;
     }
 }

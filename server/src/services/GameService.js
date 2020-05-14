@@ -52,9 +52,9 @@ export default class GameService {
     static toggleReady(idPlayer, idGame) {
         const game = GameService.getGame(idGame);
         const player = GameService.getPlayer(idPlayer, idGame);
-        player.ready = !player.ready;
+        player.isReady = !player.isReady;
 
-        if (GameService.arePlayersReady(idGame) && !game.gameOver) {
+        if (GameService.arePlayersReady(idGame) && !game.isGameOver) {
             GameService.startGame(idGame);
         }
 
@@ -63,7 +63,7 @@ export default class GameService {
 
     static arePlayersReady(idGame) {
         const game = GameService.getGame(idGame);
-        return game.players.every(p => p.ready);
+        return game.players.every(p => p.isReady);
     }
 
     static getPlayer(idPlayer, idGame) {
@@ -83,33 +83,30 @@ export default class GameService {
         return GameService.games;
     }
 
-    static getGame(id) {
-        if (!GameService.games.some(g => g.id === id)) {
+    static getGame(idGame) {
+        if (!GameService.games.some(g => g.id === idGame)) {
             throw new Error("La partie n'existe pas.");
         }
-        return GameService.games.find(g => g.id === id);
+        return GameService.games.find(g => g.id === idGame);
     }
 
-    static startGame(id) {
-        const game = GameService.getGame(id);
+    static startGame(idGame) {
+        const game = GameService.getGame(idGame);
 
-        if (game.gameStarted) {
+        if (game.isGameStarted) {
             throw new Error("La partie est déjà lancée.");
         }
 
-        if (game.gameOver) {
+        if (game.isGameOver) {
             throw new Error("La partie est finie.");
         }
 
         // let's start
-        game.gameStarted = true;
-
-        // reset votes
-        game.players.forEach(p => p.ownVote = null);
+        game.isGameStarted = true;
 
         // chose the Tartufe
         const tartufe = Random.fromArray(game.players);
-        tartufe.tartufe = true;
+        tartufe.isTartufe = true;
 
         // assign secrets words
         const flipCoin = Random.flipCoin(); // true or false
@@ -117,9 +114,9 @@ export default class GameService {
         game.players.forEach(player => {
             // we want sometimes assign the word1 to the Tartufe, sometimes reverse
             if (flipCoin) {
-                player.secretWord = player.tartufe ? words.word1 : words.word2;
+                player.secretWord = player.isTartufe ? words.word1 : words.word2;
             } else {
-                player.secretWord = player.tartufe ? words.word2 : words.word1;
+                player.secretWord = player.isTartufe ? words.word2 : words.word1;
             }
         });
 
@@ -138,25 +135,40 @@ export default class GameService {
         return game;
     }
 
-    static endGame(id) {
-        const game = GameService.getGame(id);
+    static endGame(idGame) {
+        const game = GameService.getGame(idGame);
         console.log("game : " + game.id + " - Fin du round " + game.round);
-        game.gameStarted = false;
-        game.voteStarted = false;
+        game.isGameStarted = false;
+        game.isVoteStarted = false;
         game.timer = game.roundDuration;
+
+        const playersFindTartufe = game.players.filter(p => p.ownVote.isTartufe).length;
+        const playersDoesntFindTartufe = game.players.filter(p => !p.ownVote.isTartufe).length;
+
         game.players.forEach((player) => {
-            player.tartufe = false;
-            player.ownVote = null;
-            player.wantVote = false;
+
+            if (player.isTartufe) {
+                // tartufe win 1 for each player who doesnt find him
+                player.score += playersDoesntFindTartufe;
+                if (player.ownVote.isTartufe) {
+                    // tartufe find himself, he wins +2 bonus points
+                    player.score += 2;
+                }
+            }
+
+            if (player.ownVote.isTartufe) {
+                // each player win 1 for each player who find tartufe
+                player.vote += playersFindTartufe;
+            }
+
             player.words = [];
-            player.ready = false;
-
-            // todo calcul des scores
-            player.score += 5;
-
+            player.ownVote = null;
+            player.isTartufe = false;
+            player.wantVote = false;
+            player.isReady = false;
         });
         if (game.round++ === game.roundMax) {
-            game.gameOver = true;
+            game.isGameOver = true;
             console.log("game : " + game.id + " - GameOver !");
         }
         return game;
@@ -173,16 +185,23 @@ export default class GameService {
         const game = GameService.getGame(idGame);
         const player = GameService.getPlayer(idPlayer, idGame);
         player.wantVote = true;
-        // if the majority want to vote, we vote !
+        // democracy !
         if (game.players.filter(p => p.wantVote).length >= Math.ceil(game.players.length / 2)) {
-            game.voteStarted = true;
+            game.isVoteStarted = true;
         }
+        return game;
+    }
+
+    static isWriting(idPlayer, idGame, isWriting) {
+        const game = GameService.getGame(idGame);
+        const player = GameService.getPlayer(idPlayer, idGame);
+        player.isWriting = isWriting;
         return game;
     }
 
     static vote(idPlayer, idGame, idTartufe) {
         const game = GameService.getGame(idGame);
-        if (!game.voteStarted) {
+        if (!game.isVoteStarted) {
             throw new Error("Le vote n'est pas encore ouvert sur cette partie.");
         }
         const player = GameService.getPlayer(idPlayer, idGame);
