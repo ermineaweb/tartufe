@@ -13,14 +13,13 @@ import AvatarTartufe from "../../assets/img/avatar_tartufe.png";
 const useStyles = makeStyles((theme) => ({
     root: {
         textAlign: "center",
-    },
-    dialog: {
-        padding: 50,
-        overflow: "hidden",
+        margin:"10px auto"
     },
     avatar: {
         width: 100,
         height: 100,
+        textAlign: "center",
+        margin:"10px auto"
     },
 }));
 
@@ -54,11 +53,7 @@ export default function Player({player, game}) {
                 return (
                     <BadgeStatus
                         color="primary"
-                        badgeContent={game.players.filter(p => {
-                            if (p.ownVote) {
-                                return p.ownVote.id === player.id;
-                            }
-                        }).length}
+                        badgeContent={game.players.filter(p => p.ownVote === player.id).length}
                     >
                         <Avatar className={classes.avatar} src={AvatarAnge}/>
                     </BadgeStatus>

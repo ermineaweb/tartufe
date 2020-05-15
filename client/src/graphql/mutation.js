@@ -60,9 +60,9 @@ export const ADD_OWN_WORD = gql`
     }
 `;
 
-export const WANT_VOTE = gql`
+export const TOGGLE_WANT_VOTE = gql`
     mutation ($idPlayer: ID!, $idGame: ID!){
-        wantVote(
+        toggleWantVote(
             idGame:  $idGame
             idPlayer: $idPlayer
         ) {

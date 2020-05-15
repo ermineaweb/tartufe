@@ -41,7 +41,7 @@ export default class Game {
 
     removePlayer(player) {
         const index = this._players.findIndex(p => p.id === player.id);
-        this._players.slice(index, 1);
+        this._players.splice(index, 1);
     }
 
     get timer() {

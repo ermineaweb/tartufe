@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useCallback, useContext, useState} from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -14,6 +14,7 @@ import Games from "../Games";
 import {useHistory} from "react-router-dom";
 import {UserContext} from "../../context";
 import Grid from "@material-ui/core/Grid";
+import Loading from "../Loading";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -49,22 +50,25 @@ export default function Home() {
     const [username, setUsername] = useState("");
     const [idGame, setIdGame] = useState("");
     const [playerMax, setPlayerMax] = useState(6);
-    const [roundMax, setRoundMax] = useState(2);
+    const [roundMax, setRoundMax] = useState(4);
     const [roundDuration, setRoundDuration] = useState(0);
     const [openOptions, setOpenOptions] = useState(false);
     const {setUser} = useContext(UserContext);
 
     const history = useHistory();
 
-    const [createGame] = useMutation(CREATE_GAME, {
+    const options = {
         variables: {
             username,
             playerMax,
             roundMax,
             roundDuration,
+            idGame,
         }
-    });
-    const [joinGame] = useMutation(JOIN_GAME, {variables: {username, idGame}});
+    };
+
+    const [createGame] = useMutation(CREATE_GAME, options);
+    const [joinGame] = useMutation(JOIN_GAME, options);
 
     const handleCreateGame = () => {
         setOpenOptions(false);
@@ -113,6 +117,7 @@ export default function Home() {
                             variant="outlined"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleJoinGame}
                         />
                         <TextField
                             label="ID de la partie"
@@ -120,6 +125,7 @@ export default function Home() {
                             value={idGame}
                             onChange={(e) => setIdGame(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && handleJoinGame}
+                            onFocus={(e) => e.target.select()}
                         />
                         <Button
                             variant="contained"

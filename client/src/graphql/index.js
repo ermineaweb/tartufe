@@ -11,11 +11,11 @@ import React from "react";
 // localhost
 
 const httpLink = new HttpLink({
-    uri: 'http://51.91.97.13:4000/graphql'
+    uri: 'http://localhost:4000/graphql'
 });
 
 const wsLink = new WebSocketLink({
-    uri: 'ws://51.91.97.13:4000/graphql',
+    uri: 'ws://localhost:4000/graphql',
     options: {
         reconnect: true,
     }

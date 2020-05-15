@@ -8,7 +8,7 @@ import Loading from "../Loading";
 export default () => {
 
     const options = {
-        fetchPolicy: "cache-and-network",
+        fetchPolicy: "network-only",
     };
 
     const {loading, data, error, subscribeToMore} = useQuery(GAMES, options);

@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     card: {
+        textAlign: "center",
         maxWidth: 300,
     },
     wordInput: {

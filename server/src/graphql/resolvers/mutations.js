@@ -22,9 +22,11 @@ const resolvers = {
 
         leaveGame: (root, params, context) => {
             const {idPlayer, idGame} = params;
-            const game = GameService.leaveGame(idPlayer, idGame);
+            const games = GameService.leaveGame(idPlayer, idGame);
+            const game = GameService.getGame(idGame);
             context.pubsub.publish("GAME_UPDATED", {gameUpdated: game}).catch(err => err);
-            return game;
+            context.pubsub.publish("GAMES_UPDATED", {gamesUpdated: games}).catch(err => err);
+            return games;
         },
 
         toggleReady: (root, params, context) => {
@@ -41,9 +43,9 @@ const resolvers = {
             return game;
         },
 
-        wantVote: (root, params, context) => {
+        toggleWantVote: (root, params, context) => {
             const {idPlayer, idGame} = params;
-            const game = GameService.wantVote(idPlayer, idGame);
+            const game = GameService.toggleWantVote(idPlayer, idGame);
             context.pubsub.publish("GAME_UPDATED", {gameUpdated: game}).catch(err => err);
             return game;
         },

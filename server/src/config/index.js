@@ -5,7 +5,7 @@ export default {
     PLAYER_MIN: 3,
     PLAYER_MAX: 12,
 
-    ROUND_MIN: 1,
+    ROUND_MIN: 0,
     ROUND_MAX: 12,
 
     DURATION_MIN: 0,
@@ -14,5 +14,7 @@ export default {
     WORD_MAX: 5,
 
     USERNAME_MIN_LENGTH: 2,
+
+    PERCENT_FOR_DEMOCRACY: 0.66,
 
 };

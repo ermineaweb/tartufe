@@ -17,10 +17,7 @@ export const GAME_UPDATED = gql`
                 username
                 isTartufe
                 isCreator
-                ownVote {
-                    id
-                    username
-                }
+                ownVote
                 secretWord
                 words
                 score

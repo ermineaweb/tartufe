@@ -4,7 +4,7 @@ type Mutation {
 
     joinGame(username: String!, idGame: ID!): Player
 
-    leaveGame(idPlayer: ID!, idGame: ID!): Game
+    leaveGame(idPlayer: ID!, idGame: ID!): [Game]
 
     toggleReady(idPlayer: ID!, idGame: ID!): Game
 
@@ -12,7 +12,7 @@ type Mutation {
 
     addOwnWord(idPlayer: ID!, idGame: ID!, word: String): Game
 
-    wantVote(idPlayer: ID!, idGame: ID!): Game
+    toggleWantVote(idPlayer: ID!, idGame: ID!): Game
 
     vote(idPlayer: ID!, idGame: ID!, idTartufe: ID!): Game
 

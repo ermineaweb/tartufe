@@ -4,6 +4,7 @@ import {GAME} from "../../graphql/query";
 import {GAME_UPDATED} from "../../graphql/subscription";
 import Board from "./Board";
 import Loading from "../Loading";
+import {useHistory} from "react-router";
 
 export default ({...props}) => {
     const {idGame} = props.location.state;
@@ -14,6 +15,7 @@ export default ({...props}) => {
     };
 
     const {loading, data, error, subscribeToMore} = useQuery(GAME, options);
+    const history = useHistory();
 
     const subscribe = useCallback(() => {
         subscribeToMore({
@@ -31,6 +33,10 @@ export default ({...props}) => {
 
     if (loading) return <Loading/>;
     if (error) return <>error</>;
+
+    if (!data.game || !data.game.id) {
+        history.push("/");
+    }
 
     return (
         <Board

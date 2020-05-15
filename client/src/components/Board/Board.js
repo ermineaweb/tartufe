@@ -2,7 +2,14 @@ import React, {useContext, useEffect, useState} from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import {useMutation} from "@apollo/react-hooks";
-import {ADD_OWN_WORD, IS_WRITING, LEAVE_GAME, TOGGLE_READY, VOTE, WANT_VOTE} from "../../graphql/mutation";
+import {
+    ADD_OWN_WORD,
+    IS_WRITING,
+    LEAVE_GAME,
+    TOGGLE_READY,
+    TOGGLE_WANT_VOTE,
+    VOTE,
+} from "../../graphql/mutation";
 import {UserContext} from "../../context";
 import Grid from "@material-ui/core/Grid";
 import Words from "../Words";
@@ -10,6 +17,7 @@ import Player from "../Player";
 import Typography from "@material-ui/core/Typography";
 import Writing from "../../assets/img/writing.gif";
 import useStyles from "./useStyles";
+import Score from "../Score";
 
 
 export default function Board({game, subscribe}) {
@@ -30,7 +38,7 @@ export default function Board({game, subscribe}) {
     const [toggleReady] = useMutation(TOGGLE_READY, options);
     const [addOwnWord] = useMutation(ADD_OWN_WORD, options);
     const [leaveGame] = useMutation(LEAVE_GAME, options);
-    const [wantVote] = useMutation(WANT_VOTE, options);
+    const [toggleWantVote] = useMutation(TOGGLE_WANT_VOTE, options);
     const [isWriting] = useMutation(IS_WRITING, options);
     const [vote] = useMutation(VOTE);
 
@@ -41,7 +49,7 @@ export default function Board({game, subscribe}) {
     useEffect(() => {
         return () => {
             if (!!user.id) {
-            console.log("on remove le joueur de la partie")
+                console.log("user leave game")
                 leaveGame()
                     .catch(err => setError(err.toString()));
             }
@@ -80,8 +88,8 @@ export default function Board({game, subscribe}) {
         }
     }, [ownWord]);
 
-    const handleWantVote = () => {
-        wantVote()
+    const handleToggleWantVote = () => {
+        toggleWantVote()
             .catch(err => setError(err.toString()));
     };
 
@@ -97,23 +105,31 @@ export default function Board({game, subscribe}) {
 
             {!user.id && <Typography variant="h5">Vous êtes spectateur</Typography>}
 
-            <Typography variant="h5">
-                {game.isGameStarted ?
-                    <>{game.round} / {game.roundMax} Rounds</>
-                    :
-                    <>{game.players.length} / {game.playerMax} Joueurs</>
-                }
+            {game.isGameOver &&
+            <Typography gutterBottom variant="h2">
+                GAME OVER
             </Typography>
+            }
 
-            {game.isGameStarted && user.id &&
+            {game.isGameStarted ?
+                <Typography variant="h5">ROund {game.round} / {game.roundMax}</Typography>
+                :
+                <>
+                    <Typography variant="h5">{game.players.length} / {game.playerMax} Joueurs</Typography>
+                    <TextField
+                        variant="outlined"
+                        value={game.id}
+                        readOnly={true}
+                        className={classes.wordInput}
+                        fullWidth={true}
+                        label={"ID"}
+                        onFocus={(e) => e.target.select()}
+                    />
+                </>
+            }
+
+            {game.isGameStarted && !!user.id &&
             <div className={classes.actions}>
-                <TextField
-                    variant="outlined"
-                    value={game.players.find(p => p.id === user.id).secretWord}
-                    fullWidth={true}
-                    readOnly={true}
-                    className={classes.wordInput}
-                />
                 <TextField
                     variant="outlined"
                     value={ownWord}
@@ -131,68 +147,91 @@ export default function Board({game, subscribe}) {
                 >
                     Ajouter le mot
                 </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleWantVote}
-                    disabled={game.isVoteStarted}
-                >
-                    Lancer un vote
-                </Button>
             </div>
             }
 
-            <div className={classes.players}>
-                <Grid container spacing={3}>
-                    {game.players.map((player) => (
-                        <Grid item key={player.id}>
-                            <div className={classes.card}>
-
-                                <Player game={game} player={player}/>
-
-                                <Typography gutterBottom variant="h5" component="h2">
-                                    Score : {player.score}
-                                </Typography>
-                                <Typography gutterBottom variant="h5" component="h2">
-                                    {player.isWriting ? <img src={Writing}/> : player.username}
-                                </Typography>
-
-                                {game.isGameStarted && <Words words={player.words}/>}
-
-                                {!game.isGameStarted && player.secretWord &&
-                                <Typography gutterBottom variant="h5" component="h2">
-                                    {player.secretWord}
-                                </Typography>
-                                }
-
-                                {!game.isGameStarted && !game.isGameOver && user.id === player.id &&
-                                <Button
-                                    variant="contained"
-                                    color={player.isReady ? "primary" : "secondary"}
-                                    onClick={handleToggleReady}
-                                >
-                                    {player.isReady ? "Pas prêt" : "  Prêt  "}
-                                </Button>
-                                }
-
-                                {game.isVoteStarted && game.players.some(p => {
-                                    return p.ownVote !== null ? p.id === user.id && p.ownVote.id !== player.id : true;
-                                }) &&
-                                < Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => handleVote(player.id)}
-                                >
-                                    Voter
-                                </Button>
-                                }
-
-                            </div>
-
-                        </Grid>
-                    ))}
+            <Grid container>
+                <Grid item xs={2}>
+                    <Score game={game}/>
                 </Grid>
-            </div>
+                <Grid item xs={10}>
+                    <div className={classes.players}>
+                        <Grid container spacing={3}>
+                            {game.players.map((player) => (
+                                <Grid item key={player.id}>
+                                    <div className={classes.card}>
+
+                                        <Typography gutterBottom variant="h6">
+                                            {player.isWriting && !game.isVoteStarted ?
+                                                <img src={Writing}/> : player.username}
+                                        </Typography>
+
+                                        <Player game={game} player={player}/>
+
+                                        {player.secretWord && ((game.isGameStarted && (player.id === user.id || !user.id)) || (!game.isGameStarted)) &&
+                                        // ceux qui voient les mots secrets
+                                        // sont le joueur actif si la game est lancée
+                                        // tous les joueurs si on est en phase de fin de round ou gameover
+                                        // les spectateurs
+                                        <Typography gutterBottom variant="body2">
+                                            <strong>{player.secretWord}</strong>
+                                        </Typography>
+                                        }
+
+                                        {game.isVoteStarted &&
+                                        game.players.find(p => p.id === user.id).ownVote !== player.id &&
+                                        < Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={() => handleVote(player.id)}
+                                        >
+                                            Voter
+                                        </Button>
+                                        }
+
+                                        {!game.isVoteStarted && game.isGameStarted && player.id === user.id &&
+                                        <>
+                                            {player.wantVote ?
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={handleToggleWantVote}
+                                                >
+                                                    Annuler le vote
+                                                </Button>
+                                                :
+                                                <Button
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={handleToggleWantVote}
+                                                >
+                                                    Lancer le vote !
+                                                </Button>
+                                            }
+                                        </>
+                                        }
+
+                                        {!game.isGameStarted && !game.isGameOver && user.id === player.id &&
+                                        <Button
+                                            variant="contained"
+                                            color={player.isReady ? "primary" : "secondary"}
+                                            onClick={handleToggleReady}
+                                        >
+                                            {player.isReady ? "Pas prêt" : "  Prêt  "}
+                                        </Button>
+                                        }
+
+                                        {game.isGameStarted && <Words words={player.words}/>}
+
+                                    </div>
+
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </div>
+                </Grid>
+            </Grid>
+
 
         </div>
     )
