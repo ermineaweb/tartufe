@@ -15,7 +15,6 @@ import Grid from "@material-ui/core/Grid";
 import Words from "../Words";
 import Player from "../Player";
 import Typography from "@material-ui/core/Typography";
-import Writing from "../../assets/img/writing.gif";
 import useStyles from "./useStyles";
 import Score from "../Score";
 
@@ -49,7 +48,6 @@ export default function Board({game, subscribe}) {
     useEffect(() => {
         return () => {
             if (!!user.id) {
-                console.log("user leave game")
                 leaveGame()
                     .catch(err => setError(err.toString()));
             }
@@ -112,7 +110,7 @@ export default function Board({game, subscribe}) {
             }
 
             {game.isGameStarted ?
-                <Typography variant="h5">ROund {game.round} / {game.roundMax}</Typography>
+                <Typography variant="h5">Round {game.round} / {game.roundMax}</Typography>
                 :
                 <>
                     <Typography variant="h5">{game.players.length} / {game.playerMax} Joueurs</Typography>
@@ -121,7 +119,6 @@ export default function Board({game, subscribe}) {
                         value={game.id}
                         readOnly={true}
                         className={classes.wordInput}
-                        fullWidth={true}
                         label={"ID"}
                         onFocus={(e) => e.target.select()}
                     />
@@ -136,35 +133,71 @@ export default function Board({game, subscribe}) {
                     // on récupère le statut "isWriting" du joueur en cours
                     onChange={(e) => handleWriting(e, game.players.some(p => (p.id === user.id && p.isWriting)))}
                     onKeyDown={(e) => e.key === "Enter" && handleAddOwnWord()}
-                    fullWidth={true}
                     disabled={game.isVoteStarted}
                 />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAddOwnWord}
-                    disabled={game.isVoteStarted}
-                >
-                    Ajouter le mot
-                </Button>
             </div>
             }
 
-            <Grid container>
-                <Grid item xs={2}>
+            <Grid container justify={"space-between"}>
+                <Grid item xs={3}>
                     <Score game={game}/>
                 </Grid>
-                <Grid item xs={10}>
+                <Grid item xs={9}>
                     <div className={classes.players}>
                         <Grid container spacing={3}>
                             {game.players.map((player) => (
                                 <Grid item key={player.id}>
                                     <div className={classes.card}>
 
-                                        <Typography gutterBottom variant="h6">
-                                            {player.isWriting && !game.isVoteStarted ?
-                                                <img src={Writing}/> : player.username}
-                                        </Typography>
+                                        <div className={classes.actions}>
+                                            {!game.isGameStarted && !game.isGameOver && user.id === player.id &&
+                                            <Button
+                                                variant="contained"
+                                                color={player.isReady ? "primary" : "secondary"}
+                                                onClick={handleToggleReady}
+                                                fullWidth={true}
+                                            >
+                                                {player.isReady ? "Pas prêt" : "  Prêt  "}
+                                            </Button>
+                                            }
+
+                                            {game.isVoteStarted &&
+                                            game.players.find(p => p.id === user.id).ownVote !== player.id &&
+                                            < Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => handleVote(player.id)}
+                                                fullWidth={true}
+                                            >
+                                                Voter
+                                            </Button>
+                                            }
+
+                                            {!game.isVoteStarted && game.isGameStarted && player.id === user.id &&
+                                            <>
+                                                {player.wantVote ?
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        onClick={handleToggleWantVote}
+                                                        fullWidth={true}
+                                                    >
+                                                        Annuler le vote
+                                                    </Button>
+                                                    :
+                                                    <Button
+                                                        variant="contained"
+                                                        color="secondary"
+                                                        onClick={handleToggleWantVote}
+                                                        fullWidth={true}
+                                                    >
+                                                        Lancer le vote !
+                                                    </Button>
+                                                }
+                                            </>
+                                            }
+
+                                        </div>
 
                                         <Player game={game} player={player}/>
 
@@ -178,48 +211,6 @@ export default function Board({game, subscribe}) {
                                         </Typography>
                                         }
 
-                                        {game.isVoteStarted &&
-                                        game.players.find(p => p.id === user.id).ownVote !== player.id &&
-                                        < Button
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={() => handleVote(player.id)}
-                                        >
-                                            Voter
-                                        </Button>
-                                        }
-
-                                        {!game.isVoteStarted && game.isGameStarted && player.id === user.id &&
-                                        <>
-                                            {player.wantVote ?
-                                                <Button
-                                                    variant="contained"
-                                                    color="primary"
-                                                    onClick={handleToggleWantVote}
-                                                >
-                                                    Annuler le vote
-                                                </Button>
-                                                :
-                                                <Button
-                                                    variant="contained"
-                                                    color="secondary"
-                                                    onClick={handleToggleWantVote}
-                                                >
-                                                    Lancer le vote !
-                                                </Button>
-                                            }
-                                        </>
-                                        }
-
-                                        {!game.isGameStarted && !game.isGameOver && user.id === player.id &&
-                                        <Button
-                                            variant="contained"
-                                            color={player.isReady ? "primary" : "secondary"}
-                                            onClick={handleToggleReady}
-                                        >
-                                            {player.isReady ? "Pas prêt" : "  Prêt  "}
-                                        </Button>
-                                        }
 
                                         {game.isGameStarted && <Words words={player.words}/>}
 

@@ -19,8 +19,8 @@ export default function Score({game}) {
             <List className={classes.root}>
                 <ListSubheader>Scores</ListSubheader>
 
-                {game.players.sort((a, b) => a.score - b.score).map((player, index) =>
-                    <ListItem>
+                {game.players.sort((a, b) => b.score - a.score).map((player, index) =>
+                    <ListItem key={player.id}>
                         <ListItemAvatar>
                             <Avatar>
                                 {game.round > 1 ? index + 1 : "-"}

@@ -2,34 +2,23 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        textAlign: "center",
         margin: "100px auto",
-        width: "800px",
         '& > *': {
-            margin: "10px",
-            width: "100%",
-            heigth: "100%",
-            textAlign: "center",
+            margin: "10px 0px",
         },
-    },
-    dialog: {
-        padding: 50,
-        overflow: "hidden",
     },
     players: {
         textAlign: "center",
-        margin: "50px",
         width: "100%",
     },
     actions: {
         margin: "0 auto",
-        width: 300,
-        '& > *': {
-            margin: "10px",
-        }
+        height:"10vh",
     },
     card: {
         textAlign: "center",
-        maxWidth: 300,
+        width: "150px",
     },
     wordInput: {
         '& > *': {

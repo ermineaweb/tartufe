@@ -174,7 +174,7 @@ export default class GameService {
 
         game.players.forEach((player) => {
 
-            if (player.isTartufe) {
+            if (player.isTartufe && playersDoesntFindTartufe < Math.ceil(game.players.length / 2)) {
                 // tartufe win 1 for each player who doesnt find him
                 player.score += playersDoesntFindTartufe;
                 if (player.ownVote === tartufe.id) {

@@ -8,18 +8,18 @@ import AvatarAnge from "../../assets/img/avatar_ange.png";
 import AvatarSearch from "../../assets/img/avatar_search.png";
 import AvatarSleep from "../../assets/img/avatar_sleep.png";
 import AvatarTartufe from "../../assets/img/avatar_tartufe.png";
+import Writing from "../../assets/img/writing.gif";
+import Typography from "@material-ui/core/Typography";
 
 
 const useStyles = makeStyles((theme) => ({
     root: {
         textAlign: "center",
-        margin:"10px auto"
     },
     avatar: {
         width: 100,
         height: 100,
-        textAlign: "center",
-        margin:"10px auto"
+        margin:"10px auto",
     },
 }));
 
@@ -32,17 +32,6 @@ const BadgeStatus = withStyles((theme) => ({
         height: 20,
     },
 }))(Badge);
-
-const BadgeWantVote = withStyles((theme) => ({
-    badge: {
-        right: "50%",
-        top: "0%",
-        padding: '0 0',
-        width: 30,
-        height: 30,
-    },
-}))(Badge);
-
 
 export default function Player({player, game}) {
     const classes = useStyles();
@@ -82,7 +71,14 @@ export default function Player({player, game}) {
 
     return (
         <div className={classes.root}>
+
+            <Typography gutterBottom variant="h6">
+                {player.isWriting && !game.isVoteStarted ?
+                    <img src={Writing} alt="avatar"/> : player.username}
+            </Typography>
+
             <PlayerAvatar/>
+
         </div>
     )
 }
