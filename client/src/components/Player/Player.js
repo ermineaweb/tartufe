@@ -17,9 +17,9 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "center",
     },
     avatar: {
-        width: 100,
-        height: 100,
-        margin:"10px auto",
+        width: 150,
+        height: 150,
+        margin: "10px auto",
     },
 }));
 
@@ -28,8 +28,8 @@ const BadgeStatus = withStyles((theme) => ({
         right: "50%",
         top: "0%",
         padding: '0 0',
-        width: 20,
-        height: 20,
+        width: 40,
+        height: 40,
     },
 }))(Badge);
 
@@ -44,30 +44,29 @@ export default function Player({player, game}) {
                         color="primary"
                         badgeContent={game.players.filter(p => p.ownVote === player.id).length}
                     >
-                        <Avatar className={classes.avatar} src={AvatarAnge}/>
+                        <Avatar variant={"square"} className={classes.avatar} src={AvatarAnge}/>
                     </BadgeStatus>
                 );
 
             case (game.isGameStarted && player.wantVote):
-                return <Avatar className={classes.avatar} src={AvatarDiable}/>;
+                return <Avatar variant={"square"} className={classes.avatar} src={AvatarDiable}/>;
 
             case (game.isGameStarted && !player.wantVote):
-                return <Avatar className={classes.avatar} src={AvatarSearch}/>;
+                return <Avatar variant={"square"} className={classes.avatar} src={AvatarSearch}/>;
 
             case (!game.isGameStarted && player.isTartufe):
-                return <Avatar className={classes.avatar} src={AvatarTartufe}/>;
+                return <Avatar variant={"square"} className={classes.avatar} src={AvatarTartufe}/>;
 
             case (!game.isGameStarted && player.isReady):
-                return <Avatar className={classes.avatar} src={AvatarDiable}/>;
+                return <Avatar variant={"square"} className={classes.avatar} src={AvatarDiable}/>;
 
             case (!game.isGameStarted):
-                return <Avatar className={classes.avatar} src={AvatarSleep}/>;
+                return <Avatar variant={"square"} className={classes.avatar} src={AvatarSleep}/>;
 
             default:
-                return <Avatar className={classes.avatar} src={AvatarSearch}/>;
+                return <Avatar variant={"square"} className={classes.avatar} src={AvatarSearch}/>;
         }
     };
-
 
     return (
         <div className={classes.root}>

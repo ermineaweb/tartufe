@@ -7,23 +7,22 @@ export const GAME = gql`
             round
             roundMax
             playerMax
-            roundDuration
             isGameStarted
             isVoteStarted
-            timer
             isGameOver
+            wordPlebe
             players {
                 id
                 username
                 isTartufe
-                isCreator
                 ownVote
-                secretWord
                 words
                 score
                 isReady
                 wantVote
                 isWriting
+                validVote
+                isPlaying
             }
         }
     }
@@ -33,12 +32,13 @@ export const GAMES = gql`
     query {
         games {
             id
-            isGameStarted
-            players {
+            isGameOver
+            playerMax
+            players{
                 id
-                username
-                isCreator
             }
+            round
+            roundMax
         }
     }
 `;

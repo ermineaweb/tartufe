@@ -3,18 +3,15 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 const useStyles = makeStyles((theme) => ({
     root: {
         textAlign: "center",
+        padding:"10px 20px",
         margin: "100px auto",
         '& > *': {
-            margin: "10px 0px",
+            margin: "15px auto",
         },
     },
     players: {
         textAlign: "center",
         width: "100%",
-    },
-    actions: {
-        margin: "0 auto",
-        height:"10vh",
     },
     card: {
         textAlign: "center",

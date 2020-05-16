@@ -1,4 +1,4 @@
-const wordList = [
+const wordListOld = [
     ["mer", "fleuve", "océan"],
     ["moto", "voiture", "camion", "avion", "train", "rollers"],
     ["France", "Angleterre", "Suisse", "Belgique", "Espagne"],
@@ -28,6 +28,38 @@ const wordList = [
     ["hiver", "anniversaire", "fête"],
     ["football", "basketball", "baseball"],
     ["Hercule Poirot", "Miss Marple", "Sherlock Holmes", "Dr Watson"],
+];
+
+const wordList = [
+    "mer", "fleuve", "océan",
+    "moto", "voiture", "camion", "avion", "train", "rollers",
+    "France", "Angleterre", "Suisse", "Belgique", "Espagne",
+    "Chat", "Tigre", "Lion", "Léaopard", "Eléphant", "Girafe",
+    "Amazon", "Google", "Facebook", "Linkedin", "Twitter", "Youtube",
+    "drogue", "alcool", "océan",
+    "New-York", "Los Angeles", "Washington", "Miami",
+    "cacahuète", "noix de pécan", "noix de cajou",
+    "mangue", "goyave", "pomme", "vache", "mouton",
+    "mer", "fleuve", "océan", "rivière", "atlantique",
+    "Vladimir Putin", "Emanuel Macron", "Donald Trump", "Kim Jung Un",
+    "Che Guevara", "Fidel Castro", "Lénine", "Karl Marx",
+    "Guerre du Vietnam", "1ère Guerre Mondiale", "2ème Guerre Mondiale", "Révolution Française",
+    "Counter Strike", "Valorant", "Fortnite",
+    "Orc", "Elfe", "Nain", "Draeinei",
+    "Sylvanas", "Anduin Wrynn", "Hurlevent", "Thrall", "Le Roi Liche",
+    "Domingo", "Zerator", "Sardoche", "Squeezie", "Riot Games",
+    "Rambo", "Rocky", "Bruce Willis", "Sylverster Stallone",
+    "chatte", "téton", "sein", "pénis",
+    "Mousse au chocolat", "Pomme d'amour", "baguette", "croissant", "mouton",
+    "Solary", "Fnatic", "League Of Legends",
+    "Katarina", "Miss Fortune", "Morgana", "Tomb Raider",
+    "Superman", "Batman", "Spider Man", "le Joker", "Thanos",
+    "Games Of Throne", "X-Files", "Les Misérables", "The Walking Dead", "La casa de papel",
+    "Harry Potter", "Hermione Granger", "Ron Weasley", "Drago Malefoy",
+    "Aladdin", "Bambi", "Peter Pan", "Donald", "mouton",
+    "hiver", "anniversaire", "fête",
+    "football", "basketball", "baseball",
+    "Hercule Poirot", "Miss Marple", "Sherlock Holmes", "Dr Watson",
 ];
 
 export default wordList;

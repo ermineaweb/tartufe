@@ -5,11 +5,11 @@ const resolvers = {
     Mutation: {
 
         createGame: (root, params, context) => {
-            const {username, playerMax, roundMax, roundDuration} = params;
-            const creator = GameService.createGame(username, playerMax, roundMax, roundDuration);
+            const {username, playerMax, roundMax} = params;
+            const player = GameService.createGame(username, playerMax, roundMax);
             const games = GameService.getGames();
             context.pubsub.publish("GAMES_UPDATED", {gamesUpdated: games}).catch(err => err);
-            return creator;
+            return player;
         },
 
         joinGame: (root, params, context) => {
@@ -36,9 +36,9 @@ const resolvers = {
             return game;
         },
 
-        addOwnWord: (root, params, context) => {
+        addWord: (root, params, context) => {
             const {idPlayer, idGame, word} = params;
-            const game = GameService.addOwnWord(idPlayer, idGame, word);
+            const game = GameService.addWord(idPlayer, idGame, word);
             context.pubsub.publish("GAME_UPDATED", {gameUpdated: game}).catch(err => err);
             return game;
         },
@@ -60,6 +60,13 @@ const resolvers = {
         vote: (root, params, context) => {
             const {idPlayer, idGame, idTartufe} = params;
             const game = GameService.vote(idPlayer, idGame, idTartufe);
+            context.pubsub.publish("GAME_UPDATED", {gameUpdated: game}).catch(err => err);
+            return game;
+        },
+
+        validVote: (root, params, context) => {
+            const {idPlayer, idGame} = params;
+            const game = GameService.validVote(idPlayer, idGame);
             context.pubsub.publish("GAME_UPDATED", {gameUpdated: game}).catch(err => err);
             return game;
         },

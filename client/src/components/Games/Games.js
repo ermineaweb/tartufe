@@ -1,5 +1,4 @@
 import React, {useEffect} from "react";
-import {Link} from "react-router-dom";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -23,23 +22,23 @@ export default function Games({games, subscribe}) {
         <>
             <Typography variant="h5">Parties</Typography>
             <div className={classes.root}>
-                {games.length > 0 ?
-                    games.map((game) =>
-                        <div key={game.id}>
-                            <p>
-                                <Link to={{pathname: "/board", state: {idGame: game.id}}}>
-                                    Créateur : {game.players.find(p => p.isCreator).username}
-                                </Link>
-                            </p>
-                            <TextField
-                                variant="outlined"
-                                value={game.id}
-                                readOnly={true}
-                                label={"ID"}
-                                onFocus={(e) => e.target.select()}
-                            />
-                        </div>
-                    )
+                {games ? games
+                        .filter(g => !g.isGameOver)
+                        .map((game) =>
+                            <div key={game.id}>
+                                <p>
+                                    {game.players.length} / {game.playerMax} Joueurs
+                                </p>
+                                <TextField
+                                    variant="outlined"
+                                    color="secondary"
+                                    value={game.id}
+                                    readOnly={true}
+                                    label={"ID"}
+                                    onFocus={(e) => e.target.select()}
+                                />
+                            </div>
+                        )
                     :
                     <p>Aucune partie en cours</p>
                 }

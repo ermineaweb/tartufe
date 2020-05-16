@@ -7,20 +7,18 @@ export default class Game {
     _round;
     _roundMax;
     _playerMax;
-    _roundDuration;
-    _timer;
+    _wordPlebe;
     _isGameStarted;
     _isVoteStarted;
     _isGameOver;
 
-    constructor(roundMax = 3, playerMax = 1, roundDuration = 20) {
+    constructor(roundMax = 3, playerMax = 1) {
         this._id = uuid();
         this._players = [];
         this._round = 1;
         this._roundMax = roundMax;
         this._playerMax = playerMax;
-        this._roundDuration = roundDuration;
-        this._timer = roundDuration;
+        this._wordPlebe = "";
         this._isGameStarted = false;
         this._isVoteStarted = false;
         this._isGameOver = false;
@@ -36,20 +34,21 @@ export default class Game {
         }
 
         this._players = [...this._players, player];
-        return this;
+        return player;
     }
 
     removePlayer(player) {
         const index = this._players.findIndex(p => p.id === player.id);
         this._players.splice(index, 1);
+        return this;
     }
 
-    get timer() {
-        return this._timer;
+    get wordPlebe() {
+        return this._wordPlebe;
     }
 
-    set timer(value) {
-        this._timer = value;
+    set wordPlebe(value) {
+        this._wordPlebe = value;
     }
 
     get roundMax() {
@@ -66,14 +65,6 @@ export default class Game {
 
     set playerMax(value) {
         this._playerMax = value;
-    }
-
-    get roundDuration() {
-        return this._roundDuration;
-    }
-
-    set roundDuration(value) {
-        this._roundDuration = value;
     }
 
     get id() {

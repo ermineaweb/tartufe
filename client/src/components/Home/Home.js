@@ -1,7 +1,6 @@
-import React, {useCallback, useContext, useState} from "react";
+import React, {useContext, useState} from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import makeStyles from "@material-ui/core/styles/makeStyles";
 import {useMutation} from "@apollo/react-hooks";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -14,35 +13,8 @@ import Games from "../Games";
 import {useHistory} from "react-router-dom";
 import {UserContext} from "../../context";
 import Grid from "@material-ui/core/Grid";
-import Loading from "../Loading";
+import useStyles from "./useStyles";
 
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        margin: "100px auto",
-        textAlign: "center",
-        '& > *': {
-            margin: "10px auto",
-            width: "100%",
-            heigth: "100%",
-            textAlign: "center",
-        },
-    },
-    rootJoin: {
-        margin: "50px auto",
-        // width: "300px",
-        '& > *': {
-            margin: "10px auto",
-            width: "100%",
-            heigth: "100%",
-            textAlign: "center",
-        },
-    },
-    dialog: {
-        padding: 50,
-        overflow: "hidden",
-    }
-}));
 
 export default function Home() {
     const classes = useStyles();
@@ -51,7 +23,6 @@ export default function Home() {
     const [idGame, setIdGame] = useState("");
     const [playerMax, setPlayerMax] = useState(6);
     const [roundMax, setRoundMax] = useState(4);
-    const [roundDuration, setRoundDuration] = useState(0);
     const [openOptions, setOpenOptions] = useState(false);
     const {setUser} = useContext(UserContext);
 
@@ -62,7 +33,6 @@ export default function Home() {
             username,
             playerMax,
             roundMax,
-            roundDuration,
             idGame,
         }
     };
@@ -150,7 +120,6 @@ export default function Home() {
 
             </Grid>
 
-
             <Dialog open={openOptions} onClose={() => setOpenOptions(false)}>
                 <div className={classes.dialog}>
                     <DialogTitle>Options de la partie</DialogTitle>
@@ -182,25 +151,15 @@ export default function Home() {
                             max={12}
                             onChange={(e, val) => setRoundMax(val)}
                         />
-                        {/*<Typography gutterBottom>*/}
-                        {/*    Temps d'un round (0 pour infini)*/}
-                        {/*</Typography>*/}
-                        {/*<Slider*/}
-                        {/*    valueLabelDisplay="auto"*/}
-                        {/*    value={roundDuration}*/}
-                        {/*    min={0}*/}
-                        {/*    max={180}*/}
-                        {/*    step={10}*/}
-                        {/*    onChange={(e, val) => setRoundDuration(val)}*/}
-                        {/*/>*/}
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleCreateGame} color="primary" variant={"contained"}>
+                        <Button onClick={handleCreateGame} color="secondary" variant={"contained"}>
                             Créer
                         </Button>
                     </DialogActions>
                 </div>
             </Dialog>
+
         </div>
     )
 }

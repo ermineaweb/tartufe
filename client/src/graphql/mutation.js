@@ -1,12 +1,11 @@
 import gql from "graphql-tag";
 
 export const CREATE_GAME = gql`
-    mutation($username: String!, $playerMax: Int, $roundMax: Int, $roundDuration: Int) {
+    mutation($username: String!, $playerMax: Int, $roundMax: Int) {
         createGame(
             username: $username
             playerMax: $playerMax
             roundMax: $roundMax
-            roundDuration: $roundDuration
         ) {
             id
             idGame
@@ -50,7 +49,7 @@ export const TOGGLE_READY = gql`
 
 export const ADD_OWN_WORD = gql`
     mutation ($idPlayer: ID!, $idGame: ID!, $word: String){
-        addOwnWord(
+        addWord(
             idGame:  $idGame
             idPlayer: $idPlayer
             word: $word
@@ -60,9 +59,9 @@ export const ADD_OWN_WORD = gql`
     }
 `;
 
-export const TOGGLE_WANT_VOTE = gql`
+export const VALID_VOTE = gql`
     mutation ($idPlayer: ID!, $idGame: ID!){
-        toggleWantVote(
+        validVote(
             idGame:  $idGame
             idPlayer: $idPlayer
         ) {
@@ -94,3 +93,4 @@ export const VOTE = gql`
         }
     }
 `;
+

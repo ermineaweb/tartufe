@@ -34,10 +34,6 @@ export default ({...props}) => {
     if (loading) return <Loading/>;
     if (error) return <>error</>;
 
-    if (!data.game || !data.game.id) {
-        history.push("/");
-    }
-
     return (
         <Board
             game={data.game}

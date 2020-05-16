@@ -6,11 +6,10 @@ const resolvers = {
         round: (root) => root.round,
         roundMax: (root) => root.roundMax,
         playerMax: (root) => root.playerMax,
-        roundDuration: (root) => root.roundDuration,
-        timer: (root) => root.timer,
         isGameStarted: (root) => root.isGameStarted,
         isVoteStarted: (root) => root.isVoteStarted,
         isGameOver: (root) => root.isGameOver,
+        wordPlebe: (root) => root.wordPlebe,
     },
 
     Player: {
@@ -18,14 +17,14 @@ const resolvers = {
         idGame: (root) => root.idGame,
         username: (root) => root.username,
         words: (root) => root.words,
-        secretWord: (root) => root.secretWord,
         ownVote: (root) => root.ownVote,
         score: (root) => root.score,
         wantVote: (root) => root.wantVote,
-        isCreator: (root) => root.isCreator,
+        validVote: (root) => root.validVote,
         isTartufe: (root) => root.isTartufe,
         isReady: (root) => root.isReady,
         isWriting: (root) => root.isWriting,
+        isPlaying: (root) => root.isPlaying,
     },
 
 };

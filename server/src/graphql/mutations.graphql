@@ -1,6 +1,6 @@
 type Mutation {
 
-    createGame(username: String!, playerMax: Int, roundMax: Int, roundDuration: Int): Player
+    createGame(username: String!, playerMax: Int, roundMax: Int): Player
 
     joinGame(username: String!, idGame: ID!): Player
 
@@ -10,11 +10,13 @@ type Mutation {
 
     isWriting(idPlayer: ID!, idGame: ID!, isWriting: Boolean): Game
 
-    addOwnWord(idPlayer: ID!, idGame: ID!, word: String): Game
+    addWord(idPlayer: ID!, idGame: ID!, word: String): Game
 
     toggleWantVote(idPlayer: ID!, idGame: ID!): Game
 
     vote(idPlayer: ID!, idGame: ID!, idTartufe: ID!): Game
+
+    validVote(idPlayer: ID!, idGame: ID!): Game
 
     resetGames: [Game]
 

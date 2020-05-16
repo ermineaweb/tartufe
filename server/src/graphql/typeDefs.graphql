@@ -4,11 +4,10 @@ type Game {
     round: Int
     roundMax: Int
     playerMax: Int
-    roundDuration: Int
-    timer: Int
     isGameStarted: Boolean
     isVoteStarted: Boolean
     isGameOver: Boolean
+    wordPlebe: String
 }
 
 type Player {
@@ -16,12 +15,12 @@ type Player {
     idGame: ID!
     username: String
     words: [String]
-    secretWord: String
     ownVote: ID
     score: Int
     wantVote: Boolean
-    isCreator: Boolean
+    validVote: Boolean
     isTartufe: Boolean
     isReady: Boolean
     isWriting: Boolean
+    isPlaying: Boolean
 }

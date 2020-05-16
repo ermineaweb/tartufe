@@ -5,7 +5,7 @@ import Typography from "@material-ui/core/Typography";
 const useStyles = makeStyles((theme) => ({
     root: {
         margin: "100px auto",
-        width: "450px",
+        width: "550px",
         '& > *': {
             margin: "10px",
             width: "100%",
@@ -22,37 +22,34 @@ export default function Rules() {
         <div className={classes.root}>
             <Typography variant="h5">Règles de jeu</Typography>
             <Typography variant="body1">
-                A chaque round, les joueurs ont un MOT SECRET.
+                A chaque round, les ENQUETEURS ont un MOT SECRET.
             </Typography>
             <Typography>
-                Le seul joueur qui a un mot différent est le TARTUFE.
+                Il y a un traitre, c'est le TARTUFE.
             </Typography>
             <Typography variant="body1">
-                Les autres joueurs sont la PLEBE.
+                Les ENQUETEURS doit deviner qui est le TARTUFE, en écrivant chacun leur tour un mot.
             </Typography>
             <Typography variant="body1">
-                La PLEBE doit deviner qui est le TARTUFE, en écrivant une liste de mots.
+                Les mots ne doivent pas indiquer directement le MOT SECRET.
             </Typography>
             <Typography variant="body1">
-                Les mots peuvent être ce que vous voulez, mais ne doivent pas indiquer directement le MOT SECRET.
+                Lorsque tout le monde a saisi ses mots, le vote a lieu.
             </Typography>
             <Typography variant="body1">
-                A n'importe quel instant, les joueurs peuvent lancer un vote.
+                Les points sont calculés :
             </Typography>
             <Typography variant="body1">
-                Il faut la majorité pour que le vote soit lancé.
+                200 Points pour le TARTUFE si personne ne le démasque
             </Typography>
             <Typography variant="body1">
-                Les joueurs votent et les points sont calculés :
+               100 Points pour le TARTUFE si la majorité ne le démasque pas
             </Typography>
             <Typography variant="body1">
-                1 point par joueur qui découvre le TARTUFE, pour la PLEBE
+                150 Pour l'ENQUETEUR qui démasque seul le TARTUFE
             </Typography>
             <Typography variant="body1">
-                1 point par joueur qui ne découvre pas le TARTUFE, pour le TARTUFE
-            </Typography>
-            <Typography variant="body1">
-                Si le TARTUFE se découvre, il gagne un BONUS !
+                100 Pour chaque ENQUETEUR qui démasque le TARTUFE
             </Typography>
         </div>
     )

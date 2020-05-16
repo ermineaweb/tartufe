@@ -1,4 +1,5 @@
 import config from "../config";
+import checkError from "../error";
 import wordList from "../datas/words";
 import Random from "../utils/Random";
 import Player from "../models/Player";
@@ -8,58 +9,29 @@ export default class GameService {
 
     static games = [];
 
-    static createGame(username, playerMax, roundMax, roundDuration) {
-        if (GameService.games.length >= config.GAME_MAX) {
-            throw new Error("Trop de partie en cours, veuillez patienter qu'un slot se libère.");
-        }
-
-        if (playerMax < config.PLAYER_MIN || playerMax > config.PLAYER_MAX) {
-            throw new Error(`Le nombre de joueur doit être compris entre ${config.PLAYER_MIN} et ${config.PLAYER_MAX}.`);
-        }
-
-        if (roundDuration < config.DURATION_MIN || roundDuration > config.DURATION_MAX) {
-            throw new Error(`La durée des rounds doit être comprise entre ${config.DURATION_MIN} et ${config.DURATION_MAX}.`);
-        }
-
-        if (roundMax < config.ROUND_MIN || roundMax > config.ROUND_MAX) {
-            throw new Error(`Le nombre de round doit être compris entre ${config.ROUND_MIN} et ${config.ROUND_MAX}.`);
-        }
-
-        if (username.length < config.USERNAME_MIN_LENGTH) {
-            throw new Error(`Le pseudo du créateur doit contenir au moins ${config.USERNAME_MIN_LENGTH} caractères.`);
-        }
-
-        const game = new Game(roundMax, playerMax, roundDuration);
-        const creator = new Player(username, game.id, true);
-        game.addPlayer(creator);
-        this.games = [...GameService.games, game];
-        return creator;
+    static createGame(username, playerMax, roundMax) {
+        checkError(GameService.games.length >= config.GAME_MAX, "Trop de partie en cours, veuillez patienter qu'un slot se libère.");
+        checkError(playerMax < config.PLAYER_MIN || playerMax > config.PLAYER_MAX, `Le nombre de joueur doit être compris entre ${config.PLAYER_MIN} et ${config.PLAYER_MAX}.`);
+        checkError(roundMax < config.ROUND_MIN || roundMax > config.ROUND_MAX, `Le nombre de round doit être compris entre ${config.ROUND_MIN} et ${config.ROUND_MAX}.`);
+        const game = new Game(roundMax, playerMax);
+        GameService.games = [...GameService.games, game];
+        return GameService.joinGame(username, game.id);
     }
 
     static joinGame(username, idGame) {
         const game = GameService.getGame(idGame);
-        if (username.length === config.USERNAME_MIN_LENGTH) {
-            throw new Error(`Le pseudo doit contenir au moins ${config.USERNAME_MIN_LENGTH} caractères.`);
-        }
-        if (game.players.some(p => p.username === username)) {
-            throw new Error("Le pseudo existe déjà dans la partie, soyez plus créatif.");
-        }
-        if (game.isGameStarted) {
-            throw new Error("Round en cours, essayez de rejoindre dans un instant.");
-        }
-        if (game.isGameOver) {
-            throw new Error("La partie que vous tentez de joindre est finie !");
-        }
-        const player = new Player(username, idGame, false);
-        game.addPlayer(player);
-        return player;
+        checkError(username.length < config.USERNAME_MIN_LENGTH && username.length > config.USERNAME_MAX_LENGTH, `Votre pseudo doit contenir entre ${config.USERNAME_MIN_LENGTH} et ${config.USERNAME_MAX_LENGTH} caractères.`);
+        checkError(game.players.some(p => p.username === username), "Votre pseudo est déjà pris, soyez plus créatif.");
+        checkError(game.isGameStarted, "Round en cours, essayez de rejoindre dans un instant.");
+        checkError(game.isGameOver, "La partie est finie !");
+        return game.addPlayer(new Player(username, idGame));
     }
 
     static leaveGame(idPlayer, idGame) {
         const game = GameService.getGame(idGame);
         const player = GameService.getPlayer(idPlayer, idGame);
         game.removePlayer(player);
-        if (game.players.length === 0 || player.isCreator) {
+        if (game.players.length === 0) {
             GameService.removeGame(idGame);
         }
         return GameService.games;
@@ -70,10 +42,9 @@ export default class GameService {
         const player = GameService.getPlayer(idPlayer, idGame);
         player.isReady = !player.isReady;
 // game.players.length >= config.PLAYER_MIN &&
-        if (GameService.arePlayersReady(idGame) && game.players.length >= config.PLAYER_MIN && !game.isGameOver) {
+        if (GameService.arePlayersReady(idGame) && !game.isGameOver) {
             GameService.startGame(idGame);
         }
-
         return game;
     }
 
@@ -84,9 +55,7 @@ export default class GameService {
 
     static getPlayer(idPlayer, idGame) {
         const game = GameService.getGame(idGame);
-        if (!game.players.some(p => p.id === idPlayer)) {
-            throw new Error("Ce joueur n'existe pas dans la partie.");
-        }
+        checkError(!game.players.some(p => p.id === idPlayer), "Ce joueur n'existe pas dans la partie.");
         return game.players.find(p => p.id === idPlayer);
     }
 
@@ -96,113 +65,127 @@ export default class GameService {
     }
 
     static removeGame(idGame) {
+        checkError(!GameService.games.some(g => g.id === idGame), "La partie n'existe pas.");
         const index = GameService.games.findIndex(g => g.id === idGame);
         GameService.games.splice(index, 1);
         return GameService.games;
     }
 
     static getGames() {
+        GameService.games = GameService.games.filter(g => !g.isGameOver);
         return GameService.games;
     }
 
     static getGame(idGame) {
-        if (!GameService.games.some(g => g.id === idGame)) {
-            throw new Error("La partie n'existe pas.");
-        }
+        checkError(!GameService.games.some(g => g.id === idGame), "La partie n'existe pas.");
         return GameService.games.find(g => g.id === idGame);
     }
 
     static startGame(idGame) {
         const game = GameService.getGame(idGame);
-
-        if (game.isGameStarted) {
-            throw new Error("La partie est déjà lancée.");
-        }
-
-        if (game.isGameOver) {
-            throw new Error("La partie est finie.");
-        }
+        checkError(game.isGameStarted, "La partie est déjà lancée.");
+        checkError(game.isGameOver, "La partie est finie.");
 
         // let's start
         game.isGameStarted = true;
 
+        // reset all players
         game.players.forEach((player) => {
             player.words = [];
             player.ownVote = null;
             player.isTartufe = false;
             player.wantVote = false;
+            player.validVote = false;
+            player.isPlaying = false;
         });
+
+        Random.shuffle(game.players);
+        game.players[0].isPlaying = true;
 
         // chose the Tartufe
-        const tartufe = Random.fromArray(game.players);
+        const tartufe = game.players[Random.numberMaxExcluded(1, game.players.length)];
         tartufe.isTartufe = true;
 
-        // assign secrets words
-        const words = Random.fromArray(wordList);
-        const rndTartufe = Random.numberMaxExcluded(0, words.length);
-        const wordTartufe = words.splice(rndTartufe, 1)[0];
-        const rndPlebe = Random.numberMaxExcluded(0, words.length);
-        const wordPlebe = words.splice(rndPlebe, 1)[0];
-
-        game.players.forEach(player => {
-            // we want sometimes assign the word1 to the Tartufe, sometimes reverse
-            player.secretWord = player.isTartufe ? wordTartufe : wordPlebe;
-        });
-
-        if (game.roundDuration > 0) {
-            const chrono = setInterval(() => {
-                console.log(game.timer);
-                if (game.timer-- === 0) {
-                    // todo : mettre tous les votes a true avec wantVote
-                    clearInterval(chrono);
-                }
-            }, 1000);
+        // chose a word for Detectives
+        // todo enlever ça
+        if (game.players.some(p => p.username === "eugene")) {
+            game.wordPlebe = "Mélissa";
+        } else {
+            game.wordPlebe = Random.fromArray(wordList);
         }
 
         return game;
     }
 
     static endGame(idGame) {
-        const game = GameService.getGame(idGame);
+        const game = GameService.calcScore(idGame);
         game.isGameStarted = false;
         game.isVoteStarted = false;
-        game.timer = game.roundDuration;
-
-        const tartufe = game.players.find(p => p.isTartufe);
-        const playersFindTartufe = game.players.filter(p => p.ownVote === tartufe.id).length;
-        const playersDoesntFindTartufe = game.players.filter(p => p.ownVote !== tartufe.id).length;
-
-        game.players.forEach((player) => {
-
-            if (player.isTartufe && playersDoesntFindTartufe < Math.ceil(game.players.length / 2)) {
-                // tartufe win 1 for each player who doesnt find him
-                player.score += playersDoesntFindTartufe;
-                if (player.ownVote === tartufe.id) {
-                    // tartufe find himself, he wins +2 bonus points
-                    player.score += 2;
-                }
-            } else {
-                if (player.ownVote === tartufe.id) {
-                    // each player win 1 for each player who find tartufe
-                    player.score += playersFindTartufe;
-                }
-            }
-
-            player.isReady = false;
-        });
+        game.players.forEach(p => p.isReady = false);
 
         if (game.roundMax > 0 && game.round++ === game.roundMax) {
             game.isGameOver = true;
-            GameService.removeGame(idGame);
         }
 
         return game;
     }
 
-    static addOwnWord(idPlayer, idGame, word) {
+    static calcScore(idGame) {
+        const game = GameService.getGame(idGame);
+        const tartufe = game.players.find(p => p.isTartufe);
+        const playersFindTartufe = game.players.filter(p => p.ownVote === tartufe.id).length;
+        /*
+        200 pour tartufe si personne n'a trouvé
+        100 pour tartufe si tartufe pas voté a la majorité
+        150 points si seul a voter pour tartufe
+        100 points si cote pour tartufe
+         */
+        if (playersFindTartufe === 0) {
+            tartufe.score += 200;
+        }
+
+        if (playersFindTartufe >= game.players.length * config.PERCENT_FOR_DEMOCRACY) {
+            tartufe.score += 100;
+        }
+
+        game.players.forEach((player) => {
+            if (playersFindTartufe === 1 && player.ownVote === tartufe.id) {
+                player.score += 150;
+            }
+            if (playersFindTartufe > 1 && player.ownVote === tartufe.id) {
+                player.score += 100;
+            }
+        });
+
+        return game;
+    }
+
+    static nextPlayer(idGame) {
+        const game = GameService.getGame(idGame);
+        const index = game.players.findIndex(p => p.isPlaying);
+        game.players.forEach(p => p.isPlaying = false);
+
+        if (index === game.players.length - 1) {
+            game.players[0].isPlaying = true;
+        } else {
+            game.players[index + 1].isPlaying = true;
+        }
+
+        return game;
+    }
+
+    static addWord(idPlayer, idGame, word) {
         const game = GameService.getGame(idGame);
         const player = GameService.getPlayer(idPlayer, idGame);
+        checkError(!player.isPlaying, "Ce n'est pas à votre tour de jouer.")
         player.addWord(word);
+
+        GameService.nextPlayer(idGame);
+
+        if (game.players.every(p => p.words.length === 1)) {
+            game.isVoteStarted = true;
+        }
+
         return game;
     }
 
@@ -226,11 +209,18 @@ export default class GameService {
 
     static vote(idPlayer, idGame, idTartufe) {
         const game = GameService.getGame(idGame);
-        if (!game.isVoteStarted) {
-            throw new Error("Le vote n'est pas encore ouvert sur cette partie.");
-        }
+        checkError(!game.isVoteStarted, "Le vote n'est pas encore ouvert sur cette partie.");
         const player = GameService.getPlayer(idPlayer, idGame);
+        checkError(player.isTartufe, "Tartufe n'a pas le droit de vote !");
         player.ownVote = idTartufe;
+        return game;
+    }
+
+    static validVote(idPlayer, idGame) {
+        const game = GameService.getGame(idGame);
+        checkError(!game.isVoteStarted, "Le vote n'est pas encore ouvert sur cette partie.");
+        const player = GameService.getPlayer(idPlayer, idGame);
+        player.validVote = true;
         if (GameService.arePlayersVoted(idGame)) {
             GameService.endGame(idGame);
         }
@@ -239,7 +229,7 @@ export default class GameService {
 
     static arePlayersVoted(idGame) {
         const game = GameService.getGame(idGame);
-        return game.players.every(p => p.ownVote !== null);
+        return game.players.filter(p => !p.isTartufe).every(p => p.validVote);
     }
 
 }
