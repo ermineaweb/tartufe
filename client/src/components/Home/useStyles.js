@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
 
         backgroundColor: "",
         padding: "10px 20px",
-        backgroundImage: `url(${Wallpaper})`,
+        // backgroundImage: `url(${Wallpaper})`,
         backgroundAttachment: 'fixed',
         backgroundSize: 'cover',
         heigth:"100vh",

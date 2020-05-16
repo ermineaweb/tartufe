@@ -2,9 +2,17 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        flexGrow: 1,
+        height: '100vh',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+
+
+        backgroundColor: "#ffffff",
+
         textAlign: "center",
         padding:"10px 20px",
-        margin: "100px auto",
         '& > *': {
             margin: "15px auto",
         },

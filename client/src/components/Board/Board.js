@@ -109,10 +109,10 @@ export default function Board({game, subscribe}) {
 
             {game.isGameOver &&
             <>
-                <Typography variant="h2">
+                <Typography variant="h2" color="textPrimary">
                     GAME OVER
                 </Typography>
-                <Typography variant="h5">
+                <Typography variant="h5" color="textSecondary">
                     Le meilleur détective est : {game.players.sort((a, b) => b.score - a.score)[0]}
                 </Typography>
             </>
@@ -121,7 +121,7 @@ export default function Board({game, subscribe}) {
             {game.isGameStarted ?
                 <>
                     <Typography variant="h5">Round {game.round} / {game.roundMax}</Typography>
-                    <Typography variant="h5">
+                    <Typography variant="h5" color="textSecondary">
                         {game.players.find(p => p.id === user.id).isTartufe ?
                             "Vous êtes le Tartufe, essayez de passer inaperçu !"
                             :
@@ -131,7 +131,7 @@ export default function Board({game, subscribe}) {
                 </>
                 :
                 <>
-                    <Typography variant="h5">{game.players.length} / {game.playerMax} Joueurs</Typography>
+                    <Typography variant="h5" color="textSecondary">{game.players.length} / {game.playerMax} Joueurs</Typography>
                     <TextField
                         variant="outlined"
                         color="secondary"

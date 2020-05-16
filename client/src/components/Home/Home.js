@@ -104,7 +104,9 @@ export default function Home() {
                         >
                             Rejoindre
                         </Button>
-                        <div>Ou créer une nouvelle partie</div>
+
+                        <div><Typography>Ou créer une nouvelle partie</Typography></div>
+
                         <Button
                             variant="contained"
                             color="primary"
