@@ -4,15 +4,10 @@ const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         height: '100vh',
-        display: "flex",
-        justifyContent: "center",
         alignItems: "center",
-
-
         backgroundColor: "#ffffff",
-
         textAlign: "center",
-        padding:"10px 20px",
+        padding: "10px 20px",
         '& > *': {
             margin: "15px auto",
         },

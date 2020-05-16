@@ -20,7 +20,7 @@ export default class GameService {
 
     static joinGame(username, idGame) {
         const game = GameService.getGame(idGame);
-        checkError(username.length < config.USERNAME_MIN_LENGTH && username.length > config.USERNAME_MAX_LENGTH, `Votre pseudo doit contenir entre ${config.USERNAME_MIN_LENGTH} et ${config.USERNAME_MAX_LENGTH} caractères.`);
+        checkError(username.length < config.USERNAME_MIN_LENGTH || username.length > config.USERNAME_MAX_LENGTH, `Votre pseudo doit contenir entre ${config.USERNAME_MIN_LENGTH} et ${config.USERNAME_MAX_LENGTH} caractères.`);
         checkError(game.players.some(p => p.username === username), "Votre pseudo est déjà pris, soyez plus créatif.");
         checkError(game.isGameStarted, "Round en cours, essayez de rejoindre dans un instant.");
         checkError(game.isGameOver, "La partie est finie !");
@@ -107,12 +107,7 @@ export default class GameService {
         tartufe.isTartufe = true;
 
         // chose a word for Detectives
-        // todo enlever ça
-        if (game.players.some(p => p.username === "eugene")) {
-            game.wordPlebe = "Mélissa";
-        } else {
-            game.wordPlebe = Random.fromArray(wordList);
-        }
+        game.wordPlebe = Random.fromArray(wordList);
 
         return game;
     }
@@ -144,16 +139,18 @@ export default class GameService {
             tartufe.score += 200;
         }
 
-        if (playersFindTartufe >= game.players.length * config.PERCENT_FOR_DEMOCRACY) {
+        if (playersFindTartufe <= game.players.length * config.PERCENT_FOR_DEMOCRACY) {
             tartufe.score += 100;
         }
 
         game.players.forEach((player) => {
-            if (playersFindTartufe === 1 && player.ownVote === tartufe.id) {
-                player.score += 150;
-            }
-            if (playersFindTartufe > 1 && player.ownVote === tartufe.id) {
-                player.score += 100;
+            if (!player.isTartufe) {
+                if (playersFindTartufe === 1 && player.ownVote === tartufe.id) {
+                    player.score += 150;
+                }
+                if (playersFindTartufe > 1 && player.ownVote === tartufe.id) {
+                    player.score += 100;
+                }
             }
         });
 
@@ -182,7 +179,7 @@ export default class GameService {
 
         GameService.nextPlayer(idGame);
 
-        if (game.players.every(p => p.words.length === 1)) {
+        if (game.players.every(p => p.words.length === config.WORD_MAX)) {
             game.isVoteStarted = true;
         }
 
@@ -211,7 +208,6 @@ export default class GameService {
         const game = GameService.getGame(idGame);
         checkError(!game.isVoteStarted, "Le vote n'est pas encore ouvert sur cette partie.");
         const player = GameService.getPlayer(idPlayer, idGame);
-        checkError(player.isTartufe, "Tartufe n'a pas le droit de vote !");
         player.ownVote = idTartufe;
         return game;
     }
@@ -220,6 +216,7 @@ export default class GameService {
         const game = GameService.getGame(idGame);
         checkError(!game.isVoteStarted, "Le vote n'est pas encore ouvert sur cette partie.");
         const player = GameService.getPlayer(idPlayer, idGame);
+        checkError(player.isTartufe, "Tartufe n'a pas le droit de vote !");
         player.validVote = true;
         if (GameService.arePlayersVoted(idGame)) {
             GameService.endGame(idGame);

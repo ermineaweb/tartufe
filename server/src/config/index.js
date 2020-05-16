@@ -8,7 +8,7 @@ export default {
     ROUND_MIN: 0,
     ROUND_MAX: 12,
 
-    WORD_MAX: 3,
+    WORD_MAX: 2,
 
     USERNAME_MIN_LENGTH: 1,
     USERNAME_MAX_LENGTH: 25,

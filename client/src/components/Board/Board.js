@@ -113,7 +113,7 @@ export default function Board({game, subscribe}) {
                     GAME OVER
                 </Typography>
                 <Typography variant="h5" color="textSecondary">
-                    Le meilleur détective est : {game.players.sort((a, b) => b.score - a.score)[0]}
+                    Le meilleur détective est : {game.players.sort((a, b) => b.score - a.score).shift()}
                 </Typography>
             </>
             }
@@ -131,7 +131,9 @@ export default function Board({game, subscribe}) {
                 </>
                 :
                 <>
-                    <Typography variant="h5" color="textSecondary">{game.players.length} / {game.playerMax} Joueurs</Typography>
+                    <Typography
+                        variant="h5"
+                        color="textSecondary">{game.players.length} / {game.playerMax} Joueurs</Typography>
                     <TextField
                         variant="outlined"
                         color="secondary"
@@ -174,13 +176,13 @@ export default function Board({game, subscribe}) {
                             Le Tartufe était <strong>{game.players.find(p => p.isTartufe).username}</strong>
                         </Typography>
                         <Typography variant="body2">
-                            Les enquêteurs qui ont démasqué le <strong>Tartufe</strong>
+                            Les enquêteurs qui ont démasqué le Tartufe
                             {game.players.filter(p => {
                                 const tartufe = game.players.find(p => p.isTartufe);
                                 return p.ownVote === tartufe.id;
                             }).map((p) =>
                                 <strong key={p.id}>
-                                    {p.username + " "}
+                                    {" " + p.username + " "}
                                 </strong>
                             )}
                         </Typography>
@@ -211,7 +213,7 @@ export default function Board({game, subscribe}) {
                     !game.players.find(p => p.id === user.id).isTartufe &&
                     <Button
                         variant="contained"
-                        color={"secondary"}
+                        color="primary"
                         onClick={handleValidVote}
                         disabled={game.players.find(p => p.id === user.id).validVote}
                     >
@@ -236,7 +238,7 @@ export default function Board({game, subscribe}) {
                                                 color="secondary"
                                                 onClick={() => handleVote(player.id)}
                                                 fullWidth={true}
-                                                disabled={game.players.find(p => p.id === user.id).isTartufe || game.players.find(p => p.id === user.id).ownVote === player.id}
+                                                disabled={ game.players.find(p => p.id === user.id).ownVote === player.id}
                                             >
                                                 Voter
                                             </Button>
