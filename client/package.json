@@ -39,6 +39,7 @@
     "apollo-link": "^1.2.14",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.5.3",
+    "dotenv-webpack": "^1.8.0",
     "file-loader": "^6.0.0",
     "graphql-tag": "^2.10.3",
     "html-webpack-plugin": "^4.3.0",

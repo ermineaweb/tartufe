@@ -1,11 +1,19 @@
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import Wallpaper from "../../assets/img/wallpaper6.jpg";
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+        heigth: "100vh",
+        width: "100%",
         flexGrow: 1,
         height: '100vh',
+        justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#ffffff",
+        backgroundImage: `url(${Wallpaper})`,
+        backgroundColor: "",
+
         textAlign: "center",
         padding: "10px 20px",
         '& > *': {

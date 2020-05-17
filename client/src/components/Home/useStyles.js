@@ -1,5 +1,5 @@
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import Wallpaper from "../../assets/img/wallpaper5.png";
+import Wallpaper from "../../assets/img/wallpaper6.jpg";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -11,9 +11,9 @@ const useStyles = makeStyles((theme) => ({
         alignItems: "center",
 
 
+        backgroundImage: `url(${Wallpaper})`,
         backgroundColor: "",
         padding: "10px 20px",
-        // backgroundImage: `url(${Wallpaper})`,
         backgroundAttachment: 'fixed',
         backgroundSize: 'cover',
         heigth:"100vh",

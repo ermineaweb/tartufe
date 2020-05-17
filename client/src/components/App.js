@@ -3,7 +3,7 @@ import Router from "../router";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import UserContextProvider from "../context";
 import ApolloClientProvider from "../graphql";
-import ThemeAppProvider from "../theme/theme";
+import ThemeAppProvider from "../theme";
 
 
 export default function App() {

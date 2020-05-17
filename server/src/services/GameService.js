@@ -41,8 +41,7 @@ export default class GameService {
         const game = GameService.getGame(idGame);
         const player = GameService.getPlayer(idPlayer, idGame);
         player.isReady = !player.isReady;
-// game.players.length >= config.PLAYER_MIN &&
-        if (GameService.arePlayersReady(idGame) && !game.isGameOver) {
+        if (GameService.arePlayersReady(idGame) && game.players.length >= config.PLAYER_MIN && !game.isGameOver) {
             GameService.startGame(idGame);
         }
         return game;

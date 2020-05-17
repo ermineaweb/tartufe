@@ -7,15 +7,17 @@ import {InMemoryCache} from "apollo-cache-inmemory";
 import {ApolloProvider} from "@apollo/react-hooks";
 import React from "react";
 
-// 51.91.97.13
-// localhost
+const API_PATH = process.env.API_PATH || "/graphql";
+const PORT = process.env.PORT || 4000;
+const HOST_HTTP = process.env.HOST_HTTP || "localhost";
+const HOST_WS = process.env.HOST_WS || "localhost";
 
 const httpLink = new HttpLink({
-    uri: 'http://localhost:4000/graphql'
+    uri: `http://${HOST_HTTP}:${PORT}/${API_PATH}`,
 });
 
 const wsLink = new WebSocketLink({
-    uri: 'ws://localhost:4000/graphql',
+    uri: `ws://${HOST_WS}:${PORT}/${API_PATH}`,
     options: {
         reconnect: true,
     }

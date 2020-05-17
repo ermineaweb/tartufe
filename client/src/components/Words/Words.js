@@ -15,7 +15,7 @@ export default function Words({words}) {
     return (
         <div className={classes.root}>
             {words.map((word, index) => (
-                <Typography key={index}>
+                <Typography key={index} color="primary">
                     {word}
                 </Typography>
             ))}

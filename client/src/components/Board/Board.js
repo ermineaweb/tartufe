@@ -18,6 +18,7 @@ import Typography from "@material-ui/core/Typography";
 import useStyles from "./useStyles";
 import Score from "../Score";
 import {useHistory} from "react-router";
+import ActionButton from "../ActionButton";
 
 
 export default function Board({game, subscribe}) {
@@ -109,7 +110,7 @@ export default function Board({game, subscribe}) {
 
             {game.isGameOver &&
             <>
-                <Typography variant="h2" color="textPrimary">
+                <Typography variant="h2" color="primary">
                     GAME OVER
                 </Typography>
                 <Score game={game}/>
@@ -118,8 +119,8 @@ export default function Board({game, subscribe}) {
 
             {game.isGameStarted ?
                 <>
-                    <Typography variant="h5">Round {game.round} / {game.roundMax}</Typography>
-                    <Typography variant="h5" color="textSecondary">
+                    <Typography variant="h5" color="primary">Round {game.round} / {game.roundMax}</Typography>
+                    <Typography variant="h5" color="primary">
                         {game.players.find(p => p.id === user.id).isTartufe ?
                             "Vous êtes le Menteur !"
                             :
@@ -129,12 +130,12 @@ export default function Board({game, subscribe}) {
                 </>
                 :
                 <>
-                    <Typography
-                        variant="h5"
-                        color="textSecondary">{game.players.length} / {game.playerMax} Joueurs</Typography>
+                    <Typography variant="h5" color="primary">
+                        {game.players.length} / {game.playerMax} Joueurs
+                    </Typography>
                     <TextField
-                        variant="outlined"
-                        color="secondary"
+                        variant="standard"
+                        color="primary"
                         value={game.id}
                         readOnly={true}
                         className={classes.wordInput}
@@ -149,7 +150,7 @@ export default function Board({game, subscribe}) {
                 {game.isGameStarted &&
                 <TextField
                     variant="outlined"
-                    color="secondary"
+                    color="primary"
                     value={
                         game.isVoteStarted ?
                             "Votez !"
@@ -186,7 +187,7 @@ export default function Board({game, subscribe}) {
                                             {game.isVoteStarted &&
                                             < Button
                                                 variant="contained"
-                                                color="secondary"
+                                                color="primary"
                                                 onClick={() => handleVote(player.id)}
                                                 fullWidth={true}
                                                 disabled={game.players.find(p => p.id === user.id).ownVote === player.id || game.players.find(p => p.id === user.id).validVote}
@@ -212,38 +213,38 @@ export default function Board({game, subscribe}) {
                 <Grid item xs={2}>
                     {!game.isGameOver &&
                     !game.isGameStarted &&
-                    <Button
+                    <ActionButton
                         variant="contained"
                         color={game.players.find(p => p.id === user.id).isReady ? "primary" : "secondary"}
                         onClick={handleToggleReady}
                     >
                         {game.players.find(p => p.id === user.id).isReady ? "Pas prêt" : "  Prêt  "}
-                    </Button>
+                    </ActionButton>
                     }
 
                     {!game.isGameOver &&
                     game.isVoteStarted &&
                     !game.players.find(p => p.id === user.id).isTartufe &&
-                    <Button
+                    <ActionButton
                         variant="contained"
                         color="primary"
                         onClick={handleValidVote}
                         disabled={game.players.find(p => p.id === user.id).validVote}
                     >
                         Valider mon vote
-                    </Button>
+                    </ActionButton>
                     }
                 </Grid>
 
                 {!game.isGameStarted && game.round > 1 &&
-                <div>
-                    <Typography variant="body2">
+                <>
+                    <Typography variant="body2" color="primary">
                         Les enquêteurs avaient le mot <strong>"{game.wordPlebe}"</strong>
                     </Typography>
-                    <Typography variant="body2">
+                    <Typography variant="body2" color="primary">
                         Le Tartufe était <strong>{game.players.find(p => p.isTartufe).username}</strong>
                     </Typography>
-                    <Typography variant="body2">
+                    <Typography variant="body2" color="primary">
                         Les enquêteurs qui ont démasqué le Tartufe
                         {game.players.filter(p => {
                             const tartufe = game.players.find(p => p.isTartufe);
@@ -254,7 +255,7 @@ export default function Board({game, subscribe}) {
                             </strong>
                         )}
                     </Typography>
-                </div>
+                </>
                 }
 
             </Grid>

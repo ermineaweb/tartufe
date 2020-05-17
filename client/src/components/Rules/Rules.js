@@ -20,35 +20,35 @@ export default function Rules() {
 
     return (
         <div className={classes.root}>
-            <Typography variant="h5">Règles de jeu</Typography>
-            <Typography variant="body1">
+            <Typography variant="h5" color="primary">Règles de jeu</Typography>
+            <Typography variant="body1" color="primary">
                 A chaque round, les ENQUETEURS ont un MOT SECRET.
             </Typography>
-            <Typography>
+            <Typography variant="body1" color="primary">
                 Il y a un traitre, c'est le TARTUFE.
             </Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" color="primary">
                 Les ENQUETEURS doit deviner qui est le TARTUFE, en écrivant chacun leur tour un mot.
             </Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" color="primary">
                 Les mots ne doivent pas indiquer directement le MOT SECRET.
             </Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" color="primary">
                 Lorsque tout le monde a saisi ses mots, le vote a lieu.
             </Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" color="primary">
                 Les points sont calculés :
             </Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" color="primary">
                 200 Points pour le TARTUFE si personne ne le démasque
             </Typography>
-            <Typography variant="body1">
-               100 Points pour le TARTUFE si la majorité ne le démasque pas
+            <Typography variant="body1" color="primary">
+                100 Points pour le TARTUFE si la majorité ne le démasque pas
             </Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" color="primary">
                 150 Pour l'ENQUETEUR qui démasque seul le TARTUFE
             </Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" color="primary">
                 100 Pour chaque ENQUETEUR qui démasque le TARTUFE
             </Typography>
         </div>

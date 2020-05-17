@@ -14,6 +14,8 @@ import {useHistory} from "react-router-dom";
 import {UserContext} from "../../context";
 import Grid from "@material-ui/core/Grid";
 import useStyles from "./useStyles";
+import Rules from "../Rules";
+import ActionButton from "../ActionButton";
 
 
 export default function Home() {
@@ -24,6 +26,7 @@ export default function Home() {
     const [playerMax, setPlayerMax] = useState(6);
     const [roundMax, setRoundMax] = useState(4);
     const [openOptions, setOpenOptions] = useState(false);
+    const [openRules, setOpenRules] = useState(false);
     const {setUser} = useContext(UserContext);
 
     const history = useHistory();
@@ -74,6 +77,14 @@ export default function Home() {
 
             {error && <div>{error}</div>}
 
+            <ActionButton
+                variant="contained"
+                color="primary"
+                onClick={() => setOpenRules(true)}
+            >
+                Règles
+            </ActionButton>
+
             <Grid container spacing={3}>
 
                 <Grid item xs={4}>
@@ -105,7 +116,7 @@ export default function Home() {
                             Rejoindre
                         </Button>
 
-                        <div><Typography>Ou créer une nouvelle partie</Typography></div>
+                        <div><Typography variant="body2" color="primary">Ou créer une nouvelle partie</Typography></div>
 
                         <Button
                             variant="contained"
@@ -159,6 +170,12 @@ export default function Home() {
                             Créer
                         </Button>
                     </DialogActions>
+                </div>
+            </Dialog>
+
+            <Dialog open={openRules} onClose={() => setOpenRules(false)}>
+                <div className={classes.dialog}>
+                    <Rules/>
                 </div>
             </Dialog>
 

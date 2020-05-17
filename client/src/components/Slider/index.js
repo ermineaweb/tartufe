@@ -3,7 +3,7 @@ import Slider from "@material-ui/core/Slider";
 
 export default withStyles({
     root: {
-        color: '#000000',
+        color: '#d1c4e9',
         height: 8,
         width: 200,
         padding:10,
@@ -11,7 +11,7 @@ export default withStyles({
     thumb: {
         height: 24,
         width: 24,
-        backgroundColor: '#fff',
+        backgroundColor: '#d1c4e9',
         border: '2px solid currentColor',
         marginTop: -8,
         marginLeft: -12,

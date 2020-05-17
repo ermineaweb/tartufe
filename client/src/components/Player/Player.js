@@ -3,11 +3,11 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import Badge from "@material-ui/core/Badge";
 import Avatar from "@material-ui/core/Avatar";
 import withStyles from "@material-ui/core/styles/withStyles";
-import AvatarDiable from "../../assets/img/avatar_diable.png";
-import AvatarAnge from "../../assets/img/avatar_ange.png";
-import AvatarSearch from "../../assets/img/avatar_search.png";
-import AvatarSleep from "../../assets/img/avatar_sleep.png";
-import AvatarTartufe from "../../assets/img/avatar_tartufe.png";
+import AvatarDiable from "../../assets/img/avatars/dark/avatar_diable.png";
+import AvatarAnge from "../../assets/img/avatars/dark/avatar_ange.png";
+import AvatarSearch from "../../assets/img/avatars/dark/avatar_search.png";
+import AvatarSleep from "../../assets/img/avatars/dark/avatar_sleep.png";
+import AvatarTartufe from "../../assets/img/avatars/dark/avatar_tartufe.png";
 import Writing from "../../assets/img/writing.gif";
 import Typography from "@material-ui/core/Typography";
 
@@ -71,7 +71,7 @@ export default function Player({player, game}) {
     return (
         <div className={classes.root}>
 
-            <Typography gutterBottom variant="h6">
+            <Typography gutterBottom variant="h6" color="primary">
                 {player.isWriting && !game.isVoteStarted ?
                     <img src={Writing} alt="avatar"/> : player.username}
             </Typography>

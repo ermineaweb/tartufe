@@ -14,24 +14,25 @@ const useStyles = makeStyles(theme => ({
 
 export default function Games({games, subscribe}) {
     const classes = useStyles();
+
     useEffect(() => {
         subscribe();
     }, [subscribe]);
 
     return (
         <>
-            <Typography variant="h5">Parties</Typography>
+            <Typography variant="h5" color="primary">Parties</Typography>
             <div className={classes.root}>
                 {games ? games
                         .filter(g => !g.isGameOver)
                         .map((game) =>
                             <div key={game.id}>
-                                <p>
+                                <Typography variant="body2" color="primary">
                                     {game.players.length} / {game.playerMax} Joueurs
-                                </p>
+                                </Typography>
                                 <TextField
-                                    variant="outlined"
-                                    color="secondary"
+                                    variant="standard"
+                                    color="primary"
                                     value={game.id}
                                     readOnly={true}
                                     label={"ID"}
