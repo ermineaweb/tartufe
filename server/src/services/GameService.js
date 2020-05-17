@@ -208,6 +208,7 @@ export default class GameService {
         const game = GameService.getGame(idGame);
         checkError(!game.isVoteStarted, "Le vote n'est pas encore ouvert sur cette partie.");
         const player = GameService.getPlayer(idPlayer, idGame);
+        checkError(player.validVote, "Vous avez déjà valider votre vote.");
         player.ownVote = idTartufe;
         return game;
     }

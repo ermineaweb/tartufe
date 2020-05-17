@@ -3,7 +3,8 @@ import express from "express";
 import path from "path";
 import http from "http";
 import {ApolloServer} from "apollo-server-express";
-import {resolvers, schema} from "./graphql";
+import resolvers from "./graphql/resolvers";
+import schemas from "./graphql/schemas";
 import { PubSub } from 'graphql-subscriptions';
 
 const app = express();
@@ -11,7 +12,7 @@ const app = express();
 export const pubsub = new PubSub();
 
 const server = new ApolloServer({
-    typeDefs: schema,
+    typeDefs: schemas,
     resolvers,
     subscriptions: {
         onConnect: async (connectionParams, webSocket) => {

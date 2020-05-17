@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -r ./build",
-    "build": "webpack",
-    "dev": "webpack --watch"
+    "build": "npm run clean && webpack",
+    "dev": "npm run clean && webpack --watch"
   },
   "author": "romain amichaud",
   "license": "ISC",

@@ -112,9 +112,7 @@ export default function Board({game, subscribe}) {
                 <Typography variant="h2" color="textPrimary">
                     GAME OVER
                 </Typography>
-                <Typography variant="h5" color="textSecondary">
-                    Le meilleur détective est : {game.players.sort((a, b) => b.score - a.score).shift()}
-                </Typography>
+                <Score game={game}/>
             </>
             }
 
@@ -123,7 +121,7 @@ export default function Board({game, subscribe}) {
                     <Typography variant="h5">Round {game.round} / {game.roundMax}</Typography>
                     <Typography variant="h5" color="textSecondary">
                         {game.players.find(p => p.id === user.id).isTartufe ?
-                            "Vous êtes le Tartufe, essayez de passer inaperçu !"
+                            "Vous êtes le Menteur !"
                             :
                             game.wordPlebe
                         }
@@ -148,45 +146,24 @@ export default function Board({game, subscribe}) {
 
             <div className={classes.actions}>
 
-                {game.isGameStarted ?
-                    <TextField
-                        variant="outlined"
-                        color="secondary"
-                        value={
-                            game.isVoteStarted ?
-                                "Votez !"
+                {game.isGameStarted &&
+                <TextField
+                    variant="outlined"
+                    color="secondary"
+                    value={
+                        game.isVoteStarted ?
+                            "Votez !"
+                            :
+                            game.players.find(p => p.id === user.id).isPlaying ?
+                                word
                                 :
-                                game.players.find(p => p.id === user.id).isPlaying ?
-                                    word
-                                    :
-                                    "Au tour de " + game.players.find(p => p.isPlaying).username
-                        }
-                        // on récupère le statut "isWriting" du joueur en cours
-                        onChange={(e) => handleWriting(e, game.players.some(p => (p.id === user.id && p.isWriting)))}
-                        onKeyDown={(e) => e.key === "Enter" && handleAddWord()}
-                        disabled={game.isVoteStarted || !game.players.find(p => p.id === user.id).isPlaying}
-                    />
-                    :
-                    game.round > 1 &&
-                    <>
-                        <Typography variant="body2">
-                            Les enquêteurs avaient le mot <strong>"{game.wordPlebe}"</strong>
-                        </Typography>
-                        <Typography variant="body2">
-                            Le Tartufe était <strong>{game.players.find(p => p.isTartufe).username}</strong>
-                        </Typography>
-                        <Typography variant="body2">
-                            Les enquêteurs qui ont démasqué le Tartufe
-                            {game.players.filter(p => {
-                                const tartufe = game.players.find(p => p.isTartufe);
-                                return p.ownVote === tartufe.id;
-                            }).map((p) =>
-                                <strong key={p.id}>
-                                    {" " + p.username + " "}
-                                </strong>
-                            )}
-                        </Typography>
-                    </>
+                                "Au tour de " + game.players.find(p => p.isPlaying).username
+                    }
+                    // on récupère le statut "isWriting" du joueur en cours
+                    onChange={(e) => handleWriting(e, game.players.some(p => (p.id === user.id && p.isWriting)))}
+                    onKeyDown={(e) => e.key === "Enter" && handleAddWord()}
+                    disabled={game.isVoteStarted || !game.players.find(p => p.id === user.id).isPlaying}
+                />
                 }
 
             </div>
@@ -194,6 +171,42 @@ export default function Board({game, subscribe}) {
             <Grid container>
                 <Grid item xs={2}>
                     <Score game={game}/>
+                </Grid>
+
+                <Grid item xs={8}>
+                    <div className={classes.players}>
+                        <Grid container spacing={3}>
+
+                            {game.players.map((player) => (
+                                <Grid item key={player.id}>
+                                    <div className={classes.card}>
+
+                                        <div className={classes.actions}>
+
+                                            {game.isVoteStarted &&
+                                            < Button
+                                                variant="contained"
+                                                color="secondary"
+                                                onClick={() => handleVote(player.id)}
+                                                fullWidth={true}
+                                                disabled={game.players.find(p => p.id === user.id).ownVote === player.id || game.players.find(p => p.id === user.id).validVote}
+                                            >
+                                                Voter
+                                            </Button>
+                                            }
+
+                                        </div>
+
+                                        <Player game={game} player={player}/>
+
+                                        {game.isGameStarted && <Words words={player.words}/>}
+
+                                    </div>
+
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </div>
                 </Grid>
 
                 <Grid item xs={2}>
@@ -222,41 +235,27 @@ export default function Board({game, subscribe}) {
                     }
                 </Grid>
 
-                <Grid item xs={8}>
-                    <div className={classes.players}>
-                        <Grid container spacing={3}>
-
-                            {game.players.map((player) => (
-                                <Grid item key={player.id}>
-                                    <div className={classes.card}>
-
-                                        <div className={classes.actions}>
-
-                                            {game.isVoteStarted &&
-                                            < Button
-                                                variant="contained"
-                                                color="secondary"
-                                                onClick={() => handleVote(player.id)}
-                                                fullWidth={true}
-                                                disabled={ game.players.find(p => p.id === user.id).ownVote === player.id}
-                                            >
-                                                Voter
-                                            </Button>
-                                            }
-
-                                        </div>
-
-                                        <Player game={game} player={player}/>
-
-                                        {game.isGameStarted && <Words words={player.words}/>}
-
-                                    </div>
-
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </div>
-                </Grid>
+                {!game.isGameStarted && game.round > 1 &&
+                <div>
+                    <Typography variant="body2">
+                        Les enquêteurs avaient le mot <strong>"{game.wordPlebe}"</strong>
+                    </Typography>
+                    <Typography variant="body2">
+                        Le Tartufe était <strong>{game.players.find(p => p.isTartufe).username}</strong>
+                    </Typography>
+                    <Typography variant="body2">
+                        Les enquêteurs qui ont démasqué le Tartufe
+                        {game.players.filter(p => {
+                            const tartufe = game.players.find(p => p.isTartufe);
+                            return p.ownVote === tartufe.id;
+                        }).map((p) =>
+                            <strong key={p.id}>
+                                {" " + p.username + " "}
+                            </strong>
+                        )}
+                    </Typography>
+                </div>
+                }
 
             </Grid>
 

@@ -19,7 +19,7 @@ export default function Score({game}) {
             <List className={classes.root}>
                 <ListSubheader>Scores</ListSubheader>
 
-                {game.players.map((player, index) =>
+                {game.players.sort((a, b) => b.score - a.score).map((player, index) =>
                     <ListItem key={player.id}>
                         <ListItemAvatar>
                             <Avatar>
@@ -28,7 +28,7 @@ export default function Score({game}) {
                         </ListItemAvatar>
                         <ListItemText primary={player.username} secondary={player.score}/>
                     </ListItem>
-                ).sort((a, b) => b.score - a.score)}
+                )}
             </List>
 
         </div>
