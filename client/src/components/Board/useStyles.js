@@ -28,6 +28,11 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "center",
         width: "150px",
     },
+    infos:{
+      width:"100%",
+      textAlign:"center",
+        heigth:"200px",
+    },
     wordInput: {
         '& > *': {
             margin: "0 auto",

@@ -18,7 +18,10 @@ import Typography from "@material-ui/core/Typography";
 import useStyles from "./useStyles";
 import Score from "../Score";
 import {useHistory} from "react-router";
-import ActionButton from "../ActionButton";
+import ActionButtonRight from "../ActionButton/ActionButtonRight";
+import ActionButtonLeft from "../ActionButton/ActionButtonLeft";
+import Dialog from "@material-ui/core/Dialog";
+import Rules from "../Rules";
 
 
 export default function Board({game, subscribe}) {
@@ -26,6 +29,7 @@ export default function Board({game, subscribe}) {
     const {user} = useContext(UserContext);
     const [error, setError] = useState(null);
     const [word, setWord] = useState("");
+    const [openRules, setOpenRules] = useState(false);
     const history = useHistory();
 
     const options = {
@@ -108,13 +112,31 @@ export default function Board({game, subscribe}) {
 
             {error && <div>{error}</div>}
 
-            {game.isGameOver &&
-            <>
+            {!game.isGameStarted && game.round > 1 &&
+            <div className={classes.infos}>
+                {game.isGameOver &&
                 <Typography variant="h2" color="primary">
                     GAME OVER
                 </Typography>
-                <Score game={game}/>
-            </>
+                }
+                <Typography variant="body2" color="primary">
+                    Les enquêteurs avaient le mot <strong>"{game.wordPlebe}"</strong>
+                </Typography>
+                <Typography variant="body2" color="primary">
+                    Le Tartufe était <strong>{game.players.find(p => p.isTartufe).username}</strong>
+                </Typography>
+                <Typography variant="body2" color="primary">
+                    Les enquêteurs qui ont démasqué le Tartufe
+                    {game.players.filter(p => {
+                        const tartufe = game.players.find(p => p.isTartufe);
+                        return p.ownVote === tartufe.id;
+                    }).map((p) =>
+                        <strong key={p.id}>
+                            {" " + p.username + " "}
+                        </strong>
+                    )}
+                </Typography>
+            </div>
             }
 
             {game.isGameStarted ?
@@ -170,11 +192,8 @@ export default function Board({game, subscribe}) {
             </div>
 
             <Grid container>
-                <Grid item xs={2}>
-                    <Score game={game}/>
-                </Grid>
 
-                <Grid item xs={8}>
+                <Grid item xs={6}>
                     <div className={classes.players}>
                         <Grid container spacing={3}>
 
@@ -211,54 +230,47 @@ export default function Board({game, subscribe}) {
                 </Grid>
 
                 <Grid item xs={2}>
-                    {!game.isGameOver &&
-                    !game.isGameStarted &&
-                    <ActionButton
-                        variant="contained"
-                        color={game.players.find(p => p.id === user.id).isReady ? "primary" : "secondary"}
-                        onClick={handleToggleReady}
-                    >
-                        {game.players.find(p => p.id === user.id).isReady ? "Pas prêt" : "  Prêt  "}
-                    </ActionButton>
-                    }
-
-                    {!game.isGameOver &&
-                    game.isVoteStarted &&
-                    !game.players.find(p => p.id === user.id).isTartufe &&
-                    <ActionButton
-                        variant="contained"
-                        color="primary"
-                        onClick={handleValidVote}
-                        disabled={game.players.find(p => p.id === user.id).validVote}
-                    >
-                        Valider mon vote
-                    </ActionButton>
-                    }
+                    <Score game={game}/>
+                </Grid>
+                <Grid item xs={4}>
                 </Grid>
 
-                {!game.isGameStarted && game.round > 1 &&
-                <>
-                    <Typography variant="body2" color="primary">
-                        Les enquêteurs avaient le mot <strong>"{game.wordPlebe}"</strong>
-                    </Typography>
-                    <Typography variant="body2" color="primary">
-                        Le Tartufe était <strong>{game.players.find(p => p.isTartufe).username}</strong>
-                    </Typography>
-                    <Typography variant="body2" color="primary">
-                        Les enquêteurs qui ont démasqué le Tartufe
-                        {game.players.filter(p => {
-                            const tartufe = game.players.find(p => p.isTartufe);
-                            return p.ownVote === tartufe.id;
-                        }).map((p) =>
-                            <strong key={p.id}>
-                                {" " + p.username + " "}
-                            </strong>
-                        )}
-                    </Typography>
-                </>
-                }
-
             </Grid>
+
+            {!game.isGameOver &&
+            !game.isGameStarted &&
+            <ActionButtonLeft
+                color={game.players.find(p => p.id === user.id).isReady ? "primary" : "secondary"}
+                onClick={handleToggleReady}
+            >
+                {game.players.find(p => p.id === user.id).isReady ? "Pas prêt" : "  Prêt  "}
+            </ActionButtonLeft>
+            }
+
+            {!game.isGameOver &&
+            game.isVoteStarted &&
+            !game.players.find(p => p.id === user.id).isTartufe &&
+            <ActionButtonLeft
+                color="primary"
+                onClick={handleValidVote}
+                disabled={game.players.find(p => p.id === user.id).validVote}
+            >
+                Valider le vote
+            </ActionButtonLeft>
+            }
+
+            <ActionButtonRight
+                color="primary"
+                onClick={() => setOpenRules(true)}
+            >
+                Règles
+            </ActionButtonRight>
+
+            <Dialog open={openRules} onClose={() => setOpenRules(false)}>
+                <div className={classes.dialog}>
+                    <Rules/>
+                </div>
+            </Dialog>
 
         </div>
     )

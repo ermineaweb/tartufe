@@ -9,12 +9,12 @@ const useStyles = makeStyles(() => ({
         bottom: 30,
         right: 30,
         zIndex: "1",
-        width:"100px",
-        height:"100px",
+        width: "100px",
+        height: "100px",
     },
 }));
 
-export default function ActionButton({...props}) {
+export default function ActionButtonRight({...props}) {
     const classes = useStyles();
 
     return (

@@ -15,7 +15,8 @@ import {UserContext} from "../../context";
 import Grid from "@material-ui/core/Grid";
 import useStyles from "./useStyles";
 import Rules from "../Rules";
-import ActionButton from "../ActionButton";
+import ActionButtonLeft from "../ActionButton/ActionButtonLeft";
+import ActionButtonRight from "../ActionButton/ActionButtonRight";
 
 
 export default function Home() {
@@ -76,14 +77,6 @@ export default function Home() {
         <div className={classes.root}>
 
             {error && <div>{error}</div>}
-
-            <ActionButton
-                variant="contained"
-                color="primary"
-                onClick={() => setOpenRules(true)}
-            >
-                Règles
-            </ActionButton>
 
             <Grid container spacing={3}>
 
@@ -172,6 +165,13 @@ export default function Home() {
                     </DialogActions>
                 </div>
             </Dialog>
+
+            <ActionButtonRight
+                color="primary"
+                onClick={() => setOpenRules(true)}
+            >
+                Règles
+            </ActionButtonRight>
 
             <Dialog open={openRules} onClose={() => setOpenRules(false)}>
                 <div className={classes.dialog}>

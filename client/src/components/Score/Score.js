@@ -3,8 +3,6 @@ import {makeStyles} from '@material-ui/core/styles';
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
 import ListItemText from "@material-ui/core/ListItemText";
-import Avatar from "@material-ui/core/Avatar";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import Typography from "@material-ui/core/Typography";
 
@@ -20,13 +18,8 @@ export default function Score({game}) {
             <List className={classes.root}>
                 <ListSubheader>Scores</ListSubheader>
 
-                {game.players.sort((a, b) => b.score - a.score).map((player, index) =>
+                {game.players.map((player) =>
                     <ListItem key={player.id}>
-                        <ListItemAvatar>
-                            <Avatar>
-                                {game.round > 1 ? index + 1 : "-"}
-                            </Avatar>
-                        </ListItemAvatar>
                         <ListItemText
                             primary={<Typography color="primary">{player.username}</Typography>}
                             secondary={player.score}
