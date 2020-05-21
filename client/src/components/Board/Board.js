@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {createRef, useContext, useEffect, useRef, useState} from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import {useMutation} from "@apollo/react-hooks";
@@ -18,10 +18,10 @@ import Typography from "@material-ui/core/Typography";
 import useStyles from "./useStyles";
 import Score from "../Score";
 import {useHistory} from "react-router";
-import ActionButtonRight from "../ActionButton/ActionButtonRight";
-import ActionButtonLeft from "../ActionButton/ActionButtonLeft";
-import Dialog from "@material-ui/core/Dialog";
+import ActionButtonRightTop from "../ActionButton/ActionButtonRightTop";
+import ActionButtonRightBot from "../ActionButton/ActionButtonRightBot";
 import Rules from "../Rules";
+import {NavLink} from "react-router-dom";
 
 
 export default function Board({game, subscribe}) {
@@ -115,9 +115,26 @@ export default function Board({game, subscribe}) {
             {!game.isGameStarted && game.round > 1 &&
             <div className={classes.infos}>
                 {game.isGameOver &&
-                <Typography variant="h2" color="primary">
-                    GAME OVER
-                </Typography>
+                <>
+                    <Typography variant="h3" color="primary">
+                        GAME OVER
+                    </Typography>
+                    <Typography variant="h3" color="primary">
+                        Scores
+                    </Typography>
+                    {game.players
+                        .sort((a, b) => b.score - a.score)
+                        .map(player =>
+                            <Typography key={player.id} variant="h5" color="primary">
+                                {player.username} - {player.score}
+                            </Typography>
+                        )}
+                    <NavLink to={"/"}>
+                        <Typography variant="h3" color="primary">
+                            Accueil
+                        </Typography>
+                    </NavLink>
+                </>
                 }
                 <Typography variant="body2" color="primary">
                     Les enquêteurs avaient le mot <strong>"{game.wordPlebe}"</strong>
@@ -126,7 +143,9 @@ export default function Board({game, subscribe}) {
                     Le Tartufe était <strong>{game.players.find(p => p.isTartufe).username}</strong>
                 </Typography>
                 <Typography variant="body2" color="primary">
-                    Les enquêteurs qui ont démasqué le Tartufe
+                    Les enquêteurs qui ont démasqué le Tartufe sont :
+                </Typography>
+                <Typography variant="body2" color="primary">
                     {game.players.filter(p => {
                         const tartufe = game.players.find(p => p.isTartufe);
                         return p.ownVote === tartufe.id;
@@ -142,28 +161,41 @@ export default function Board({game, subscribe}) {
             {game.isGameStarted ?
                 <>
                     <Typography variant="h5" color="primary">Round {game.round} / {game.roundMax}</Typography>
-                    <Typography variant="h5" color="primary">
-                        {game.players.find(p => p.id === user.id).isTartufe ?
-                            "Vous êtes le Menteur !"
-                            :
-                            game.wordPlebe
-                        }
-                    </Typography>
+
+                    {game.players.find(p => p.id === user.id).isTartufe ?
+                        <>
+                            <Typography variant="h5" color="primary">
+                                Vous êtes le Menteur, vous devez passer inaperçu.
+                            </Typography>
+                            <Typography variant="h5" color="primary">
+                                Vous pouvez influencer les votes en faisant semblant de voter.
+                            </Typography>
+                        </>
+                        :
+                        <Typography variant="h5" color="primary">
+                            {game.wordPlebe}
+                        </Typography>
+                    }
+
                 </>
                 :
                 <>
-                    <Typography variant="h5" color="primary">
-                        {game.players.length} / {game.playerMax} Joueurs
-                    </Typography>
-                    <TextField
-                        variant="standard"
-                        color="primary"
-                        value={game.id}
-                        readOnly={true}
-                        className={classes.wordInput}
-                        label={"ID"}
-                        onFocus={(e) => e.target.select()}
-                    />
+                    {!game.isGameOver &&
+                    <>
+                        <Typography variant="h5" color="primary">
+                            {game.players.length} / {game.playerMax} Joueurs
+                        </Typography>
+                        <TextField
+                            variant="standard"
+                            color="primary"
+                            value={game.id}
+                            readOnly={true}
+                            className={classes.wordInput}
+                            label={"ID"}
+                            onFocus={(e) => e.target.select()}
+                        />
+                    </>
+                    }
                 </>
             }
 
@@ -173,6 +205,7 @@ export default function Board({game, subscribe}) {
                 <TextField
                     variant="outlined"
                     color="primary"
+                    autoFocus={true}
                     value={
                         game.isVoteStarted ?
                             "Votez !"
@@ -186,15 +219,16 @@ export default function Board({game, subscribe}) {
                     onChange={(e) => handleWriting(e, game.players.some(p => (p.id === user.id && p.isWriting)))}
                     onKeyDown={(e) => e.key === "Enter" && handleAddWord()}
                     disabled={game.isVoteStarted || !game.players.find(p => p.id === user.id).isPlaying}
+                    error={game.players.find(p => p.id === user.id).isPlaying}
                 />
                 }
 
             </div>
 
-            <Grid container>
+            <div className={classes.players}>
+                <Grid container>
 
-                <Grid item xs={6}>
-                    <div className={classes.players}>
+                    <Grid item xs={6}>
                         <Grid container spacing={3}>
 
                             {game.players.map((player) => (
@@ -217,7 +251,9 @@ export default function Board({game, subscribe}) {
 
                                         </div>
 
+                                        {!game.isGameOver &&
                                         <Player game={game} player={player}/>
+                                        }
 
                                         {game.isGameStarted && <Words words={player.words}/>}
 
@@ -226,51 +262,49 @@ export default function Board({game, subscribe}) {
                                 </Grid>
                             ))}
                         </Grid>
-                    </div>
-                </Grid>
+                    </Grid>
 
-                <Grid item xs={2}>
-                    <Score game={game}/>
-                </Grid>
-                <Grid item xs={4}>
-                </Grid>
+                    <Grid item xs={2}>
+                        {!game.isGameOver &&
+                        <Score game={game}/>
+                        }
+                    </Grid>
+                    <Grid item xs={4}>
+                    </Grid>
 
-            </Grid>
+                </Grid>
+            </div>
 
             {!game.isGameOver &&
             !game.isGameStarted &&
-            <ActionButtonLeft
+            <ActionButtonRightBot
                 color={game.players.find(p => p.id === user.id).isReady ? "primary" : "secondary"}
                 onClick={handleToggleReady}
             >
                 {game.players.find(p => p.id === user.id).isReady ? "Pas prêt" : "  Prêt  "}
-            </ActionButtonLeft>
+            </ActionButtonRightBot>
             }
 
             {!game.isGameOver &&
             game.isVoteStarted &&
             !game.players.find(p => p.id === user.id).isTartufe &&
-            <ActionButtonLeft
+            <ActionButtonRightBot
                 color="primary"
                 onClick={handleValidVote}
                 disabled={game.players.find(p => p.id === user.id).validVote}
             >
                 Valider le vote
-            </ActionButtonLeft>
+            </ActionButtonRightBot>
             }
 
-            <ActionButtonRight
+            <ActionButtonRightTop
                 color="primary"
                 onClick={() => setOpenRules(true)}
             >
                 Règles
-            </ActionButtonRight>
+            </ActionButtonRightTop>
 
-            <Dialog open={openRules} onClose={() => setOpenRules(false)}>
-                <div className={classes.dialog}>
-                    <Rules/>
-                </div>
-            </Dialog>
+            <Rules openRules={openRules} setOpenRules={setOpenRules}/>
 
         </div>
     )

@@ -9,11 +9,12 @@ export default class GameService {
 
     static games = [];
 
-    static createGame(username, playerMax, roundMax) {
+    static createGame(username, playerMax, roundMax, scoreMax) {
         checkError(GameService.games.length >= config.GAME_MAX, "Trop de partie en cours, veuillez patienter qu'un slot se libère.");
         checkError(playerMax < config.PLAYER_MIN || playerMax > config.PLAYER_MAX, `Le nombre de joueur doit être compris entre ${config.PLAYER_MIN} et ${config.PLAYER_MAX}.`);
         checkError(roundMax < config.ROUND_MIN || roundMax > config.ROUND_MAX, `Le nombre de round doit être compris entre ${config.ROUND_MIN} et ${config.ROUND_MAX}.`);
-        const game = new Game(roundMax, playerMax);
+        checkError(scoreMax < 0, `Le score max doit être un nombre positif.`);
+        const game = new Game(roundMax, playerMax, scoreMax);
         GameService.games = [...GameService.games, game];
         return GameService.joinGame(username, game.id);
     }
@@ -116,8 +117,10 @@ export default class GameService {
         game.isGameStarted = false;
         game.isVoteStarted = false;
         game.players.forEach(p => p.isReady = false);
+        game.round++;
 
-        if (game.roundMax > 0 && game.round++ === game.roundMax) {
+        if ((game.roundMax > 0 && game.round === game.roundMax) ||
+            (game.scoreMax > 0 && game.players.some(p => p.score >= game.scoreMax))) {
             game.isGameOver = true;
         }
 
@@ -129,26 +132,26 @@ export default class GameService {
         const tartufe = game.players.find(p => p.isTartufe);
         const playersFindTartufe = game.players.filter(p => p.ownVote === tartufe.id).length;
         /*
-        200 pour tartufe si personne n'a trouvé
-        100 pour tartufe si tartufe pas voté a la majorité
-        150 points si seul a voter pour tartufe
-        100 points si cote pour tartufe
+        20 pour tartufe si personne n'a trouvé
+        10 pour tartufe si tartufe pas voté a la majorité
+        15 points si seul a voter pour tartufe
+        10 points si cote pour tartufe
          */
         if (playersFindTartufe === 0) {
-            tartufe.score += 200;
+            tartufe.score += 20;
         }
 
         if (playersFindTartufe <= game.players.length * config.PERCENT_FOR_DEMOCRACY) {
-            tartufe.score += 100;
+            tartufe.score += 10;
         }
 
         game.players.forEach((player) => {
             if (!player.isTartufe) {
                 if (playersFindTartufe === 1 && player.ownVote === tartufe.id) {
-                    player.score += 150;
+                    player.score += 15;
                 }
                 if (playersFindTartufe > 1 && player.ownVote === tartufe.id) {
-                    player.score += 100;
+                    player.score += 10;
                 }
             }
         });

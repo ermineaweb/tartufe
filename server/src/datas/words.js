@@ -45,7 +45,7 @@ const wordList = [
     "Che Guevara", "Fidel Castro", "Lénine", "Karl Marx",
     "Guerre du Vietnam", "1ère Guerre Mondiale", "2ème Guerre Mondiale", "Révolution Française",
     "Counter Strike", "Valorant", "Fortnite",
-    "Orc", "Elfe", "Nain", "Draeinei",
+    "Orc", "Elfe", "Nain", "Draenei",
     "Sylvanas", "Anduin Wrynn", "Hurlevent", "Thrall", "Le Roi Liche",
     "Domingo", "Zerator", "Sardoche", "Squeezie", "Riot Games",
     "Rambo", "Rocky", "Bruce Willis", "Sylverster Stallone",

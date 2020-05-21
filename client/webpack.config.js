@@ -47,11 +47,8 @@ module.exports = {
     },
     plugins: [
         new Dotenv({
-            path: '../.env', // load this now instead of the ones in '.env'
-            safe: true, // vérifie grâce à .env.exemple que toutes les données sont récupérées
+            path: '../env/.env', // load this now instead of the ones in '.env'
             allowEmptyValues: true, // allow empty variables (e.g. `FOO=`) (treat it as empty string, rather than missing)
-            systemvars: true, // load all the predefined 'process.env' variables which will trump anything local per dotenv specs.
-            defaults: true // load '.env.defaults' as the default values if empty.
         }),
         new HtmlWebpackPlugin({
             template: require('html-webpack-template'),

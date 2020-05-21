@@ -16,13 +16,11 @@ const useStyles = makeStyles((theme) => ({
 
         textAlign: "center",
         padding: "10px 20px",
-        '& > *': {
-            margin: "15px auto",
-        },
     },
     players: {
         textAlign: "center",
         width: "100%",
+        margin:"100px auto"
     },
     card: {
         textAlign: "center",

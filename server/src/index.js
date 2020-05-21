@@ -7,7 +7,7 @@ import resolvers from "./graphql/resolvers";
 import schemas from "./graphql/schemas";
 import {PubSub} from 'graphql-subscriptions';
 
-dotenv.config({path: '../.env'});
+dotenv.config({path: '../env/.env'});
 const PORT = process.env.PORT || 4000;
 const API_PATH = "/" + process.env.API_PATH || "/graphdql";
 const PATH = "/" + process.env.PATH || "/";

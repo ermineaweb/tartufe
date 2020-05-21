@@ -5,6 +5,7 @@ const resolvers = {
         players: (root) => root.players,
         round: (root) => root.round,
         roundMax: (root) => root.roundMax,
+        scoreMax: (root) => root.scoreMax,
         playerMax: (root) => root.playerMax,
         isGameStarted: (root) => root.isGameStarted,
         isVoteStarted: (root) => root.isVoteStarted,

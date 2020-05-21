@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     },
     rootJoin: {
         margin: "50px auto",
-        // width: "300px",
+        width: "250px",
         '& > *': {
             margin: "10px auto",
             width: "100%",

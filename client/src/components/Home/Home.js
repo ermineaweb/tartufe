@@ -9,14 +9,12 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Slider from "../Slider";
 import Typography from "@material-ui/core/Typography";
 import {CREATE_GAME, JOIN_GAME} from "../../graphql/mutation";
-import Games from "../Games";
 import {useHistory} from "react-router-dom";
 import {UserContext} from "../../context";
 import Grid from "@material-ui/core/Grid";
 import useStyles from "./useStyles";
 import Rules from "../Rules";
-import ActionButtonLeft from "../ActionButton/ActionButtonLeft";
-import ActionButtonRight from "../ActionButton/ActionButtonRight";
+import ActionButtonRightTop from "../ActionButton/ActionButtonRightTop";
 
 
 export default function Home() {
@@ -24,8 +22,9 @@ export default function Home() {
     const [error, setError] = useState(null);
     const [username, setUsername] = useState("");
     const [idGame, setIdGame] = useState("");
-    const [playerMax, setPlayerMax] = useState(6);
-    const [roundMax, setRoundMax] = useState(4);
+    const [playerMax, setPlayerMax] = useState(8);
+    const [roundMax, setRoundMax] = useState(0);
+    const [scoreMax, setScoreMax] = useState(50);
     const [openOptions, setOpenOptions] = useState(false);
     const [openRules, setOpenRules] = useState(false);
     const {setUser} = useContext(UserContext);
@@ -37,6 +36,7 @@ export default function Home() {
             username,
             playerMax,
             roundMax,
+            scoreMax,
             idGame,
         }
     };
@@ -81,7 +81,7 @@ export default function Home() {
             <Grid container spacing={3}>
 
                 <Grid item xs={4}>
-                    <Games/>
+                    {/*<Games/>*/}
                 </Grid>
 
                 <Grid item xs={4}>
@@ -92,6 +92,7 @@ export default function Home() {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && handleJoinGame}
+                            autoFocus={true}
                         />
                         <TextField
                             label="ID de la partie"
@@ -148,7 +149,10 @@ export default function Home() {
                             onChange={(e, val) => setPlayerMax(val)}
                         />
                         <Typography gutterBottom>
-                            Nombre de rounds (0 pour infini)
+                            Nombre de rounds (Le joueur qui a le plus gros
+                        </Typography>
+                        <Typography gutterBottom>
+                            score gagne au {roundMax} ème round, 0 pour ignorer)
                         </Typography>
                         <Slider
                             valueLabelDisplay="auto"
@@ -156,6 +160,20 @@ export default function Home() {
                             min={0}
                             max={12}
                             onChange={(e, val) => setRoundMax(val)}
+                        />
+                        <Typography gutterBottom>
+                            Score à atteindre (Dès qu'un joueur atteint
+                        </Typography>
+                        <Typography gutterBottom>
+                            le score {scoreMax}, il gagne, 0 pour ignorer)
+                        </Typography>
+                        <Slider
+                            valueLabelDisplay="auto"
+                            value={scoreMax}
+                            min={0}
+                            max={200}
+                            step={10}
+                            onChange={(e, val) => setScoreMax(val)}
                         />
                     </DialogContent>
                     <DialogActions>
@@ -166,18 +184,14 @@ export default function Home() {
                 </div>
             </Dialog>
 
-            <ActionButtonRight
+            <ActionButtonRightTop
                 color="primary"
                 onClick={() => setOpenRules(true)}
             >
                 Règles
-            </ActionButtonRight>
+            </ActionButtonRightTop>
 
-            <Dialog open={openRules} onClose={() => setOpenRules(false)}>
-                <div className={classes.dialog}>
-                    <Rules/>
-                </div>
-            </Dialog>
+            <Rules openRules={openRules} setOpenRules={setOpenRules}/>
 
         </div>
     )

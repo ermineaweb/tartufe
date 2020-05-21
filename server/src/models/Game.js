@@ -6,17 +6,19 @@ export default class Game {
     _players;
     _round;
     _roundMax;
+    _scoreMax;
     _playerMax;
     _wordPlebe;
     _isGameStarted;
     _isVoteStarted;
     _isGameOver;
 
-    constructor(roundMax = 3, playerMax = 1) {
+    constructor(roundMax = 0, playerMax = 1, scoreMax = 0) {
         this._id = uuid();
         this._players = [];
         this._round = 1;
         this._roundMax = roundMax;
+        this._scoreMax = scoreMax;
         this._playerMax = playerMax;
         this._wordPlebe = "";
         this._isGameStarted = false;
@@ -41,6 +43,14 @@ export default class Game {
         const index = this._players.findIndex(p => p.id === player.id);
         this._players.splice(index, 1);
         return this;
+    }
+
+    get scoreMax() {
+        return this._scoreMax;
+    }
+
+    set scoreMax(value) {
+        this._scoreMax = value;
     }
 
     get wordPlebe() {

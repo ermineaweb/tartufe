@@ -6,7 +6,7 @@ import Fab from '@material-ui/core/Fab';
 const useStyles = makeStyles(() => ({
     fab: {
         position: 'fixed',
-        bottom: 30,
+        top: 30,
         right: 30,
         zIndex: "1",
         width: "100px",
@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export default function ActionButtonRight({...props}) {
+export default function ActionButtonRightTop({...props}) {
     const classes = useStyles();
 
     return (

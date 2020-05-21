@@ -7,14 +7,14 @@ const useStyles = makeStyles(() => ({
     fab: {
         position: 'fixed',
         bottom: 30,
-        left: 30,
+        right: 30,
         zIndex: "1",
         width:"100px",
         height:"100px",
     },
 }));
 
-export default function ActionButtonLeft({...props}) {
+export default function ActionButtonRightBot({...props}) {
     const classes = useStyles();
 
     return (

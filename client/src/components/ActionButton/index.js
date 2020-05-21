@@ -1,4 +1,4 @@
-import ActionButtonRight from "./ActionButtonRight";
-import ActionButtonLeft from "./ActionButtonLeft";
+import ActionButtonRightTop from "./ActionButtonRightBot";
+import ActionButtonRightBot from "./ActionButtonRightTop";
 
-export default {ActionButtonLeft, ActionButtonRight};
+export default {ActionButtonRightBot, ActionButtonRightTop};

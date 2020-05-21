@@ -8,7 +8,7 @@ import AvatarAnge from "../../assets/img/avatars/dark/avatar_ange.png";
 import AvatarSearch from "../../assets/img/avatars/dark/avatar_search.png";
 import AvatarSleep from "../../assets/img/avatars/dark/avatar_sleep.png";
 import AvatarTartufe from "../../assets/img/avatars/dark/avatar_tartufe.png";
-import Writing from "../../assets/img/writing.gif";
+import Writing from "../../assets/img/writing_dark2.gif";
 import Typography from "@material-ui/core/Typography";
 
 
