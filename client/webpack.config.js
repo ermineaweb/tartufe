@@ -4,7 +4,6 @@ const Dotenv = require('dotenv-webpack');
 
 
 module.exports = {
-    mode: "development",
     entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'build'),
@@ -51,10 +50,8 @@ module.exports = {
             allowEmptyValues: true, // allow empty variables (e.g. `FOO=`) (treat it as empty string, rather than missing)
         }),
         new HtmlWebpackPlugin({
-            template: require('html-webpack-template'),
-            inject: true,
-            appMountId: 'root',
-            filename: 'index.html'
+            template: "public/index.html",
+            favicon: "public/favicon.ico",
         }),
     ],
     optimization: {

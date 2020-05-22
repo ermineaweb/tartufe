@@ -8,12 +8,12 @@ export default function Rules({openRules, setOpenRules}) {
     const classes = useStyles();
 
     return (
+        <div className={classes.root}>
             <Dialog
                 open={openRules}
                 onClose={() => setOpenRules(false)}
                 fullWidth={true}
                 maxWidth={"sm"}
-                className={classes.root}
             >
                 <Typography variant="h5" color="primary">Règles de jeu</Typography>
                 <Typography variant="body1" color="primary">
@@ -50,5 +50,6 @@ export default function Rules({openRules, setOpenRules}) {
                     10 Pour chaque détective qui démasque le TARTUFE
                 </Typography>
             </Dialog>
+        </div>
     )
 }

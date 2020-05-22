@@ -3,39 +3,20 @@ import Wallpaper from "../../assets/img/wallpaper6.jpg";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        backgroundAttachment: 'fixed',
-        backgroundSize: 'cover',
-        heigth: "100vh",
-        width: "100%",
         flexGrow: 1,
-        height: '100vh',
         justifyContent: "center",
         alignItems: "center",
+
+        width: "100%",
+        height: '100vh',
+
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
         backgroundImage: `url(${Wallpaper})`,
         backgroundColor: "",
 
         textAlign: "center",
-        padding: "10px 20px",
-    },
-    players: {
-        textAlign: "center",
-        width: "100%",
-        margin:"100px auto"
-    },
-    card: {
-        textAlign: "center",
-        width: "150px",
-    },
-    infos:{
-      width:"100%",
-      textAlign:"center",
-        heigth:"200px",
-    },
-    wordInput: {
-        '& > *': {
-            margin: "0 auto",
-        },
-        fontSize: "1.2em",
+        padding: "5px 10px",
     },
 }));
 

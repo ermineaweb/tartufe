@@ -1,4 +1,3 @@
-import ActionButtonRightTop from "./ActionButtonRightBot";
-import ActionButtonRightBot from "./ActionButtonRightTop";
+import ActionButton from "./ActionButton";
 
-export default {ActionButtonRightBot, ActionButtonRightTop};
+export default ActionButton;

@@ -1,45 +1,49 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
+import React, {useEffect, useState} from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from '@material-ui/icons/Close';
+import Alert from '@material-ui/lab/Alert';
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
-export default function Error({error}) {
-    const [open, setOpen] = React.useState(false);
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: "100%",
+    },
+}));
 
-    const handleClick = () => {
-        setOpen(true);
-    };
+export default function Error({error, setError}) {
+    const classes = useStyles();
 
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
+    const [open, setOpen] = useState(true);
 
+    const handleClose = () => {
         setOpen(false);
     };
 
+    useEffect(() => {
+        return () => {
+            setError(null);
+        }
+    });
+
     return (
-        <div>
-            <Snackbar
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                open={open}
-                autoHideDuration={6000}
-                onClose={handleClose}
-                message={error}
+        <Snackbar
+            className={classes.root}
+            anchorOrigin={{vertical: "top", horizontal: "center"}}
+            open={open}
+            onClose={handleClose}
+            autoHideDuration={4000}
+        >
+            <Alert
+                elevation={6}
+                variant="outlined"
+                severity="error"
                 action={
-                    <React.Fragment>
-                        <Button color="secondary" size="small" onClick={handleClose}>
-                            UNDO
-                        </Button>
-                        <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-                            X
-                        </IconButton>
-                    </React.Fragment>
+                    <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+                        <CloseIcon fontSize="small"/>
+                    </IconButton>
                 }
-            />
-        </div>
+            >{error}</Alert>
+        </Snackbar>
     );
 }

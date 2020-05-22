@@ -1,6 +1,4 @@
-import React, {createRef, useContext, useEffect, useRef, useState} from "react";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
+import React, { useContext, useEffect, useRef, useState} from "react";
 import {useMutation} from "@apollo/react-hooks";
 import {
     ADD_OWN_WORD,
@@ -11,17 +9,15 @@ import {
     VOTE,
 } from "../../graphql/mutation";
 import {UserContext} from "../../context";
-import Grid from "@material-ui/core/Grid";
-import Words from "../Words";
-import Player from "../Player";
-import Typography from "@material-ui/core/Typography";
 import useStyles from "./useStyles";
-import Score from "../Score";
 import {useHistory} from "react-router";
-import ActionButtonRightTop from "../ActionButton/ActionButtonRightTop";
-import ActionButtonRightBot from "../ActionButton/ActionButtonRightBot";
+import ActionButton from "../ActionButton";
 import Rules from "../Rules";
-import {NavLink} from "react-router-dom";
+import Error from "../Error";
+import GameInfo from "./GameInfo";
+import PlayerInfo from "./PlayerInfo";
+import PlayerInput from "./PlayerInput";
+import Players from "./Players";
 
 
 export default function Board({game, subscribe}) {
@@ -56,14 +52,16 @@ export default function Board({game, subscribe}) {
         return () => {
             if (!!user.id) {
                 leaveGame()
-                    .catch(err => setError(err.toString()));
+                    .catch(err => setError(err.graphQLErrors[0].message));
             }
         }
     }, []);
 
     const handleToggleReady = () => {
+        console.log(user.id)
+        console.log(user.idGame)
         toggleReady()
-            .catch(err => setError(err.toString()));
+            .catch(err => setError(err.graphQLErrors[0].message));
     };
 
     const handleAddWord = () => {
@@ -73,7 +71,7 @@ export default function Board({game, subscribe}) {
                 isWriting({variables: {...options.variables, isWriting: false}})
                     .catch(err => setError(err.toString()));
             })
-            .catch(err => setError(err.toString()));
+            .catch(err => setError(err.graphQLErrors[0].message));
     };
 
     const handleWriting = (e, isAlreadyWriting) => {
@@ -82,25 +80,25 @@ export default function Board({game, subscribe}) {
         // pour ne pas surcharger en requetes
         if (!isAlreadyWriting) {
             isWriting({variables: {...options.variables, isWriting: true}})
-                .catch(err => setError(err.toString()));
+                .catch(err => setError(err.graphQLErrors[0].message));
         }
     };
 
     useEffect(() => {
         if (word === "") {
             isWriting({variables: {...options.variables, isWriting: false}})
-                .catch(err => setError(err.toString()));
+                .catch(err => setError(err.graphQLErrors[0].message));
         }
     }, [word]);
 
     const handleValidVote = () => {
         validVote()
-            .catch(err => setError(err.toString()));
+            .catch(err => setError(err.graphQLErrors[0].message));
     };
 
     const handleVote = (idTartufe) => {
         vote({variables: {...options.variables, idTartufe}})
-            .catch(err => setError(err.toString()));
+            .catch(err => setError(err.graphQLErrors[0].message));
     };
 
     if (!user.id) {
@@ -110,199 +108,49 @@ export default function Board({game, subscribe}) {
     return (
         <div className={classes.root}>
 
-            {error && <div>{error}</div>}
+            {error && <Error error={error} setError={setError}/>}
 
-            {!game.isGameStarted && game.round > 1 &&
-            <div className={classes.infos}>
-                {game.isGameOver &&
-                <>
-                    <Typography variant="h3" color="primary">
-                        GAME OVER
-                    </Typography>
-                    <Typography variant="h3" color="primary">
-                        Scores
-                    </Typography>
-                    {game.players
-                        .sort((a, b) => b.score - a.score)
-                        .map(player =>
-                            <Typography key={player.id} variant="h5" color="primary">
-                                {player.username} - {player.score}
-                            </Typography>
-                        )}
-                    <NavLink to={"/"}>
-                        <Typography variant="h3" color="primary">
-                            Accueil
-                        </Typography>
-                    </NavLink>
-                </>
-                }
-                <Typography variant="body2" color="primary">
-                    Les enquêteurs avaient le mot <strong>"{game.wordPlebe}"</strong>
-                </Typography>
-                <Typography variant="body2" color="primary">
-                    Le Tartufe était <strong>{game.players.find(p => p.isTartufe).username}</strong>
-                </Typography>
-                <Typography variant="body2" color="primary">
-                    Les enquêteurs qui ont démasqué le Tartufe sont :
-                </Typography>
-                <Typography variant="body2" color="primary">
-                    {game.players.filter(p => {
-                        const tartufe = game.players.find(p => p.isTartufe);
-                        return p.ownVote === tartufe.id;
-                    }).map((p) =>
-                        <strong key={p.id}>
-                            {" " + p.username + " "}
-                        </strong>
-                    )}
-                </Typography>
-            </div>
-            }
-
-            {game.isGameStarted ?
-                <>
-                    <Typography variant="h5" color="primary">Round {game.round} / {game.roundMax}</Typography>
-
-                    {game.players.find(p => p.id === user.id).isTartufe ?
-                        <>
-                            <Typography variant="h5" color="primary">
-                                Vous êtes le Menteur, vous devez passer inaperçu.
-                            </Typography>
-                            <Typography variant="h5" color="primary">
-                                Vous pouvez influencer les votes en faisant semblant de voter.
-                            </Typography>
-                        </>
-                        :
-                        <Typography variant="h5" color="primary">
-                            {game.wordPlebe}
-                        </Typography>
-                    }
-
-                </>
-                :
-                <>
-                    {!game.isGameOver &&
-                    <>
-                        <Typography variant="h5" color="primary">
-                            {game.players.length} / {game.playerMax} Joueurs
-                        </Typography>
-                        <TextField
-                            variant="standard"
-                            color="primary"
-                            value={game.id}
-                            readOnly={true}
-                            className={classes.wordInput}
-                            label={"ID"}
-                            onFocus={(e) => e.target.select()}
-                        />
-                    </>
-                    }
-                </>
-            }
-
-            <div className={classes.actions}>
-
-                {game.isGameStarted &&
-                <TextField
-                    variant="outlined"
-                    color="primary"
-                    autoFocus={true}
-                    value={
-                        game.isVoteStarted ?
-                            "Votez !"
-                            :
-                            game.players.find(p => p.id === user.id).isPlaying ?
-                                word
-                                :
-                                "Au tour de " + game.players.find(p => p.isPlaying).username
-                    }
-                    // on récupère le statut "isWriting" du joueur en cours
-                    onChange={(e) => handleWriting(e, game.players.some(p => (p.id === user.id && p.isWriting)))}
-                    onKeyDown={(e) => e.key === "Enter" && handleAddWord()}
-                    disabled={game.isVoteStarted || !game.players.find(p => p.id === user.id).isPlaying}
-                    error={game.players.find(p => p.id === user.id).isPlaying}
-                />
-                }
-
-            </div>
-
-            <div className={classes.players}>
-                <Grid container>
-
-                    <Grid item xs={6}>
-                        <Grid container spacing={3}>
-
-                            {game.players.map((player) => (
-                                <Grid item key={player.id}>
-                                    <div className={classes.card}>
-
-                                        <div className={classes.actions}>
-
-                                            {game.isVoteStarted &&
-                                            < Button
-                                                variant="contained"
-                                                color="primary"
-                                                onClick={() => handleVote(player.id)}
-                                                fullWidth={true}
-                                                disabled={game.players.find(p => p.id === user.id).ownVote === player.id || game.players.find(p => p.id === user.id).validVote}
-                                            >
-                                                Voter
-                                            </Button>
-                                            }
-
-                                        </div>
-
-                                        {!game.isGameOver &&
-                                        <Player game={game} player={player}/>
-                                        }
-
-                                        {game.isGameStarted && <Words words={player.words}/>}
-
-                                    </div>
-
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </Grid>
-
-                    <Grid item xs={2}>
-                        {!game.isGameOver &&
-                        <Score game={game}/>
-                        }
-                    </Grid>
-                    <Grid item xs={4}>
-                    </Grid>
-
-                </Grid>
-            </div>
+            <PlayerInfo game={game}/>
+            <PlayerInput
+                game={game}
+                handleAddWord={handleAddWord}
+                handleWriting={handleWriting}
+                word={word}
+            />
+            <Players game={game} handleVote={handleVote}/>
+            <GameInfo game={game}/>
 
             {!game.isGameOver &&
             !game.isGameStarted &&
-            <ActionButtonRightBot
+            <ActionButton
+                corner={"bottom-right"}
                 color={game.players.find(p => p.id === user.id).isReady ? "primary" : "secondary"}
                 onClick={handleToggleReady}
             >
                 {game.players.find(p => p.id === user.id).isReady ? "Pas prêt" : "  Prêt  "}
-            </ActionButtonRightBot>
+            </ActionButton>
             }
 
             {!game.isGameOver &&
             game.isVoteStarted &&
             !game.players.find(p => p.id === user.id).isTartufe &&
-            <ActionButtonRightBot
+            <ActionButton
+                corner={"bottom-right"}
                 color="primary"
                 onClick={handleValidVote}
                 disabled={game.players.find(p => p.id === user.id).validVote}
             >
                 Valider le vote
-            </ActionButtonRightBot>
+            </ActionButton>
             }
 
-            <ActionButtonRightTop
+            <ActionButton
+                corner={"bottom-left"}
                 color="primary"
                 onClick={() => setOpenRules(true)}
             >
                 Règles
-            </ActionButtonRightTop>
+            </ActionButton>
 
             <Rules openRules={openRules} setOpenRules={setOpenRules}/>
 

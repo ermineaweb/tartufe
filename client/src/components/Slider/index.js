@@ -5,7 +5,7 @@ export default withStyles({
     root: {
         color: '#d1c4e9',
         height: 8,
-        width: 200,
+        width: 180,
         padding:10,
     },
     thumb: {

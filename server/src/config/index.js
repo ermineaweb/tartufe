@@ -1,12 +1,15 @@
 export default {
 
-    GAME_MAX: 100,
+    GAME_MAX: 1000,
 
     PLAYER_MIN: 3,
     PLAYER_MAX: 12,
 
     ROUND_MIN: 0,
     ROUND_MAX: 12,
+
+    SCORE_MIN: 30,
+    SCORE_MAX: 200,
 
     WORD_MAX: 2,
 

@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {useMutation} from "@apollo/react-hooks";
@@ -11,10 +11,11 @@ import Typography from "@material-ui/core/Typography";
 import {CREATE_GAME, JOIN_GAME} from "../../graphql/mutation";
 import {useHistory} from "react-router-dom";
 import {UserContext} from "../../context";
-import Grid from "@material-ui/core/Grid";
 import useStyles from "./useStyles";
 import Rules from "../Rules";
-import ActionButtonRightTop from "../ActionButton/ActionButtonRightTop";
+import ActionButton from "../ActionButton";
+import Error from "../Error";
+import Footer from "../Footer";
 
 
 export default function Home() {
@@ -22,9 +23,9 @@ export default function Home() {
     const [error, setError] = useState(null);
     const [username, setUsername] = useState("");
     const [idGame, setIdGame] = useState("");
-    const [playerMax, setPlayerMax] = useState(8);
+    const [playerMax, setPlayerMax] = useState(12);
     const [roundMax, setRoundMax] = useState(0);
-    const [scoreMax, setScoreMax] = useState(50);
+    const [scoreMax, setScoreMax] = useState(60);
     const [openOptions, setOpenOptions] = useState(false);
     const [openRules, setOpenRules] = useState(false);
     const {setUser} = useContext(UserContext);
@@ -56,12 +57,14 @@ export default function Home() {
                     }
                 })
             })
-            .catch(err => setError(err.toString()));
+            .catch(err => setError(err.graphQLErrors[0].message));
     };
 
     const handleJoinGame = () => {
+        console.log("handlejoingame")
         joinGame()
             .then(res => {
+                console.log("then")
                 setUser(res.data.joinGame);
                 history.push({
                     pathname: "/board",
@@ -70,65 +73,54 @@ export default function Home() {
                     }
                 });
             })
-            .catch(err => setError(err.toString()));
+            .catch(err => setError(err.graphQLErrors[0].message));
     };
+
 
     return (
         <div className={classes.root}>
 
-            {error && <div>{error}</div>}
+            {error && <Error error={error} setError={setError}/>}
 
-            <Grid container spacing={3}>
+            <div className={classes.rootJoin}>
+                <TextField
+                    label="Pseudo"
+                    variant="outlined"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleJoinGame}
+                    autoFocus={true}
+                />
+                <TextField
+                    label="ID de la partie"
+                    variant="outlined"
+                    value={idGame}
+                    onChange={(e) => setIdGame(e.target.value.trim())}
+                    onKeyDown={(e) => e.key === "Enter" && handleJoinGame}
+                    onFocus={(e) => e.target.select()}
+                />
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleJoinGame}
+                    disabled={!username || !idGame}
+                >
+                    Rejoindre
+                </Button>
 
-                <Grid item xs={4}>
-                    {/*<Games/>*/}
-                </Grid>
+                <Typography variant="body2" color="primary">Ou créer une nouvelle partie</Typography>
 
-                <Grid item xs={4}>
-                    <div className={classes.rootJoin}>
-                        <TextField
-                            label="Pseudo"
-                            variant="outlined"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && handleJoinGame}
-                            autoFocus={true}
-                        />
-                        <TextField
-                            label="ID de la partie"
-                            variant="outlined"
-                            value={idGame}
-                            onChange={(e) => setIdGame(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && handleJoinGame}
-                            onFocus={(e) => e.target.select()}
-                        />
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleJoinGame}
-                        >
-                            Rejoindre
-                        </Button>
-
-                        <div><Typography variant="body2" color="primary">Ou créer une nouvelle partie</Typography></div>
-
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => setOpenOptions(true)}
-                        >
-                            Créer
-                        </Button>
-                    </div>
-                </Grid>
-
-                <Grid item xs={4}>
-                </Grid>
-
-            </Grid>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => setOpenOptions(true)}
+                >
+                    Créer
+                </Button>
+            </div>
 
             <Dialog open={openOptions} onClose={() => setOpenOptions(false)}>
-                <div className={classes.dialog}>
+                <div className={classes.options}>
                     <DialogTitle>Options de la partie</DialogTitle>
                     <DialogContent>
                         <TextField
@@ -137,40 +129,38 @@ export default function Home() {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && handleCreateGame}
+                            autoFocus={true}
                         />
+                        {/*<Typography gutterBottom>*/}
+                        {/*    Maximum de joueurs*/}
+                        {/*</Typography>*/}
+                        {/*<Slider*/}
+                        {/*    valueLabelDisplay="auto"*/}
+                        {/*    value={playerMax}*/}
+                        {/*    min={3}*/}
+                        {/*    max={12}*/}
+                        {/*    onChange={(e, val) => setPlayerMax(val)}*/}
+                        {/*/>*/}
+                        {/*<Typography gutterBottom>*/}
+                        {/*    Nombre de rounds (Le joueur qui a le plus gros*/}
+                        {/*</Typography>*/}
+                        {/*<Typography gutterBottom>*/}
+                        {/*    score gagne au {roundMax} ème round, 0 pour ignorer)*/}
+                        {/*</Typography>*/}
+                        {/*<Slider*/}
+                        {/*    valueLabelDisplay="auto"*/}
+                        {/*    value={roundMax}*/}
+                        {/*    min={0}*/}
+                        {/*    max={12}*/}
+                        {/*    onChange={(e, val) => setRoundMax(val)}*/}
+                        {/*/>*/}
                         <Typography gutterBottom>
-                            Maximum de joueurs
-                        </Typography>
-                        <Slider
-                            valueLabelDisplay="auto"
-                            value={playerMax}
-                            min={3}
-                            max={12}
-                            onChange={(e, val) => setPlayerMax(val)}
-                        />
-                        <Typography gutterBottom>
-                            Nombre de rounds (Le joueur qui a le plus gros
-                        </Typography>
-                        <Typography gutterBottom>
-                            score gagne au {roundMax} ème round, 0 pour ignorer)
-                        </Typography>
-                        <Slider
-                            valueLabelDisplay="auto"
-                            value={roundMax}
-                            min={0}
-                            max={12}
-                            onChange={(e, val) => setRoundMax(val)}
-                        />
-                        <Typography gutterBottom>
-                            Score à atteindre (Dès qu'un joueur atteint
-                        </Typography>
-                        <Typography gutterBottom>
-                            le score {scoreMax}, il gagne, 0 pour ignorer)
+                            Score à atteindre pour gagner
                         </Typography>
                         <Slider
                             valueLabelDisplay="auto"
                             value={scoreMax}
-                            min={0}
+                            min={30}
                             max={200}
                             step={10}
                             onChange={(e, val) => setScoreMax(val)}
@@ -184,14 +174,17 @@ export default function Home() {
                 </div>
             </Dialog>
 
-            <ActionButtonRightTop
+            <ActionButton
+                corner={"bottom-left"}
                 color="primary"
                 onClick={() => setOpenRules(true)}
             >
                 Règles
-            </ActionButtonRightTop>
+            </ActionButton>
 
             <Rules openRules={openRules} setOpenRules={setOpenRules}/>
+
+            <Footer/>
 
         </div>
     )

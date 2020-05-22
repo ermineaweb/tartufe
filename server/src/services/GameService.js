@@ -13,15 +13,15 @@ export default class GameService {
         checkError(GameService.games.length >= config.GAME_MAX, "Trop de partie en cours, veuillez patienter qu'un slot se libère.");
         checkError(playerMax < config.PLAYER_MIN || playerMax > config.PLAYER_MAX, `Le nombre de joueur doit être compris entre ${config.PLAYER_MIN} et ${config.PLAYER_MAX}.`);
         checkError(roundMax < config.ROUND_MIN || roundMax > config.ROUND_MAX, `Le nombre de round doit être compris entre ${config.ROUND_MIN} et ${config.ROUND_MAX}.`);
-        checkError(scoreMax < 0, `Le score max doit être un nombre positif.`);
+        checkError(scoreMax < config.SCORE_MIN || scoreMax > config.SCORE_MAX, `Le score max doit être compris entre ${config.SCORE_MIN} et ${config.SCORE_MAX}.`);
         const game = new Game(roundMax, playerMax, scoreMax);
         GameService.games = [...GameService.games, game];
         return GameService.joinGame(username, game.id);
     }
 
     static joinGame(username, idGame) {
-        const game = GameService.getGame(idGame);
         checkError(username.length < config.USERNAME_MIN_LENGTH || username.length > config.USERNAME_MAX_LENGTH, `Votre pseudo doit contenir entre ${config.USERNAME_MIN_LENGTH} et ${config.USERNAME_MAX_LENGTH} caractères.`);
+        const game = GameService.getGame(idGame);
         checkError(game.players.some(p => p.username === username), "Votre pseudo est déjà pris, soyez plus créatif.");
         checkError(game.isGameStarted, "Round en cours, essayez de rejoindre dans un instant.");
         checkError(game.isGameOver, "La partie est finie !");
@@ -41,8 +41,10 @@ export default class GameService {
     static toggleReady(idPlayer, idGame) {
         const game = GameService.getGame(idGame);
         const player = GameService.getPlayer(idPlayer, idGame);
+        console.log(player)
         player.isReady = !player.isReady;
-        if (GameService.arePlayersReady(idGame) && game.players.length >= config.PLAYER_MIN && !game.isGameOver) {
+        //&& game.players.length >= config.PLAYER_MIN
+        if (GameService.arePlayersReady(idGame) && !game.isGameOver) {
             GameService.startGame(idGame);
         }
         return game;
