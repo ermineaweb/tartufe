@@ -15,7 +15,7 @@ const wordList = [
     ["Counter Strike", "Valorant", "Fortnite"],
     ["Orc", "Elfe", "Nain", "Draeinei"],
     ["Sylvanas", "Anduin Wrynn", "Hurlevent", "Thrall", "Le Roi Liche"],
-    ["Domingo", "Zerator", "Sardoche", "Squeezie", "Riot Games"],
+    ["Domingo", "Zerator", "Sardoche", "Squeezie"],
     ["Rambo", "Rocky", "Bruce Willis", "Sylverster Stallone"],
     ["chatte", "téton", "sein", "pénis"],
     ["Mousse au chocolat", "Pomme d'amour", "baguette", "croissant", "mouton"],
@@ -28,6 +28,12 @@ const wordList = [
     ["hiver", "anniversaire", "fête"],
     ["football", "basketball", "baseball"],
     ["Hercule Poirot", "Miss Marple", "Sherlock Holmes", "Dr Watson"],
+    ["Playstation", "Nintendo", "Xbox"],
+    ["Windows", "Macintosh", "Linux"],
+    ["Harry Potter", "Le seigneur des anneaux", "Star Wars", "mot"],
+    ["mot", "mot", "mot", "mot"],
+    ["mot", "mot", "mot", "mot"],
+    ["mot", "mot", "mot", "mot"],
 ];
 
 const wordListOld = [
