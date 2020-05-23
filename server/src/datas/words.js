@@ -31,9 +31,6 @@ const wordList = [
     ["Playstation", "Nintendo", "Xbox"],
     ["Windows", "Macintosh", "Linux"],
     ["Harry Potter", "Le seigneur des anneaux", "Star Wars", "mot"],
-    ["mot", "mot", "mot", "mot"],
-    ["mot", "mot", "mot", "mot"],
-    ["mot", "mot", "mot", "mot"],
 ];
 
 const wordListOld = [
