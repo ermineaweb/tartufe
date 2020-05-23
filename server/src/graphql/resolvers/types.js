@@ -7,10 +7,13 @@ const resolvers = {
         roundMax: (root) => root.roundMax,
         scoreMax: (root) => root.scoreMax,
         playerMax: (root) => root.playerMax,
+        wordsMax: (root) => root.wordsMax,
         isGameStarted: (root) => root.isGameStarted,
         isVoteStarted: (root) => root.isVoteStarted,
         isGameOver: (root) => root.isGameOver,
         wordPlebe: (root) => root.wordPlebe,
+        wordTartufe: (root) => root.wordTartufe,
+        mode: (root) => root.mode,
     },
 
     Player: {

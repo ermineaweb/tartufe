@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import useStyles from "./useStyles";
 import TextField from "@material-ui/core/TextField";
 import {UserContext} from "../../../context";
+import Typography from "@material-ui/core/Typography";
 
 export default function PlayerInput({game, handleWriting, handleAddWord, word}) {
     const classes = useStyles();
@@ -10,28 +11,49 @@ export default function PlayerInput({game, handleWriting, handleAddWord, word}) 
     return (
         <div className={classes.root}>
 
-            {game.isGameStarted &&
-            <TextField
-                variant="outlined"
-                color="primary"
-                autoFocus={true}
-                value={
-                    game.isVoteStarted ?
-                        "Votez !"
-                        :
-                        game.players.find(p => p.id === user.id).isPlaying ?
-                            word
-                            :
-                            "Au tour de " + game.players.find(p => p.isPlaying).username
+                {game.players.find(p => p.id === user.id).isTartufe ?
+                    <>
+                        {game.mode === 1 &&
+                        <>
+                            <Typography variant="h6" color="primary">
+                                Vous êtes le Menteur, vous devez passer inaperçu.
+                            </Typography>
+                            <Typography variant="h6" color="primary">
+                                Vous pouvez influencer les votes en faisant semblant de voter.
+                            </Typography>
+                        </>
+                        }
+                        {game.mode === 2 &&
+                        <Typography variant="h5" color="primary">
+                            {game.wordTartufe}
+                        </Typography>
+                        }
+                    </>
+                    :
+                    <Typography variant="h5" color="primary">
+                        {game.wordPlebe}
+                    </Typography>
                 }
-                // on récupère le statut "isWriting" du joueur en cours
-                onChange={(e) => handleWriting(e, game.players.some(p => (p.id === user.id && p.isWriting)))}
-                onKeyDown={(e) => e.key === "Enter" && handleAddWord()}
-                disabled={game.isVoteStarted || !game.players.find(p => p.id === user.id).isPlaying}
-                error={game.players.find(p => p.id === user.id).isPlaying}
-            />
-            }
 
+                <TextField
+                    variant="outlined"
+                    color="primary"
+                    autoFocus={true}
+                    value={
+                        game.isVoteStarted ?
+                            "Votez !"
+                            :
+                            game.players.find(p => p.id === user.id).isPlaying ?
+                                word
+                                :
+                                "Au tour de " + game.players.find(p => p.isPlaying).username
+                    }
+                    // on récupère le statut "isWriting" du joueur en cours
+                    onChange={(e) => handleWriting(e, game.players.some(p => (p.id === user.id && p.isWriting)))}
+                    onKeyDown={(e) => e.key === "Enter" && handleAddWord()}
+                    disabled={game.isVoteStarted || !game.players.find(p => p.id === user.id).isPlaying}
+                    error={game.players.find(p => p.id === user.id).isPlaying}
+                />
         </div>
     );
 }

@@ -6,8 +6,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: "flex-start",
         justifyContent: "center",
 
-        height: "40vh",
-
+        height: "45vh",
     },
 }));
 

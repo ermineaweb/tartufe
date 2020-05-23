@@ -4,7 +4,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         textAlign: "center",
         width: 140,
-        margin: "0 5px",
+        margin: "0 15px",
     },
     avatar: {
         width: "12vw",

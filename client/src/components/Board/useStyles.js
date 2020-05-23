@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme) => ({
         backgroundAttachment: 'fixed',
         backgroundSize: 'cover',
         backgroundImage: `url(${Wallpaper})`,
-        backgroundColor: "",
 
         textAlign: "center",
         padding: "5px 10px",

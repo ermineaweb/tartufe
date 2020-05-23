@@ -21,7 +21,10 @@ export default function Players({game, handleVote}) {
                         color="primary"
                         onClick={() => handleVote(player.id)}
                         fullWidth={true}
-                        disabled={game.players.find(p => p.id === user.id).ownVote === player.id || game.players.find(p => p.id === user.id).validVote}
+                        disabled={
+                            game.players.find(p => p.id === user.id).ownVote === player.id ||
+                            game.players.find(p => p.id === user.id).validVote
+                        }
                     >
                         Voter
                     </Button>

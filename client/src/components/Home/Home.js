@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {useMutation} from "@apollo/react-hooks";
@@ -16,6 +16,9 @@ import Rules from "../Rules";
 import ActionButton from "../ActionButton";
 import Error from "../Error";
 import Footer from "../Footer";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Radio from "@material-ui/core/Radio";
 
 
 export default function Home() {
@@ -25,7 +28,9 @@ export default function Home() {
     const [idGame, setIdGame] = useState("");
     const [playerMax, setPlayerMax] = useState(12);
     const [roundMax, setRoundMax] = useState(0);
+    const [wordsMax, setWordsMax] = useState(2);
     const [scoreMax, setScoreMax] = useState(60);
+    const [mode, setMode] = useState(1);
     const [openOptions, setOpenOptions] = useState(false);
     const [openRules, setOpenRules] = useState(false);
     const {setUser} = useContext(UserContext);
@@ -38,6 +43,8 @@ export default function Home() {
             playerMax,
             roundMax,
             scoreMax,
+            wordsMax,
+            mode,
             idGame,
         }
     };
@@ -61,10 +68,8 @@ export default function Home() {
     };
 
     const handleJoinGame = () => {
-        console.log("handlejoingame")
         joinGame()
             .then(res => {
-                console.log("then")
                 setUser(res.data.joinGame);
                 history.push({
                     pathname: "/board",
@@ -165,6 +170,24 @@ export default function Home() {
                             step={10}
                             onChange={(e, val) => setScoreMax(val)}
                         />
+                        <Typography gutterBottom>
+                            Mots par joueur
+                        </Typography>
+                        <Slider
+                            valueLabelDisplay="auto"
+                            value={wordsMax}
+                            min={1}
+                            max={5}
+                            step={1}
+                            onChange={(e, val) => setWordsMax(val)}
+                        />
+                        <Typography gutterBottom>
+                            Mode de jeu
+                        </Typography>
+                        <RadioGroup value={mode} onChange={(e, val) => setMode(Number(val))}>
+                            <FormControlLabel value={1} control={<Radio/>} label="Mode 1 : Tartufe n'a pas de mot"/>
+                            <FormControlLabel value={2} control={<Radio/>} label="Mode 2 : Tartufe a un mot"/>
+                        </RadioGroup>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleCreateGame} color="secondary" variant={"contained"}>

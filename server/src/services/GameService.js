@@ -9,12 +9,22 @@ export default class GameService {
 
     static games = [];
 
-    static createGame(username, playerMax, roundMax, scoreMax) {
-        checkError(GameService.games.length >= config.GAME_MAX, "Trop de partie en cours, veuillez patienter qu'un slot se libère.");
+    static createGame(username, playerMax, roundMax, scoreMax, wordsMax, mode) {
         checkError(playerMax < config.PLAYER_MIN || playerMax > config.PLAYER_MAX, `Le nombre de joueur doit être compris entre ${config.PLAYER_MIN} et ${config.PLAYER_MAX}.`);
         checkError(roundMax < config.ROUND_MIN || roundMax > config.ROUND_MAX, `Le nombre de round doit être compris entre ${config.ROUND_MIN} et ${config.ROUND_MAX}.`);
         checkError(scoreMax < config.SCORE_MIN || scoreMax > config.SCORE_MAX, `Le score max doit être compris entre ${config.SCORE_MIN} et ${config.SCORE_MAX}.`);
-        const game = new Game(roundMax, playerMax, scoreMax);
+        checkError(wordsMax < config.WORDS_MIN || wordsMax > config.WORDS_MAX, `Le nombre de mots par tours doit être compris entre ${config.WORDS_MIN} et ${config.WORDS_MAX}.`);
+
+        // clean games with no players
+        GameService.games.forEach((game, index, array) => {
+            if (game.players.length === 0) {
+                array.splice(index, 1);
+            }
+        });
+
+        checkError(GameService.games.length >= config.GAME_MAX, "Trop de partie en cours, veuillez patienter qu'un slot se libère.");
+        const game = new Game(roundMax, playerMax, scoreMax, wordsMax, mode);
+
         GameService.games = [...GameService.games, game];
         return GameService.joinGame(username, game.id);
     }
@@ -32,19 +42,14 @@ export default class GameService {
         const game = GameService.getGame(idGame);
         const player = GameService.getPlayer(idPlayer, idGame);
         game.removePlayer(player);
-        if (game.players.length === 0) {
-            GameService.removeGame(idGame);
-        }
         return GameService.games;
     }
 
     static toggleReady(idPlayer, idGame) {
         const game = GameService.getGame(idGame);
         const player = GameService.getPlayer(idPlayer, idGame);
-        console.log(player)
         player.isReady = !player.isReady;
-        //&& game.players.length >= config.PLAYER_MIN
-        if (GameService.arePlayersReady(idGame) && !game.isGameOver) {
+        if (GameService.arePlayersReady(idGame) && game.players.length >= config.PLAYER_MIN && !game.isGameOver) {
             GameService.startGame(idGame);
         }
         return game;
@@ -63,13 +68,6 @@ export default class GameService {
 
     static resetGames() {
         GameService.games = [];
-        return GameService.games
-    }
-
-    static removeGame(idGame) {
-        checkError(!GameService.games.some(g => g.id === idGame), "La partie n'existe pas.");
-        const index = GameService.games.findIndex(g => g.id === idGame);
-        GameService.games.splice(index, 1);
         return GameService.games;
     }
 
@@ -101,15 +99,31 @@ export default class GameService {
             player.isPlaying = false;
         });
 
+        // random players role
         Random.shuffle(game.players);
         game.players[0].isPlaying = true;
 
         // chose the Tartufe
-        const tartufe = game.players[Random.numberMaxExcluded(1, game.players.length)];
+        // if mode 1 the first player start and can't be Tartuge
+        // if mode 2 all players can be the Tartufe
+        const tartufe = game.mode === 1 ?
+            game.players[Random.numberMaxExcluded(1, game.players.length)] :
+            game.players[Random.numberMaxExcluded(0, game.players.length)];
         tartufe.isTartufe = true;
 
-        // chose a word for Detectives
-        game.wordPlebe = Random.fromArray(wordList);
+        // chose words
+        const wordLine = Random.fromArray(wordList);
+        switch (game.mode) {
+            case 1:
+                // mode 1 : only detectives have a word
+                game.wordPlebe = Random.fromArray(wordLine);
+                break;
+            case 2:
+                // mode 2 : detectives and tartufe have a different word
+                game.wordPlebe = Random.shuffle(wordLine).pop();
+                game.wordTartufe = Random.shuffle(wordLine).pop();
+                break;
+        }
 
         return game;
     }
@@ -132,12 +146,15 @@ export default class GameService {
     static calcScore(idGame) {
         const game = GameService.getGame(idGame);
         const tartufe = game.players.find(p => p.isTartufe);
+        if (game.mode === 1) {
+            tartufe.ownVote = null;
+        }
         const playersFindTartufe = game.players.filter(p => p.ownVote === tartufe.id).length;
         /*
-        20 pour tartufe si personne n'a trouvé
+        20 pour tartufe si personne ne l'a trouvé
         10 pour tartufe si tartufe pas voté a la majorité
         15 points si seul a voter pour tartufe
-        10 points si cote pour tartufe
+        10 points si vote pour tartufe
          */
         if (playersFindTartufe === 0) {
             tartufe.score += 20;
@@ -183,13 +200,14 @@ export default class GameService {
 
         GameService.nextPlayer(idGame);
 
-        if (game.players.every(p => p.words.length === config.WORD_MAX)) {
+        if (game.players.every(p => p.words.length === game.wordsMax)) {
             game.isVoteStarted = true;
         }
 
         return game;
     }
 
+    // this feature is not active
     static toggleWantVote(idPlayer, idGame) {
         const game = GameService.getGame(idGame);
         const player = GameService.getPlayer(idPlayer, idGame);
@@ -221,7 +239,7 @@ export default class GameService {
         const game = GameService.getGame(idGame);
         checkError(!game.isVoteStarted, "Le vote n'est pas encore ouvert sur cette partie.");
         const player = GameService.getPlayer(idPlayer, idGame);
-        checkError(player.isTartufe, "Tartufe n'a pas le droit de vote !");
+        checkError(player.isTartufe && game.mode === 1, "Tartufe n'a pas le droit de vote dans ce mode de jeu !");
         player.validVote = true;
         if (GameService.arePlayersVoted(idGame)) {
             GameService.endGame(idGame);
@@ -231,7 +249,13 @@ export default class GameService {
 
     static arePlayersVoted(idGame) {
         const game = GameService.getGame(idGame);
-        return game.players.filter(p => !p.isTartufe).every(p => p.validVote);
+        switch (game.mode) {
+            case 1:
+                return game.players.filter(p => !p.isTartufe).every(p => p.validVote);
+            case 2:
+                return game.players.every(p => p.validVote);
+        }
+
     }
 
 }

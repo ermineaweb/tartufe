@@ -8,22 +8,28 @@ export default class Game {
     _roundMax;
     _scoreMax;
     _playerMax;
+    _wordsMax;
     _wordPlebe;
+    _wordTartufe; // for mode 2
     _isGameStarted;
     _isVoteStarted;
     _isGameOver;
+    _mode;
 
-    constructor(roundMax = 0, playerMax = 1, scoreMax = 0) {
+    constructor(roundMax = 0, playerMax = 1, scoreMax = 0, wordsMax = 2, mode = 1) {
         this._id = uuid();
         this._players = [];
         this._round = 1;
         this._roundMax = roundMax;
         this._scoreMax = scoreMax;
         this._playerMax = playerMax;
+        this._wordsMax = wordsMax;
         this._wordPlebe = "";
+        this._wordTartufe = "";
         this._isGameStarted = false;
         this._isVoteStarted = false;
         this._isGameOver = false;
+        this._mode = mode;
     }
 
     addPlayer(player) {
@@ -43,6 +49,30 @@ export default class Game {
         const index = this._players.findIndex(p => p.id === player.id);
         this._players.splice(index, 1);
         return this;
+    }
+
+    get wordTartufe() {
+        return this._wordTartufe;
+    }
+
+    set wordTartufe(value) {
+        this._wordTartufe = value;
+    }
+
+    get mode() {
+        return this._mode;
+    }
+
+    set mode(value) {
+        this._mode = value;
+    }
+
+    get wordsMax() {
+        return this._wordsMax;
+    }
+
+    set wordsMax(value) {
+        this._wordsMax = value;
     }
 
     get scoreMax() {

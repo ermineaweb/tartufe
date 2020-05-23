@@ -11,7 +11,8 @@ export default {
     SCORE_MIN: 30,
     SCORE_MAX: 200,
 
-    WORD_MAX: 2,
+    WORDS_MIN: 1,
+    WORDS_MAX: 5,
 
     USERNAME_MIN_LENGTH: 1,
     USERNAME_MAX_LENGTH: 25,

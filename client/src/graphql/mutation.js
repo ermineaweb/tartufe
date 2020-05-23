@@ -1,12 +1,14 @@
 import gql from "graphql-tag";
 
 export const CREATE_GAME = gql`
-    mutation($username: String!, $playerMax: Int, $roundMax: Int, $scoreMax: Int) {
+    mutation($username: String!, $playerMax: Int, $roundMax: Int, $scoreMax: Int, $wordsMax: Int, $mode : Int) {
         createGame(
             username: $username
             playerMax: $playerMax
             roundMax: $roundMax
             scoreMax: $scoreMax
+            wordsMax: $wordsMax
+            mode: $mode
         ) {
             id
             idGame

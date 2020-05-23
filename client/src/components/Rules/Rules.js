@@ -17,6 +17,9 @@ export default function Rules({openRules, setOpenRules}) {
             >
                 <Typography variant="h5" color="primary">Règles de jeu</Typography>
                 <Typography variant="body1" color="primary">
+                    Le détective principal est le premier joueur, il change à chaque round.
+                </Typography>
+                <Typography variant="body1" color="primary">
                     Le détective et ses adjoints ont un mot identique.
                 </Typography>
                 <Typography variant="body1" color="primary">

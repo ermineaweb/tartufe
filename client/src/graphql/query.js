@@ -11,6 +11,8 @@ export const GAME = gql`
             isVoteStarted
             isGameOver
             wordPlebe
+            wordTartufe
+            mode
             players {
                 id
                 username

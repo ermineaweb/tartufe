@@ -4,6 +4,7 @@ http://tartufe.erminea.fr/
 
 Jeu de société node / react / graphql.
 
+- Le détective principal est le premier à jouer.
 - Le détective et ses adjoints ont un mot identique.
 - Un traitre (le tartufe) se cache parmi les adjoints, il n'a pas de mot.
 - Chacun son tour, les adjoints indiquent un mot pour prouver qu'ils ne sont pas le tartufe.
@@ -16,10 +17,7 @@ Jeu de société node / react / graphql.
 todo
 
 lorsque cest au tour du joueur mettre en select l'input
-option mot pour tartufe
-remettre a null les users dans context apres une gameOver
+
 proposition de mot
+
 anglais / francais
-lorsque tartufe vote, il ne faut pas tenir compte coté serveur
-permettre le nombre de mot en options
-le detective principal avec un avatar différent

@@ -1,8 +1,8 @@
-const wordListOld = [
+const wordList = [
     ["mer", "fleuve", "océan"],
     ["moto", "voiture", "camion", "avion", "train", "rollers"],
     ["France", "Angleterre", "Suisse", "Belgique", "Espagne"],
-    ["Chat", "Tigre", "Lion", "Léaopard", "Eléphant", "Girafe"],
+    ["Chat", "Tigre", "Lion", "Léopard", "Eléphant", "Girafe"],
     ["Amazon", "Google", "Facebook", "Linkedin", "Twitter", "Youtube"],
     ["drogue", "alcool", "océan"],
     ["New-York", "Los Angeles", "Washington", "Miami"],
@@ -30,7 +30,7 @@ const wordListOld = [
     ["Hercule Poirot", "Miss Marple", "Sherlock Holmes", "Dr Watson"],
 ];
 
-const wordList = [
+const wordListOld = [
     "mer", "fleuve", "océan",
     "moto", "voiture", "camion", "avion", "train", "rollers",
     "France", "Angleterre", "Suisse", "Belgique", "Espagne",

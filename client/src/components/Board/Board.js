@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {useMutation} from "@apollo/react-hooks";
 import {
     ADD_OWN_WORD,
@@ -15,9 +15,9 @@ import ActionButton from "../ActionButton";
 import Rules from "../Rules";
 import Error from "../Error";
 import GameInfo from "./GameInfo";
-import PlayerInfo from "./PlayerInfo";
 import PlayerInput from "./PlayerInput";
 import Players from "./Players";
+import LobbyInfo from "./LobbyInfo";
 
 
 export default function Board({game, subscribe}) {
@@ -50,16 +50,11 @@ export default function Board({game, subscribe}) {
 
     useEffect(() => {
         return () => {
-            if (!!user.id) {
-                leaveGame()
-                    .catch(err => setError(err.graphQLErrors[0].message));
-            }
+            console.log("user s'en va")
         }
     }, []);
 
     const handleToggleReady = () => {
-        console.log(user.id)
-        console.log(user.idGame)
         toggleReady()
             .catch(err => setError(err.graphQLErrors[0].message));
     };
@@ -101,24 +96,31 @@ export default function Board({game, subscribe}) {
             .catch(err => setError(err.graphQLErrors[0].message));
     };
 
-    if (!user.id) {
-        history.push("/");
-    }
-
     return (
         <div className={classes.root}>
 
             {error && <Error error={error} setError={setError}/>}
 
-            <PlayerInfo game={game}/>
+            {game.isGameStarted &&
             <PlayerInput
                 game={game}
                 handleAddWord={handleAddWord}
                 handleWriting={handleWriting}
                 word={word}
             />
+            }
+
+            {!game.isGameOver && !game.isGameStarted &&
+            <LobbyInfo game={game}/>
+            }
+
+            {!game.isGameOver &&
             <Players game={game} handleVote={handleVote}/>
+            }
+
+            {!game.isGameStarted && game.round > 1 &&
             <GameInfo game={game}/>
+            }
 
             {!game.isGameOver &&
             !game.isGameStarted &&
@@ -133,12 +135,12 @@ export default function Board({game, subscribe}) {
 
             {!game.isGameOver &&
             game.isVoteStarted &&
-            !game.players.find(p => p.id === user.id).isTartufe &&
+            (!game.players.find(p => p.id === user.id).isTartufe || game.mode === 2) &&
             <ActionButton
                 corner={"bottom-right"}
                 color="primary"
                 onClick={handleValidVote}
-                disabled={game.players.find(p => p.id === user.id).validVote}
+                disabled={game.players.find(p => p.id === user.id).validVote || game.players.find(p => p.id === user.id).ownVote === null}
             >
                 Valider le vote
             </ActionButton>

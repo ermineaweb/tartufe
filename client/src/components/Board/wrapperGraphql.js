@@ -1,4 +1,4 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useContext} from "react";
 import {useQuery} from "@apollo/react-hooks";
 import {GAME} from "../../graphql/query";
 import {GAME_UPDATED} from "../../graphql/subscription";

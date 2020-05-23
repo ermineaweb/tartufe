@@ -8,9 +8,12 @@ import schemas from "./graphql/schemas";
 import {PubSub} from 'graphql-subscriptions';
 
 dotenv.config({path: '../env/.env'});
+
+const HOST_HTTP = process.env.HOST_HTTP || "localhost";
+const HOST_WS = process.env.HOST_WS || "localhost";
 const PORT = process.env.PORT || 4000;
-const API_PATH = "/" + process.env.API_PATH || "/graphdql";
-const PATH = "/" + process.env.PATH || "/";
+const API_ROUTE = process.env.API_ROUTE || "/graphdql";
+const ROUTE = process.env.ROUTE || "/";
 
 const app = express();
 
@@ -33,16 +36,18 @@ const server = new ApolloServer({
     },
 });
 
-server.applyMiddleware({app, path: API_PATH});
+server.applyMiddleware({app, path: API_ROUTE});
 
 app.use(express.static(path.resolve("../client/build")));
 
-app.use(PATH, (req, res) => res.sendFile(path.resolve("../client/build/index.html")));
+app.use(ROUTE, (req, res) => res.sendFile(path.resolve("../client/build/index.html")));
 
 const httpServer = http.createServer(app);
 
 server.installSubscriptionHandlers(httpServer);
 
-httpServer.listen({port: PORT}, () =>
-    console.log("Server ready")
-);
+httpServer.listen({port: PORT}, () => {
+    console.log(`Server  http : http://${HOST_HTTP}:${PORT}${ROUTE}`);
+    console.log(`Graphql reqs : http://${HOST_HTTP}:${PORT}${API_ROUTE}`);
+    console.log(`Graphql subs : ws://${HOST_WS}:${PORT}${API_ROUTE}`);
+});

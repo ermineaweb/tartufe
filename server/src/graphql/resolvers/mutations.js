@@ -5,8 +5,8 @@ const resolvers = {
     Mutation: {
 
         createGame: (root, params, context) => {
-            const {username, playerMax, roundMax, scoreMax} = params;
-            const player = GameService.createGame(username, playerMax, roundMax, scoreMax);
+            const {username, playerMax, roundMax, scoreMax, wordsMax, mode} = params;
+            const player = GameService.createGame(username, playerMax, roundMax, scoreMax, wordsMax, mode);
             const games = GameService.getGames();
             context.pubsub.publish("GAMES_UPDATED", {gamesUpdated: games}).catch(err => err);
             return player;
