@@ -13,11 +13,11 @@ const HOST_HTTP = process.env.HOST_HTTP || "localhost";
 const HOST_WS = process.env.HOST_WS || "localhost";
 
 const httpLink = new HttpLink({
-    uri: `http://${HOST_HTTP}:${PORT}/${API_ROUTE}`,
+    uri: `http://${HOST_HTTP}:${PORT}${API_ROUTE}`,
 });
 
 const wsLink = new WebSocketLink({
-    uri: `ws://${HOST_WS}:${PORT}/${API_ROUTE}`,
+    uri: `ws://${HOST_WS}:${PORT}${API_ROUTE}`,
     options: {
         reconnect: true,
     }
