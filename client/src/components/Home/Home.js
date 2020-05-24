@@ -20,7 +20,6 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 
-
 export default function Home() {
     const classes = useStyles();
     const [error, setError] = useState(null);
@@ -30,7 +29,7 @@ export default function Home() {
     const [roundMax, setRoundMax] = useState(0);
     const [wordsMax, setWordsMax] = useState(2);
     const [scoreMax, setScoreMax] = useState(60);
-    const [mode, setMode] = useState(1);
+    const [mode, setMode] = useState(2);
     const [openOptions, setOpenOptions] = useState(false);
     const [openRules, setOpenRules] = useState(false);
     const {setUser} = useContext(UserContext);

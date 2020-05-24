@@ -27,6 +27,7 @@
     "react-dom": "^16.13.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.1.2",
+    "react-sound": "^1.2.0",
     "subscriptions-transport-ws": "^0.9.16"
   },
   "devDependencies": {

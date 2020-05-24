@@ -30,9 +30,9 @@ export default function Players({game, handleVote}) {
                     </Button>
                     }
 
-                    {!game.isGameOver && <Player game={game} player={player}/>}
+                    <Player game={game} player={player}/>
 
-                    {game.isGameStarted && <Words words={player.words}/>}
+                    <Words words={player.words}/>
 
                 </div>
             ))}

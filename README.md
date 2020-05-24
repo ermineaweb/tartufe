@@ -17,7 +17,9 @@ Jeu de société node / react / graphql.
 todo
 
 lorsque cest au tour du joueur mettre en select l'input
-
 proposition de mot
-
 anglais / francais
+
+
+revoir algo des points pour le mode 2
+

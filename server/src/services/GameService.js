@@ -149,31 +149,69 @@ export default class GameService {
         if (game.mode === 1) {
             tartufe.ownVote = null;
         }
+        const tartufeFindHimself = game.players.some(p => p.ownVote === tartufe.id && p.isTartufe);
         const playersFindTartufe = game.players.filter(p => p.ownVote === tartufe.id).length;
-        /*
-        20 pour tartufe si personne ne l'a trouvé
-        10 pour tartufe si tartufe pas voté a la majorité
-        15 points si seul a voter pour tartufe
-        10 points si vote pour tartufe
-         */
-        if (playersFindTartufe === 0) {
-            tartufe.score += 20;
-        }
 
-        if (playersFindTartufe <= game.players.length * config.PERCENT_FOR_DEMOCRACY) {
-            tartufe.score += 10;
-        }
+        if (game.mode === 1) {
+            /*
+            mode 1
+            20 pour tartufe si personne ne l'a trouvé
+            10 pour tartufe si tartufe pas voté a la majorité
+            15 points si seul a voter pour tartufe
+            10 points si vote pour tartufe
+             */
+            if (playersFindTartufe === 0) {
+                tartufe.score += 20;
+            }
 
-        game.players.forEach((player) => {
-            if (!player.isTartufe) {
-                if (playersFindTartufe === 1 && player.ownVote === tartufe.id) {
-                    player.score += 15;
+            if (playersFindTartufe <= game.players.length * config.PERCENT_FOR_DEMOCRACY) {
+                tartufe.score += 10;
+            }
+
+            game.players.forEach((player) => {
+                if (!player.isTartufe) {
+                    if (playersFindTartufe === 1 && player.ownVote === tartufe.id) {
+                        player.score += 15;
+                    }
+                    if (playersFindTartufe > 1 && player.ownVote === tartufe.id) {
+                        player.score += 10;
+                    }
                 }
-                if (playersFindTartufe > 1 && player.ownVote === tartufe.id) {
-                    player.score += 10;
+            });
+        }
+
+        if (game.mode === 2) {
+            /*
+            mode 2
+            10 pour tartufe si personne ne l'a trouvé et qu'il se trouve lui même
+            10 pour tartufe s'il se trouve
+            10 pour tartufe si la majorité ne le trouve pas
+            15 points pour détective si seul a voter pour tartufe
+            10 points pour détective si vote pour tartufe
+             */
+
+            if (tartufeFindHimself) {
+                tartufe.score += 10;
+                if (playersFindTartufe === 1) {
+                    tartufe.score += 10;
+                }
+            } else {
+                if (playersFindTartufe <= game.players.length * config.PERCENT_FOR_DEMOCRACY) {
+                    tartufe.score += 10;
                 }
             }
-        });
+
+            game.players.forEach((player) => {
+                if (!player.isTartufe) {
+                    if (playersFindTartufe === 1 && player.ownVote === tartufe.id) {
+                        player.score += 15;
+                    }
+                    if (playersFindTartufe > 1 && player.ownVote === tartufe.id) {
+                        player.score += 10;
+                    }
+                }
+            });
+        }
 
         return game;
     }
@@ -195,7 +233,9 @@ export default class GameService {
     static addWord(idPlayer, idGame, word) {
         const game = GameService.getGame(idGame);
         const player = GameService.getPlayer(idPlayer, idGame);
-        checkError(!player.isPlaying, "Ce n'est pas à votre tour de jouer.")
+        checkError(!player.isPlaying, "Ce n'est pas à votre tour de jouer.");
+        checkError(GameService.checkWordIsValid(game.wordPlebe, word), "Vous ne pouvez pas écrire le mot secret dans votre réponse.");
+        checkError(GameService.checkWordIsValid(game.wordTartufe, word), "Vous ne pouvez pas écrire le mot secret dans votre réponse.");
         player.addWord(word);
 
         GameService.nextPlayer(idGame);
@@ -205,6 +245,10 @@ export default class GameService {
         }
 
         return game;
+    }
+
+    static checkWordIsValid(word, sentence) {
+        return sentence.toLowerCase().includes(word.toLowerCase());
     }
 
     // this feature is not active

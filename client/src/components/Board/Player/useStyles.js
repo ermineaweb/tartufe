@@ -2,9 +2,13 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        textAlign: "center",
-        width: 140,
-        margin: "0 15px",
+        display: "flex",
+        flexFlow: "column nowrap",
+        justifyContent: "center",
+        alignItems: "center",
+
+        width: 150,
+
     },
     avatar: {
         width: "12vw",

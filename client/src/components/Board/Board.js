@@ -18,6 +18,8 @@ import GameInfo from "./GameInfo";
 import PlayerInput from "./PlayerInput";
 import Players from "./Players";
 import LobbyInfo from "./LobbyInfo";
+import Sound from "react-sound";
+import ding from "../../assets/sounds/ding.mp3";
 
 
 export default function Board({game, subscribe}) {
