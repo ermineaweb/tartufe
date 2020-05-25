@@ -21,5 +21,4 @@ proposition de mot
 anglais / francais
 
 
-revoir algo des points pour le mode 2
-
+mettre un timer sur les votes ?

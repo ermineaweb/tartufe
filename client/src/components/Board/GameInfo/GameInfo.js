@@ -30,8 +30,8 @@ export default function GameInfo({game}) {
                 Les enquêteurs avaient le mot <strong>"{game.wordPlebe}"</strong>
             </Typography>
             <Typography variant="subtitle1" color="primary">
-                Le Tartufe était <strong>{game.players.find(p => p.isTartufe).username}</strong>
-                {game.mode === 2 && <>il avait le mot <strong>"{game.wordTartufe}"</strong></>}
+                Le Tartufe était : <strong>{game.players.find(p => p.isTartufe).username}</strong>
+                {game.mode === 2 && <>, il avait le mot : <strong>"{game.wordTartufe}"</strong></>}
             </Typography>
             <Typography variant="subtitle1" color="primary">
                 Les détectives qui ont démasqué le Tartufe sont :

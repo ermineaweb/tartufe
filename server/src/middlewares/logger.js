@@ -2,6 +2,8 @@ import fs from "fs";
 
 function logger(err, req, res, next) {
     if (err) {
-        ds.write
+        fs.appendFile('errors.log', err, (err) => {
+            if (err) throw err;
+        });
     }
 }

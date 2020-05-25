@@ -4,6 +4,7 @@ import wordList from "../datas/words";
 import Random from "../utils/Random";
 import Player from "../models/Player";
 import Game from "../models/Game";
+import LogService from "./LogService";
 
 export default class GameService {
 
@@ -24,6 +25,9 @@ export default class GameService {
 
         checkError(GameService.games.length >= config.GAME_MAX, "Trop de partie en cours, veuillez patienter qu'un slot se libère.");
         const game = new Game(roundMax, playerMax, scoreMax, wordsMax, mode);
+
+        const log = new LogService("stats.json");
+        log.insert(game);
 
         GameService.games = [...GameService.games, game];
         return GameService.joinGame(username, game.id);
@@ -236,6 +240,7 @@ export default class GameService {
         checkError(!player.isPlaying, "Ce n'est pas à votre tour de jouer.");
         checkError(GameService.checkWordIsValid(game.wordPlebe, word), "Vous ne pouvez pas écrire le mot secret dans votre réponse.");
         checkError(GameService.checkWordIsValid(game.wordTartufe, word), "Vous ne pouvez pas écrire le mot secret dans votre réponse.");
+        checkError(word.length > 25, "Le mot ne doit pas dépasser 25 caractères.");
         player.addWord(word);
 
         GameService.nextPlayer(idGame);

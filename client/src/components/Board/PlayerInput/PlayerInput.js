@@ -3,7 +3,7 @@ import useStyles from "./useStyles";
 import TextField from "@material-ui/core/TextField";
 import {UserContext} from "../../../context";
 import Typography from "@material-ui/core/Typography";
-import ding from "../../../assets/sounds/ding.mp3";
+import ding from "../../../assets/sounds/ding2.mp3";
 import Sound from "react-sound";
 
 export default function PlayerInput({game, handleWriting, handleAddWord, word}) {
