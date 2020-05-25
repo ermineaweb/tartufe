@@ -6,10 +6,18 @@ export default class LogService {
         this._file = file;
     }
 
-    insert(game) {
+    saveGame(game) {
         const date = new Date();
 
-        const infos = `{"date":"${date.toISOString()}","mode":"${game.mode}"},`;
+        const infos = `{"date":"${date.toISOString()}","mode":"${game.mode}"},\n`;
+
+        fs.appendFile(this._file, infos, (err) => {
+            if (err) throw err;
+        });
+    }
+
+    saveWords(wordPlebe, wordTartufe, word) {
+        const infos = `{"wordPlebe":"${wordPlebe}","wordTartufe":"${wordTartufe}","word":"${word}"},\n`;
 
         fs.appendFile(this._file, infos, (err) => {
             if (err) throw err;
