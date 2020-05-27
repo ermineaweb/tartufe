@@ -12,7 +12,8 @@ export default function Router() {
         <BrowserRouter>
             <Switch>
                 <Route path={"/"} exact component={Home}/>
-                {!!user.id && !!user.idGame && <Route path={"/board"} component={Board}/>}
+                <Route path={"/join/:id"} component={Home}/>
+                {user.id && user.idGame && <Route path={"/board"} component={Board}/>}
                 <Redirect to="/"/>
             </Switch>
         </BrowserRouter>

@@ -23,11 +23,10 @@ import Radio from "@material-ui/core/Radio";
 
 export default function Home() {
     const {id} = useParams();
-    console.log(id)
     const classes = useStyles();
     const [error, setError] = useState(null);
     const [username, setUsername] = useState("");
-    const [idGame, setIdGame] = useState("");
+    const [idGame, setIdGame] = useState(id);
     const [playerMax, setPlayerMax] = useState(12);
     const [roundMax, setRoundMax] = useState(0);
     const [wordsMax, setWordsMax] = useState(2);
