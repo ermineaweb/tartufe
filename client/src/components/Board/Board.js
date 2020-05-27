@@ -10,7 +10,6 @@ import {
 } from "../../graphql/mutation";
 import {UserContext} from "../../context";
 import useStyles from "./useStyles";
-import {useHistory} from "react-router";
 import ActionButton from "../ActionButton";
 import Rules from "../Rules";
 import Error from "../Error";
@@ -18,8 +17,6 @@ import GameInfo from "./GameInfo";
 import PlayerInput from "./PlayerInput";
 import Players from "./Players";
 import LobbyInfo from "./LobbyInfo";
-import Sound from "react-sound";
-import ding from "../../assets/sounds/ding.mp3";
 
 
 export default function Board({game, subscribe}) {
@@ -28,7 +25,6 @@ export default function Board({game, subscribe}) {
     const [error, setError] = useState(null);
     const [word, setWord] = useState("");
     const [openRules, setOpenRules] = useState(false);
-    const history = useHistory();
 
     const options = {
         variables: {
