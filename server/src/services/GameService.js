@@ -4,7 +4,6 @@ import wordList from "../datas/words";
 import Random from "../utils/Random";
 import Player from "../models/Player";
 import Game from "../models/Game";
-import LogService from "./LogService";
 
 export default class GameService {
 
@@ -138,8 +137,6 @@ export default class GameService {
         if ((game.roundMax > 0 && game.round === game.roundMax) ||
             (game.scoreMax > 0 && game.players.some(p => p.score >= game.scoreMax))) {
             game.isGameOver = true;
-            const log = new LogService("gamestats.json");
-            log.saveGame(game);
         }
 
         return game;
@@ -240,9 +237,6 @@ export default class GameService {
         checkError(GameService.checkWordIsValid(game.wordTartufe, word), "Vous ne pouvez pas écrire le mot secret dans votre réponse.");
         checkError(word.length > 25, "Le mot ne doit pas dépasser 25 caractères.");
         player.addWord(word);
-
-        const log = new LogService("wordstats.json");
-        log.saveWords(game.wordPlebe, game.wordTartufe, word);
 
         GameService.nextPlayer(idGame);
 

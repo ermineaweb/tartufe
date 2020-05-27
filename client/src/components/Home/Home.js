@@ -9,7 +9,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Slider from "../Slider";
 import Typography from "@material-ui/core/Typography";
 import {CREATE_GAME, JOIN_GAME} from "../../graphql/mutation";
-import {useHistory} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {UserContext} from "../../context";
 import useStyles from "./useStyles";
 import Rules from "../Rules";
@@ -20,7 +20,10 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 
+
 export default function Home() {
+    const {id} = useParams();
+    console.log(id)
     const classes = useStyles();
     const [error, setError] = useState(null);
     const [username, setUsername] = useState("");
