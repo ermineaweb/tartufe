@@ -23,25 +23,13 @@ const BadgeVote = withStyles((theme) => ({
     },
 }))(Badge);
 
-const BadgeScore = withStyles((theme) => ({
-    badge: {
-        right: "50%",
-        bottom: "5%",
-        padding: '0 0',
-        width: 40,
-        height: 40,
-        textSize: "1.3em",
-        zIndex: "10",
-    },
-}))(Badge);
-
 
 export default function Player({player, game}) {
     const classes = useStyles();
 
     const PlayerAvatar = () => {
         switch (true) {
-            case (game.isGameStarted && game.isVoteStarted):
+            case (game.isGameStarted && game.isVoteStarted && player.validVote):
                 return (
                     <BadgeVote
                         color="primary"
@@ -49,6 +37,11 @@ export default function Player({player, game}) {
                     >
                         <Avatar variant={"square"} className={classes.avatar} src={AvatarAnge}/>
                     </BadgeVote>
+                );
+
+            case (game.isGameStarted && game.isVoteStarted):
+                return (
+                    <Avatar variant={"square"} className={classes.avatar} src={AvatarAnge}/>
                 );
 
             case (game.isGameStarted && player.wantVote):
