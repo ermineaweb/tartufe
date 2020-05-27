@@ -17,7 +17,7 @@ export default function LobbyInfo({game}) {
             <TextField
                 variant="standard"
                 color="primary"
-                value={HOST_URL + game.id}
+                value={HOST_URL + "join/" + game.id}
                 readOnly={true}
                 label={"Url"}
                 onFocus={(e) => e.target.select()}
