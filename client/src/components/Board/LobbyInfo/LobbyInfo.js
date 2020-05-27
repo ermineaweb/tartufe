@@ -17,15 +17,18 @@ export default function LobbyInfo({game}) {
             <TextField
                 variant="standard"
                 color="primary"
-                value={game.id}
+                value={HOST_URL + game.id}
                 readOnly={true}
-                label={"ID"}
+                label={"Url"}
                 onFocus={(e) => e.target.select()}
             />
+            <Typography variant="h6" color="primary">
+                Ou
+            </Typography>
             <TextField
                 variant="standard"
                 color="primary"
-                value={HOST_URL + game.id}
+                value={game.id}
                 readOnly={true}
                 label={"ID"}
                 onFocus={(e) => e.target.select()}
