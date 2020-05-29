@@ -14,7 +14,7 @@ module.exports = merge(common, {
             cacheGroups: {
                 reactVendor: {
                     test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-                    name: "reactvendor"
+                    name: "reactVendor"
                 },
                 utilityVendor: {
                     test: /[\\/]node_modules[\\/](lodash|moment|moment-timezone)[\\/]/,
