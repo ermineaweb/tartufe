@@ -22,3 +22,5 @@ anglais / francais
 
 
 mettre un timer sur les votes ?
+
+gerer le pseudo en localstorage

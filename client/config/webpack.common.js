@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
 
@@ -24,46 +25,27 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    'sass-loader'
-                ]
+                use: ['style-loader', 'css-loader', 'sass-loader']
             },
             {
-                test: /\.(png|svg|jpg|gif|mp3)$/,
-                use: [
-                    'file-loader',
-                ]
+                test: /\.(png|svg|jpg|gif|mp3|webp)$/,
+                use: ['file-loader',]
             },
         ]
     },
     resolve: {
-        extensions: [
-            '.js',
-            '.jsx'
-        ],
+        extensions: ['.js', '.jsx'],
     },
     plugins: [
         new Dotenv({
             path: '../env/.env', // load this now instead of the ones in '.env'
             allowEmptyValues: true, // allow empty variables (e.g. `FOO=`) (treat it as empty string, rather than missing)
         }),
+        new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: "public/index.html",
             favicon: "public/favicon.ico",
+            title: 'Caching',
         }),
     ],
-    optimization: {
-        runtimeChunk: 'single',
-        splitChunks: {
-            cacheGroups: {
-                vendor: {
-                    test: /[\\/]node_modules[\\/]/,
-                    name: 'vendors',
-                    chunks: 'all'
-                }
-            }
-        }
-    }
 };

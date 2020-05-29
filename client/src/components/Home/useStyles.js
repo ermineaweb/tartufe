@@ -1,5 +1,5 @@
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import Wallpaper from "../../assets/img/wallpaper6.jpg";
+import Wallpaper from "../../assets/img/wallpaper6.webp";
 
 const useStyles = makeStyles((theme) => ({
     root: {
