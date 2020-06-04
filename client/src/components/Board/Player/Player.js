@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext} from "react";
 import Badge from "@material-ui/core/Badge";
 import Avatar from "@material-ui/core/Avatar";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -10,6 +10,7 @@ import AvatarTartufe from "../../../assets/img/avatars/dark/avatar_tartufe.png";
 import Writing from "../../../assets/img/writing_dark2.gif";
 import Typography from "@material-ui/core/Typography";
 import useStyles from "./useStyles";
+import {UserContext} from "../../../context";
 
 
 const BadgeVote = withStyles((theme) => ({
@@ -27,9 +28,21 @@ const BadgeVote = withStyles((theme) => ({
 export default function Player({player, game}) {
     const classes = useStyles();
 
+    const {user} = useContext(UserContext);
+
     const PlayerAvatar = () => {
         switch (true) {
-            case (game.isGameStarted && game.isVoteStarted && player.validVote):
+            case (!game.canSeeVote && game.isGameStarted && game.isVoteStarted && game.players.find(p => p.id === user.id).validVote):
+                return (
+                    <BadgeVote
+                        color="primary"
+                        badgeContent={game.players.filter(p => p.ownVote === player.id).length}
+                    >
+                        <Avatar variant={"square"} className={classes.avatar} src={AvatarAnge}/>
+                    </BadgeVote>
+                );
+
+            case (game.canSeeVote && game.isGameStarted && game.isVoteStarted):
                 return (
                     <BadgeVote
                         color="primary"

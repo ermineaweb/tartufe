@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     options: {
+        width: "350px",
         margin: "10px 40px",
         textAlign: "center",
         '& > *': {

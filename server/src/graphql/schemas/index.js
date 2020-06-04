@@ -15,6 +15,7 @@ export default gql`
         wordPlebe: String
         wordTartufe: String
         mode: Int
+        canSeeVote: Boolean
     }
 
     type Player {
@@ -39,7 +40,7 @@ export default gql`
     }
 
     type Mutation {
-        createGame(username: String!, playerMax: Int, roundMax: Int, scoreMax: Int, wordsMax: Int, mode: Int): Player
+        createGame(username: String!, playerMax: Int, roundMax: Int, scoreMax: Int, wordsMax: Int, mode: Int, canSeeVote: Boolean): Player
         joinGame(username: String!, idGame: ID!): Player
         leaveGame(idPlayer: ID!, idGame: ID!): [Game]
         toggleReady(idPlayer: ID!, idGame: ID!): Game

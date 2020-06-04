@@ -9,7 +9,7 @@ export default class GameService {
 
     static games = [];
 
-    static createGame(username, playerMax, roundMax, scoreMax, wordsMax, mode) {
+    static createGame(username, playerMax, roundMax, scoreMax, wordsMax, mode, canSeeVote) {
         checkError(playerMax < config.PLAYER_MIN || playerMax > config.PLAYER_MAX, `Le nombre de joueur doit être compris entre ${config.PLAYER_MIN} et ${config.PLAYER_MAX}.`);
         checkError(roundMax < config.ROUND_MIN || roundMax > config.ROUND_MAX, `Le nombre de round doit être compris entre ${config.ROUND_MIN} et ${config.ROUND_MAX}.`);
         checkError(scoreMax < config.SCORE_MIN || scoreMax > config.SCORE_MAX, `Le score max doit être compris entre ${config.SCORE_MIN} et ${config.SCORE_MAX}.`);
@@ -23,7 +23,7 @@ export default class GameService {
         });
 
         checkError(GameService.games.length >= config.GAME_MAX, "Trop de partie en cours, veuillez patienter qu'un slot se libère.");
-        const game = new Game(roundMax, playerMax, scoreMax, wordsMax, mode);
+        const game = new Game(roundMax, playerMax, scoreMax, wordsMax, mode, canSeeVote);
         GameService.games = [...GameService.games, game];
         return GameService.joinGame(username, game.id);
     }

@@ -46,12 +46,6 @@ export default function Board({game, subscribe}) {
         subscribe();
     }, [subscribe]);
 
-    useEffect(() => {
-        return () => {
-            console.log("user s'en va")
-        }
-    }, []);
-
     const handleToggleReady = () => {
         toggleReady()
             .catch(err => setError(err.graphQLErrors[0].message));

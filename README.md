@@ -19,8 +19,5 @@ todo
 lorsque cest au tour du joueur mettre en select l'input
 proposition de mot
 anglais / francais
-
-
 mettre un timer sur les votes ?
-
 gerer le pseudo en localstorage

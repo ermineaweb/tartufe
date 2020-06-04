@@ -15,8 +15,9 @@ export default class Game {
     _isVoteStarted;
     _isGameOver;
     _mode;
+    _canSeeVote;
 
-    constructor(roundMax = 0, playerMax = 1, scoreMax = 0, wordsMax = 2, mode = 1) {
+    constructor(roundMax = 0, playerMax = 1, scoreMax = 0, wordsMax = 2, mode = 1, canSeeVote = true) {
         this._id = uuid();
         this._players = [];
         this._round = 1;
@@ -30,6 +31,7 @@ export default class Game {
         this._isVoteStarted = false;
         this._isGameOver = false;
         this._mode = mode;
+        this._canSeeVote = canSeeVote;
     }
 
     addPlayer(player) {
@@ -49,6 +51,14 @@ export default class Game {
         const index = this._players.findIndex(p => p.id === player.id);
         this._players.splice(index, 1);
         return this;
+    }
+
+    get canSeeVote() {
+        return this._canSeeVote;
+    }
+
+    set canSeeVote(value) {
+        this._canSeeVote = value;
     }
 
     get wordTartufe() {

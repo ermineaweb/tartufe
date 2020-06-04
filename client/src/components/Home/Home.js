@@ -19,6 +19,7 @@ import Footer from "../Footer";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
+import Switch from "@material-ui/core/Switch";
 
 
 export default function Home() {
@@ -32,6 +33,7 @@ export default function Home() {
     const [wordsMax, setWordsMax] = useState(2);
     const [scoreMax, setScoreMax] = useState(60);
     const [mode, setMode] = useState(2);
+    const [canSeeVote, setCanSeeVote] = useState(true);
     const [openOptions, setOpenOptions] = useState(false);
     const [openRules, setOpenRules] = useState(false);
     const {setUser} = useContext(UserContext);
@@ -47,6 +49,7 @@ export default function Home() {
             wordsMax,
             mode,
             idGame,
+            canSeeVote,
         }
     };
 
@@ -189,6 +192,19 @@ export default function Home() {
                             <FormControlLabel value={1} control={<Radio/>} label="Mode 1 : Tartufe n'a pas de mot"/>
                             <FormControlLabel value={2} control={<Radio/>} label="Mode 2 : Tartufe a un mot"/>
                         </RadioGroup>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={canSeeVote}
+                                    onChange={() => setCanSeeVote(canSeeVote => !canSeeVote)}
+                                />
+                            }
+                            label={
+                                <Typography gutterBottom>
+                                    {canSeeVote ? "Voir les votes" : "Cacher les votes"}
+                                </Typography>
+                            }
+                        />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleCreateGame} color="secondary" variant={"contained"}>

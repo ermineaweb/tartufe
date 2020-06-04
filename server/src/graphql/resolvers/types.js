@@ -14,6 +14,7 @@ const resolvers = {
         wordPlebe: (root) => root.wordPlebe,
         wordTartufe: (root) => root.wordTartufe,
         mode: (root) => root.mode,
+        canSeeVote: (root) => root.canSeeVote,
     },
 
     Player: {

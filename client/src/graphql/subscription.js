@@ -13,6 +13,7 @@ export const GAME_UPDATED = gql`
             wordPlebe
             wordTartufe
             mode
+            canSeeVote
             players {
                 id
                 username
