@@ -16,7 +16,6 @@ const API_ROUTE = process.env.API_ROUTE || "/graphdql";
 const ROUTE = process.env.ROUTE || "/";
 
 const app = express();
-
 const pubsub = new PubSub();
 
 const server = new ApolloServer({
@@ -40,7 +39,9 @@ server.applyMiddleware({app, path: API_ROUTE});
 
 app.use(express.static(path.resolve("../client/build")));
 
-app.use(ROUTE, (req, res) => res.sendFile(path.resolve("../client/build/index.html")));
+app.use(ROUTE, (req, res) => {
+    res.sendFile(path.resolve("../client/build/index.html"))
+});
 
 const httpServer = http.createServer(app);
 

@@ -1,9 +1,9 @@
-import fs from "fs";
+import LogService from "../services/LogService";
+
+const logService = new LogService();
 
 function logger(err, req, res, next) {
     if (err) {
-        fs.appendFile('errors.log', err, (err) => {
-            if (err) throw err;
-        });
+        logService.saveError(err);
     }
 }
