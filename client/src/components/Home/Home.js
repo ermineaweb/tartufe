@@ -20,11 +20,14 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Switch from "@material-ui/core/Switch";
+import {useNotification, useNotificationDispatch} from "../../stores/notificationStore";
 
 
 export default function Home() {
     const {id} = useParams();
     const classes = useStyles();
+    const notification = useNotification();
+    const notificationDispatch = useNotificationDispatch();
     const [error, setError] = useState(null);
     const [username, setUsername] = useState("");
     const [idGame, setIdGame] = useState(id);

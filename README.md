@@ -17,7 +17,15 @@ Jeu de société node / react / graphql.
 todo
 
 lorsque cest au tour du joueur mettre en select l'input
-proposition de mot
+
+proposition de mots
+
 anglais / francais
-mettre un timer sur les votes ?
-gerer le pseudo en localstorage
+
+gerer une sauvegarde en localstorage
+
+une page pour voir les stats a partir de mongodb
+
+workflow d'intégration continue
+
+store global pour gérer les erreurs
