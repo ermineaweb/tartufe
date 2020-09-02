@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - mongodb:/data/db
+
+  tartufe:
+    container_name: tartufe
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    image: tartufe
+    ports:
+      - 3001:4000
+    depends_on:
+      - mongo
+
+    environment:
+      - HOST_HTTP=localhost
+      - HOST_WS=localhost
+      - PORT=4000
+      - API_ROUTE=/graphql
+      - ROUTE=/
+      - PROD=localhost
+      - DEV=localhost
+      - HOST_URL=http://tartufe.erminea.fr
+      - DB_ADDR=mongodb://mongo:27017
+
+volumes:
+  mongodb:

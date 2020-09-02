@@ -16,16 +16,10 @@ Jeu de société node / react / graphql.
 
 todo
 
-lorsque cest au tour du joueur mettre en select l'input
+- proposition de mots
 
-proposition de mots
+- gerer une sauvegarde en localstorage
 
-anglais / francais
+- une page pour voir les stats a partir de mongodb
 
-gerer une sauvegarde en localstorage
-
-une page pour voir les stats a partir de mongodb
-
-workflow d'intégration continue
-
-store global pour gérer les erreurs
+- store global pour gérer les erreurs

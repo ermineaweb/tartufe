@@ -1,8 +1,0 @@
-/node_modules/
-.idea/
-.vscode/
-coverage/
-build/
-dist/
-public/
-../.env

@@ -1,6 +1,6 @@
-/server/node_modules/
-.idea/
-.vscode/
-coverage/
-build/
-dist/
+node_modules
+.idea
+.vscode
+coverage
+build
+dist
