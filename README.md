@@ -1,6 +1,5 @@
 # tartufe
 
-http://tartufe.erminea.fr/
 
 Jeu de société node / react / graphql.
 
