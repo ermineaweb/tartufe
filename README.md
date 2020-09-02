@@ -22,3 +22,12 @@ todo
 - une page pour voir les stats a partir de mongodb
 
 - store global pour gérer les erreurs
+
+
+```
+git clone https://github.com/ermineaweb/tartufe
+
+cd tartufe/docker
+
+docker-compose up --build
+```
